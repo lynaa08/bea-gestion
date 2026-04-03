@@ -35,8 +35,9 @@ public class UserService {
     }
     
     public UserDTO createUser(CreateUserRequest request) {
-        if (userRepository.existsByEmail(request.getEmail())) {
-            throw new RuntimeException("Email already exists");
+        if (userRepository.existsByMatricule(request.getMatricule())) {
+    throw new RuntimeException("Matricule already exists");
+
         }
         User user = new User();
         user.setNom(request.getNom());
