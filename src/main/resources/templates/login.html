@@ -1,0 +1,672 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Connexion - BEA Gestion Projets</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family:
+          -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+          "Helvetica Neue", Arial, sans-serif;
+        background: #f0f4fa;
+        min-height: 100vh;
+        width: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        overflow: hidden;
+      }
+
+      .login-page {
+        display: flex;
+        width: 100%;
+        height: 100%;
+        min-height: 100vh;
+        overflow: hidden;
+      }
+
+      /* LEFT PANEL */
+      .left-panel {
+        flex: 1;
+        background: #0d2b6e;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        padding: 48px 40px;
+        position: relative;
+        overflow: hidden;
+      }
+
+      .left-panel::before {
+        content: "";
+        position: absolute;
+        width: 320px;
+        height: 320px;
+        border-radius: 50%;
+        border: 40px solid rgba(91, 184, 232, 0.07);
+        top: -80px;
+        left: -80px;
+      }
+
+      .left-panel::after {
+        content: "";
+        position: absolute;
+        width: 240px;
+        height: 240px;
+        border-radius: 50%;
+        border: 30px solid rgba(91, 184, 232, 0.05);
+        bottom: -60px;
+        right: -60px;
+      }
+
+      .logo-wrap {
+        width: 110px;
+        height: 110px;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.07);
+        border: 2px solid rgba(91, 184, 232, 0.3);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-bottom: 28px;
+        position: relative;
+        z-index: 1;
+      }
+
+      .logo-wrap svg {
+        width: 72px;
+        height: 72px;
+      }
+
+      .bank-name-ar {
+        font-size: 18px;
+        color: rgba(255, 255, 255, 0.9);
+        font-weight: 600;
+        margin-bottom: 6px;
+        position: relative;
+        z-index: 1;
+        text-align: center;
+        direction: rtl;
+      }
+
+      .bank-name-fr {
+        font-size: 13px;
+        color: rgba(255, 255, 255, 0.5);
+        text-align: center;
+        position: relative;
+        z-index: 1;
+        letter-spacing: 0.03em;
+      }
+
+      .divider {
+        width: 48px;
+        height: 2px;
+        background: rgba(91, 184, 232, 0.4);
+        border-radius: 2px;
+        margin: 24px auto;
+        position: relative;
+        z-index: 1;
+      }
+
+      .tagline {
+        font-size: 12px;
+        color: rgba(255, 255, 255, 0.35);
+        text-align: center;
+        line-height: 1.6;
+        position: relative;
+        z-index: 1;
+        max-width: 200px;
+      }
+
+      /* RIGHT PANEL */
+      .right-panel {
+        width: 480px;
+        background: #f5f8fd;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        padding: 48px 44px;
+        overflow-y: auto;
+      }
+
+      .login-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        background: #eef4ff;
+        border: 0.5px solid #c8d8f0;
+        border-radius: 20px;
+        padding: 4px 14px;
+        font-size: 11px;
+        font-weight: 500;
+        color: #3a6ab8;
+        margin-bottom: 28px;
+      }
+
+      .login-badge-dot {
+        width: 6px;
+        height: 6px;
+        border-radius: 50%;
+        background: #5bb8e8;
+      }
+
+      .login-title {
+        font-size: 30px;
+        font-weight: 700;
+        color: #0d2b6e;
+        margin-bottom: 6px;
+        text-align: center;
+      }
+
+      .login-subtitle {
+        font-size: 13px;
+        color: #8a9fbf;
+        margin-bottom: 36px;
+        text-align: center;
+      }
+
+      .form-group {
+        width: 100%;
+        margin-bottom: 18px;
+      }
+
+      .form-label {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        font-size: 12px;
+        font-weight: 600;
+        color: #4a6080;
+        margin-bottom: 7px;
+        text-transform: uppercase;
+        letter-spacing: 0.06em;
+      }
+
+      .input-wrap {
+        position: relative;
+      }
+
+      .input-icon {
+        position: absolute;
+        left: 14px;
+        top: 50%;
+        transform: translateY(-50%);
+        pointer-events: none;
+      }
+
+      .form-input {
+        width: 100%;
+        height: 46px;
+        padding: 0 14px 0 42px;
+        background: #fff;
+        border: 1.5px solid #d8e6f2;
+        border-radius: 10px;
+        font-size: 14px;
+        color: #1a2d5a;
+        outline: none;
+        transition: border-color 0.15s;
+      }
+
+      .form-input:focus {
+        border-color: #5bb8e8;
+      }
+
+      .form-input::placeholder {
+        color: #b0bdd0;
+      }
+
+      .show-pwd {
+        position: absolute;
+        right: 14px;
+        top: 50%;
+        transform: translateY(-50%);
+        cursor: pointer;
+        opacity: 0.4;
+      }
+
+      .btn-login {
+        width: 100%;
+        height: 48px;
+        background: #0d2b6e;
+        color: #fff;
+        border: none;
+        border-radius: 10px;
+        font-size: 14px;
+        font-weight: 600;
+        letter-spacing: 0.06em;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        transition: background 0.15s;
+        margin-top: 10px;
+      }
+
+      .btn-login:hover {
+        background: #1a3f8f;
+      }
+
+      .login-footer {
+        margin-top: 28px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        width: 100%;
+      }
+
+      .footer-line {
+        flex: 1;
+        height: 0.5px;
+        background: #d8e6f2;
+      }
+
+      .footer-text {
+        font-size: 11px;
+        color: #b0bdd0;
+        white-space: nowrap;
+      }
+
+      .security-note {
+        margin-top: 20px;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        background: #eef4ff;
+        border-radius: 8px;
+        padding: 8px 12px;
+        width: 100%;
+      }
+
+      .security-note span {
+        font-size: 10px;
+        color: #5a78aa;
+        line-height: 1.4;
+      }
+
+      .error-message {
+        background: #fee;
+        color: #c00;
+        padding: 10px;
+        border-radius: 8px;
+        margin-bottom: 15px;
+        font-size: 12px;
+        text-align: center;
+        border: 1px solid #fcc;
+        width: 100%;
+      }
+
+      .success-message {
+        background: #efe;
+        color: #0a0;
+        padding: 10px;
+        border-radius: 8px;
+        margin-bottom: 15px;
+        font-size: 12px;
+        text-align: center;
+        border: 1px solid #cfc;
+        width: 100%;
+      }
+
+      .info-box {
+        background: #e8f4ff;
+        border: 1px solid #5bb8e8;
+        border-radius: 8px;
+        padding: 12px;
+        margin-top: 20px;
+        width: 100%;
+      }
+
+      .info-box-title {
+        font-weight: bold;
+        color: #0d2b6e;
+        margin-bottom: 8px;
+        font-size: 12px;
+      }
+
+      .info-box-content {
+        color: #4a6080;
+        line-height: 1.5;
+        font-size: 11px;
+      }
+
+      .info-box-content strong {
+        color: #0d2b6e;
+      }
+
+      @keyframes slideIn {
+        from {
+          transform: translateX(100%);
+          opacity: 0;
+        }
+        to {
+          transform: translateX(0);
+          opacity: 1;
+        }
+      }
+
+      @media (max-width: 768px) {
+        .login-page {
+          flex-direction: column;
+        }
+        .right-panel {
+          width: 100%;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="login-page">
+      <!-- LEFT PANEL -->
+      <div class="left-panel">
+        <div class="logo-wrap">
+          <svg viewBox="0 0 80 80" fill="none">
+            <circle cx="40" cy="40" r="36" fill="#1A4BA8" />
+            <circle
+              cx="40"
+              cy="40"
+              r="36"
+              stroke="#5BB8E8"
+              stroke-width="2"
+              fill="none" />
+            <ellipse
+              cx="40"
+              cy="40"
+              rx="14"
+              ry="36"
+              stroke="#5BB8E8"
+              stroke-width="1.5"
+              fill="none" />
+            <line
+              x1="4"
+              y1="40"
+              x2="76"
+              y2="40"
+              stroke="#5BB8E8"
+              stroke-width="1.5" />
+            <ellipse
+              cx="40"
+              cy="40"
+              rx="36"
+              ry="14"
+              stroke="#5BB8E8"
+              stroke-width="1"
+              fill="none" />
+            <path
+              d="M18 32 Q40 24 62 32"
+              stroke="white"
+              stroke-width="2.5"
+              stroke-linecap="round"
+              fill="none" />
+            <path
+              d="M56 28l6 4-5 4"
+              stroke="white"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              fill="none" />
+          </svg>
+        </div>
+        <div class="bank-name-ar">بنـك الجـزائـر الخـارجـي</div>
+        <div class="bank-name-fr">Banque Extérieure d'Algérie</div>
+        <div class="divider"></div>
+        <div class="tagline">Portail de gestion interne des projets</div>
+      </div>
+
+      <!-- RIGHT PANEL -->
+      <div class="right-panel">
+        <div class="login-badge">
+          <div class="login-badge-dot"></div>
+          Accès sécurisé
+        </div>
+
+        <div class="login-title">Connexion</div>
+        <div class="login-subtitle">
+          Entrez vos identifiants pour accéder au portail
+        </div>
+
+        <div id="messageArea"></div>
+
+        <form id="loginForm" onsubmit="handleLogin(event)">
+          <div class="form-group">
+            <label class="form-label">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none">
+                <path
+                  d="M20 4H4a2 2 0 00-2 2v12a2 2 0 002 2h16a2 2 0 002-2V6a2 2 0 00-2-2z"
+                  stroke="#4A6080"
+                  stroke-width="1.8" />
+                <path
+                  d="M22 7l-10 7L2 7"
+                  stroke="#4A6080"
+                  stroke-width="1.8"
+                  stroke-linecap="round" />
+              </svg>
+              Email
+            </label>
+            <div class="input-wrap">
+              <div class="input-icon">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+                  <path
+                    d="M20 4H4a2 2 0 00-2 2v12a2 2 0 002 2h16a2 2 0 002-2V6a2 2 0 00-2-2z"
+                    stroke="#B0BDD0"
+                    stroke-width="1.5" />
+                  <path
+                    d="M22 7l-10 7L2 7"
+                    stroke="#B0BDD0"
+                    stroke-width="1.5"
+                    stroke-linecap="round" />
+                </svg>
+              </div>
+              <input
+                class="form-input"
+                type="email"
+                id="email"
+                name="email"
+                placeholder="prenom.nom@bea.dz"
+                required />
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none">
+                <rect
+                  x="3"
+                  y="11"
+                  width="18"
+                  height="11"
+                  rx="2"
+                  stroke="#4A6080"
+                  stroke-width="1.8" />
+                <path
+                  d="M7 11V7a5 5 0 0110 0v4"
+                  stroke="#4A6080"
+                  stroke-width="1.8"
+                  stroke-linecap="round" />
+              </svg>
+              Mot de passe
+            </label>
+            <div class="input-wrap">
+              <div class="input-icon">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+                  <rect
+                    x="3"
+                    y="11"
+                    width="18"
+                    height="11"
+                    rx="2"
+                    stroke="#B0BDD0"
+                    stroke-width="1.5" />
+                  <path
+                    d="M7 11V7a5 5 0 0110 0v4"
+                    stroke="#B0BDD0"
+                    stroke-width="1.5"
+                    stroke-linecap="round" />
+                </svg>
+              </div>
+              <input
+                class="form-input"
+                type="password"
+                id="password"
+                name="password"
+                placeholder="••••••••••"
+                required />
+              <div class="show-pwd" onclick="togglePassword()">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+                  <path
+                    d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"
+                    stroke="#8A9FBF"
+                    stroke-width="1.5" />
+                  <circle
+                    cx="12"
+                    cy="12"
+                    r="3"
+                    stroke="#8A9FBF"
+                    stroke-width="1.5" />
+                </svg>
+              </div>
+            </div>
+          </div>
+
+          <button type="submit" class="btn-login">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+              <path
+                d="M15 3h4a2 2 0 012 2v14a2 2 0 01-2 2h-4M10 17l5-5-5-5M15 12H3"
+                stroke="white"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round" />
+            </svg>
+            SE CONNECTER
+          </button>
+        </form>
+
+        <div class="login-footer">
+          <div class="footer-line"></div>
+          <div class="footer-text">Connexion sécurisée SSL</div>
+          <div class="footer-line"></div>
+        </div>
+
+        <div class="info-box">
+          <div class="info-box-title">🔐 Comptes de démonstration</div>
+          <div class="info-box-content">
+            <strong>Administrateur:</strong><br />
+            📧 admin@bea.dz<br />
+            🔑 admin123<br /><br />
+            <strong>Chef de projet:</strong><br />
+            📧 chef@bea.dz<br />
+            🔑 chef123<br /><br />
+            <strong>Consultant:</strong><br />
+            📧 consultant@bea.dz<br />
+            🔑 consult123<br /><br />
+            <strong>Utilisateur standard:</strong><br />
+            📧 user@bea.dz<br />
+            🔑 user123
+          </div>
+        </div>
+
+        <div class="security-note">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none">
+            <path
+              d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"
+              stroke="#5A78AA"
+              stroke-width="1.5"
+              fill="none" />
+            <path
+              d="M9 12l2 2 4-4"
+              stroke="#5A78AA"
+              stroke-width="1.5"
+              stroke-linecap="round"
+              stroke-linejoin="round" />
+          </svg>
+          <span
+            >Vos données sont protégées. Ne partagez jamais vos
+            identifiants.</span
+          >
+        </div>
+      </div>
+    </div>
+
+    <script>
+      async function handleLogin(event) {
+        event.preventDefault();
+
+        const email = document.getElementById("email").value;
+        const password = document.getElementById("password").value;
+
+        const submitBtn = document.querySelector(".btn-login");
+        const originalText = submitBtn.innerHTML;
+        submitBtn.innerHTML = "Connexion...";
+        submitBtn.disabled = true;
+
+        try {
+          const response = await fetch("/api/auth/login", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ email, password }),
+          });
+
+          if (response.ok) {
+            const data = await response.json();
+            localStorage.setItem("token", data.token);
+            localStorage.setItem("user", JSON.stringify(data));
+            showMessage("Connexion réussie! Redirection...", "success");
+            setTimeout(() => {
+              window.location.href = "/api/dashboard";
+            }, 1000);
+          } else {
+            showMessage("Email ou mot de passe incorrect", "error");
+          }
+        } catch (error) {
+          console.error("Login error:", error);
+          showMessage("Erreur de connexion au serveur", "error");
+        } finally {
+          submitBtn.innerHTML = originalText;
+          submitBtn.disabled = false;
+        }
+      }
+
+      function togglePassword() {
+        const passwordInput = document.getElementById("password");
+        const type = passwordInput.type === "password" ? "text" : "password";
+        passwordInput.type = type;
+      }
+
+      function showMessage(message, type) {
+        const messageArea = document.getElementById("messageArea");
+        const className =
+          type === "error" ? "error-message" : "success-message";
+        messageArea.innerHTML = `<div class="${className}">${message}</div>`;
+
+        setTimeout(() => {
+          if (messageArea.innerHTML.includes(message)) {
+            messageArea.innerHTML = "";
+          }
+        }, 5000);
+      }
+
+      // Check if we have users, if not show message
+      window.onload = function () {
+        console.log("Login page loaded");
+      };
+    </script>
+    <script th:src="@{/js/auth.js}"></script>
+    <script th:src="@{/js/projets.js}"></script>
+  </body>
+</html>

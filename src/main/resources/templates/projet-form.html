@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Formulaire projet - BEA Gestion Projets</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+    <div class="app-shell">
+        <!-- TOPBAR (same as dashboard) -->
+        <div class="topbar">
+            <div class="topbar-brand">
+                <div class="topbar-logo">
+                    <svg viewBox="0 0 32 32" fill="none">
+                        <circle cx="16" cy="16" r="13" fill="#0D2B6E"/>
+                        <ellipse cx="16" cy="16" rx="5" ry="13" stroke="#5BB8E8" stroke-width="1.4" fill="none"/>
+                        <line x1="3" y1="16" x2="29" y2="16" stroke="#5BB8E8" stroke-width="1.4"/>
+                        <circle cx="16" cy="16" r="13" stroke="#5BB8E8" stroke-width="1.4" fill="none"/>
+                    </svg>
+                </div>
+                <div class="brand-text">
+                    <div class="brand-name">Banque Extérieure d'Algérie</div>
+                    <div class="brand-sub">Système de gestion de projets</div>
+                </div>
+            </div>
+            <div class="topbar-right">
+                <div class="user-chip">
+                    <div class="user-chip-avatar"></div>
+                    <div class="user-chip-info">
+                        <div class="user-chip-name"></div>
+                        <div class="user-chip-role"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="body">
+            <!-- SIDEBAR (same as dashboard) -->
+            <div class="sidebar">
+                <div class="sidebar-profile">
+                    <div class="avatar-ring">
+                        <svg viewBox="0 0 36 36" fill="none">
+                            <circle cx="18" cy="13" r="7" fill="rgba(255,255,255,0.9)"/>
+                            <path d="M4 32c0-7.7 6.3-14 14-14s14 6.3 14 14" fill="rgba(255,255,255,0.9)"/>
+                        </svg>
+                    </div>
+                    <div class="sidebar-name"></div>
+                    <div class="sidebar-role"></div>
+                </div>
+
+                <div class="nav-section-label">Projets</div>
+                <div class="nav-item" onclick="window.location.href='/projets'">
+                    <div class="nav-icon">
+                        <svg viewBox="0 0 24 24" fill="none">
+                            <rect x="3" y="3" width="7" height="7" rx="1.5" stroke="rgba(255,255,255,0.5)" stroke-width="1.5"/>
+                            <rect x="14" y="3" width="7" height="7" rx="1.5" stroke="rgba(255,255,255,0.5)" stroke-width="1.5"/>
+                            <rect x="3" y="14" width="7" height="7" rx="1.5" stroke="rgba(255,255,255,0.5)" stroke-width="1.5"/>
+                            <rect x="14" y="14" width="7" height="7" rx="1.5" stroke="rgba(255,255,255,0.5)" stroke-width="1.5"/>
+                        </svg>
+                    </div>
+                    <span class="nav-label">Liste des projets</span>
+                </div>
+
+                <div class="nav-item active">
+                    <div class="nav-icon">
+                        <svg viewBox="0 0 24 24" fill="none">
+                            <rect x="3" y="5" width="18" height="16" rx="2" stroke="#5BB8E8" stroke-width="1.5" fill="none"/>
+                            <path d="M8 3v4M16 3v4M3 11h18" stroke="#5BB8E8" stroke-width="1.5" stroke-linecap="round"/>
+                        </svg>
+                    </div>
+                    <span class="nav-label">Nouveau projet</span>
+                </div>
+
+                <div class="sidebar-bottom">
+                    <div class="logout-btn" onclick="logout()">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none">
+                            <path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4M16 17l5-5-5-5M21 12H9" stroke="#E8896A" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                        <span class="logout-label">Déconnexion</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- MAIN CONTENT -->
+            <div class="main">
+                <div class="form-card">
+                    <form id="projectForm" onsubmit="handleProjectSubmit(event)">
+                        <input type="hidden" id="projectId">
+                        
+                        <div class="section-label">
+                            <svg width="11" height="11" viewBox="0 0 24 24" fill="none">
+                                <rect x="3" y="5" width="18" height="16" rx="2" stroke="#5BB8E8" stroke-width="2" fill="none"/>
+                                <path d="M8 3v4M16 3v4M3 11h18" stroke="#5BB8E8" stroke-width="2" stroke-linecap="round"/>
+                            </svg>
+                            Informations générales
+                        </div>
+
+                        <div class="field" style="margin-bottom:12px;">
+                            <label class="field-label">Nom du projet <span class="req">*</span></label>
+                            <input type="text" class="field-input" id="nom" required placeholder="Entrez le nom du projet">
+                        </div>
+
+                        <div class="form-grid2">
+                            <div class="field">
+                                <label class="field-label">Statut <span class="req">*</span></label>
+                                <select class="field-select" id="statut" required>
+                                    <option value="">-- Sélectionner --</option>
+                                    <option value="EN_COURS">En cours</option>
+                                    <option value="EN_ATTENTE">En attente</option>
+                                    <option value="TERMINE">Terminé</option>
+                                </select>
+                            </div>
+                            <div class="field">
+                                <label class="field-label">Type <span class="req">*</span></label>
+                                <select class="field-select" id="type" required>
+                                    <option value="">-- Sélectionner --</option>
+                                    <option value="INTERNE">Interne</option>
+                                    <option value="EXTERNE">Externe</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="form-grid2">
+                            <div class="field">
+                                <label class="field-label">Priorité</label>
+                                <select class="field-select" id="priorite">
+                                    <option value="">-- Sélectionner --</option>
+                                    <option value="Haute">Haute</option>
+                                    <option value="Moyenne">Moyenne</option>
+                                    <option value="Basse">Basse</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="section-label" style="margin-top:16px;">
+                            <svg width="11" height="11" viewBox="0 0 24 24" fill="none">
+                                <rect x="3" y="4" width="18" height="18" rx="2" stroke="#5BB8E8" stroke-width="2" fill="none"/>
+                                <path d="M3 10h18M8 2v4M16 2v4" stroke="#5BB8E8" stroke-width="2" stroke-linecap="round"/>
+                            </svg>
+                            Dates
+                        </div>
+
+                        <div class="form-grid3">
+                            <div class="field">
+                                <label class="field-label">Date début</label>
+                                <input type="date" class="field-input" id="dateDebut">
+                            </div>
+                            <div class="field">
+                                <label class="field-label">Deadline</label>
+                                <input type="date" class="field-input" id="deadline">
+                            </div>
+                        </div>
+
+                        <div class="section-label" style="margin-top:16px;">
+                            <svg width="11" height="11" viewBox="0 0 24 24" fill="none">
+                                <path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2" stroke="#5BB8E8" stroke-width="2" stroke-linecap="round"/>
+                                <circle cx="9" cy="7" r="4" stroke="#5BB8E8" stroke-width="2"/>
+                                <path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75" stroke="#5BB8E8" stroke-width="2" stroke-linecap="round"/>
+                            </svg>
+                            Description
+                        </div>
+
+                        <div class="field">
+                            <label class="field-label">Description</label>
+                            <textarea class="field-input" id="description" rows="4" placeholder="Décrivez le projet..."></textarea>
+                        </div>
+
+                        <div class="form-actions">
+                            <button type="button" class="btn-cancel" onclick="window.location.href='/projets'">Annuler</button>
+                            <button type="submit" class="btn-submit">
+                                <svg width="13" height="13" viewBox="0 0 24 24" fill="none">
+                                    <path d="M20 6L9 17l-5-5" stroke="white" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+                                </svg>
+                                Valider
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script th:src="@{/js/auth.js}"></script>
+    <script th:src="@{/js/projets.js}"></script>
+</body>
+</html>
