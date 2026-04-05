@@ -19,7 +19,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/projets")
-@CrossOrigin(origins = "*")
+
 public class ProjetController {
     
     private final ProjetService projetService;

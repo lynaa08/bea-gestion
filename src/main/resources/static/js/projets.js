@@ -192,7 +192,7 @@ async function createProject(projectData) {
         
         if (response.ok) {
             showNotification('Projet créé avec succès!', 'success');
-            window.location.href = '/projets';
+            window.location.href = '/api/projets-list';
         } else {
             const error = await response.json();
             showNotification(error.message || 'Erreur lors de la création', 'error');
@@ -214,7 +214,7 @@ async function updateProject(id, projectData) {
         
         if (response.ok) {
             showNotification('Projet modifié avec succès!', 'success');
-            window.location.href = '/projets';
+            window.location.href = '/api/projets-list';
         } else {
             const error = await response.json();
             showNotification(error.message || 'Erreur lors de la modification', 'error');
@@ -227,12 +227,12 @@ async function updateProject(id, projectData) {
 
 // View project
 function viewProject(id) {
-    window.location.href = `/projets/view/${id}`;
+    window.location.href = `/api/projets/view/${id}`;
 }
 
 // Edit project
 function editProject(id) {
-    window.location.href = `/projets/edit/${id}`;
+    window.location.href = `/api/projets/edit/${id}`;
 }
 
 // Delete project
@@ -345,7 +345,7 @@ function escapeHtml(text) {
 // Initialize on page load
 if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', () => {
-        if (window.location.pathname === '/projets') {
+        if (window.location.pathname === '/api/projets-list') {
             loadProjects();
             
             // Setup search
@@ -355,7 +355,7 @@ if (document.readyState === 'loading') {
                     if (e.key === 'Enter') searchProjects();
                 });
             }
-        } else if (window.location.pathname.includes('/projets/edit/')) {
+        } else if (window.location.pathname.includes('/api/projets/edit/')) {
             const id = window.location.pathname.split('/').pop();
             if (id && !isNaN(id)) {
                 loadProjectForEdit(id);

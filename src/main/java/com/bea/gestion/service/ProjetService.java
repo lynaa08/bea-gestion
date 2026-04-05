@@ -23,11 +23,16 @@ public class ProjetService {
     private final ProjetRepository projetRepository;
     private final UserRepository userRepository;
     private final ProjetMapper projetMapper;
+
+
     
-    public ProjetService(ProjetRepository projetRepository, UserRepository userRepository, ProjetMapper projetMapper) {
+ public ProjetService(ProjetRepository projetRepository,
+                     UserRepository userRepository,
+                     ProjetMapper projetMapper) {
         this.projetRepository = projetRepository;
         this.userRepository = userRepository;
         this.projetMapper = projetMapper;
+    
     }
     
     public Page<ProjetDTO> getAllProjets(String nom, StatutProjet statut, TypeProjet type, LocalDate dateDebut, Long chefProjetId, Pageable pageable) {
@@ -56,7 +61,9 @@ public class ProjetService {
             User chef = userRepository.findById(request.getChefProjetId()).orElse(null);
             projet.setChefProjet(chef);
         }
-        return projetMapper.toDTO(projetRepository.save(projet));
+        Projet saved = projetRepository.save(projet);
+        
+        return projetMapper.toDTO(saved);
     }
     
     public ProjetDTO updateProjet(Long id, CreateProjetRequest request) {
@@ -72,7 +79,9 @@ public class ProjetService {
             User chef = userRepository.findById(request.getChefProjetId()).orElse(null);
             projet.setChefProjet(chef);
         }
-        return projetMapper.toDTO(projetRepository.save(projet));
+        Projet saved = projetRepository.save(projet);
+      
+        return projetMapper.toDTO(saved);
     }
     
     public void deleteProjet(Long id) {
@@ -82,6 +91,9 @@ public class ProjetService {
     public ProjetDTO updateProjetStatut(Long id, StatutProjet statut) {
         Projet projet = projetRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Projet not found"));
         projet.setStatut(statut);
-        return projetMapper.toDTO(projetRepository.save(projet));
-    }
+        Projet saved = projetRepository.save(projet);
+        
+        return projetMapper.toDTO(saved);
+    } 
+
 }
