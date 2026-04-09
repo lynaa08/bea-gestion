@@ -5,7 +5,6 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
-import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -15,7 +14,6 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 
 @Configuration
 @EnableWebSecurity
-@EnableMethodSecurity
 public class SecurityConfig {
 
     private final JwtFilter jwtFilter;
@@ -35,18 +33,20 @@ public class SecurityConfig {
             .csrf(csrf -> csrf.disable())
             .cors(cors -> cors.disable())
             .authorizeHttpRequests(auth -> auth
-                // ✅ Pages HTML et ressources → toujours accessibles
+                // HTML pages - always accessible (auth handled client-side via JWT)
                 .requestMatchers(
-                    "/auth/**", "/login", "/dashboard",
-                    "/projets-list", "/projets/**", "/projets/new",
-                    "/users-list", "/users/**", "/users/new",
-                    "/agenda", "/parametres",
-                    "/css/**", "/js/**", "/images/**"
+                    "/", "/login", "/dashboard",
+                    "/projets-list", "/projets/new", "/projets/edit/**",
+                    "/users-list", "/users/new", "/users/edit/**",
+                    "/agenda", "/problemes",
+                    "/css/**", "/js/**", "/images/**",
+                    "/error"
                 ).permitAll()
-                // ✅ API REST → nécessite JWT
+                // Auth endpoint - public
+                .requestMatchers("/api/auth/**").permitAll()
+                // All other API calls require JWT
                 .anyRequest().authenticated()
             )
-            // ✅ JwtFilter lit le token et authentifie l'utilisateur
             .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
         return http.build();
     }

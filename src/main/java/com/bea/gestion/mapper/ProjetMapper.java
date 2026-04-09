@@ -6,7 +6,7 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class ProjetMapper {
-    
+
     public ProjetDTO toDTO(Projet projet) {
         if (projet == null) return null;
         ProjetDTO dto = new ProjetDTO();
@@ -21,23 +21,9 @@ public class ProjetMapper {
         dto.setPriorite(projet.getPriorite());
         if (projet.getChefProjet() != null) {
             dto.setChefProjetId(projet.getChefProjet().getId());
-            dto.setChefProjetNom(projet.getChefProjet().getNom() + " " + projet.getChefProjet().getPrenom());
+            dto.setChefProjetNom(projet.getChefProjet().getPrenom() + " " + projet.getChefProjet().getNom());
+            dto.setChefProjetMatricule(projet.getChefProjet().getMatricule());
         }
         return dto;
-    }
-    
-    public Projet toEntity(ProjetDTO dto) {
-        if (dto == null) return null;
-        Projet projet = new Projet();
-        projet.setId(dto.getId());
-        projet.setNom(dto.getNom());
-        projet.setDescription(dto.getDescription());
-        projet.setDateCreation(dto.getDateCreation());
-        projet.setDateDebut(dto.getDateDebut());
-        projet.setDeadline(dto.getDeadline());
-        projet.setStatut(dto.getStatut());
-        projet.setType(dto.getType());
-        projet.setPriorite(dto.getPriorite());
-        return projet;
     }
 }

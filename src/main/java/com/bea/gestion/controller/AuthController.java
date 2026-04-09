@@ -4,11 +4,10 @@ import com.bea.gestion.dto.LoginRequest;
 import com.bea.gestion.dto.LoginResponse;
 import com.bea.gestion.service.AuthService;
 import org.springframework.http.ResponseEntity;
- import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/auth")
-
+@RequestMapping("/api/auth")
 public class AuthController {
 
     private final AuthService authService;

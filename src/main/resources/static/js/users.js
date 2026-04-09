@@ -1,284 +1,161 @@
-const API_BASE_URL = '/api';
+const API_U = "/api";
 
-// Load all users
-async function loadUsers() {
-    const token = localStorage.getItem('token');
-    if (!token) {
-        window.location.href = '/api/login';
-        return;
-    }
-    
-    try {
-        const response = await fetch(`${API_BASE_URL}/users`, {
-            headers: {
-                'Authorization': `Bearer ${token}`
-            }
-        });
-        
-        if (response.ok) {
-            const users = await response.json();
-            displayUsers(users);
-        } else if (response.status === 403) {
-            document.getElementById('users-container').innerHTML = 
-                '<div class="error-message">⛔ Accès non autorisé. Réservé aux administrateurs.</div>';
-        }
-    } catch (error) {
-        console.error('Error loading users:', error);
-        showError('Erreur lors du chargement des utilisateurs');
-    }
-}
+async function handleUserSubmit(event) {
+  event.preventDefault();
+  const id = document.getElementById("userId").value;
+  const matricule = document.getElementById("matricule").value.trim();
 
-// Display users in a table
-function displayUsers(users) {
-    const container = document.getElementById('users-container');
-    if (!container) return;
-    
-    if (!users || users.length === 0) {
-        container.innerHTML = '<div class="empty-state">Aucun utilisateur trouvé</div>';
-        return;
-    }
-    
-    let html = `
-        <table class="data-table">
-            <thead>
-                <tr>
-                    <th>ID</th>
-                    <th>Nom complet</th>
-                    <th>Email</th>
-                    <th>Rôle</th>
-                    <th>Téléphone</th>
-                    <th>Actions</th>
-                </tr>
-            </thead>
-            <tbody>
-    `;
-    
-    users.forEach(user => {
-        const roleText = getRoleText(user.role);
-        html += `
-            <tr>
-                <td>${user.id}</td>
-                <td>${user.prenom} ${user.nom}</td>
-                <td>${user.email}</td>
-                <td><span class="role-badge role-${user.role.toLowerCase()}">${roleText}</span></td>
-                <td>${user.telephone || '-'}</td>
-                <td>
-                    <div class="action-btns">
-                        <button class="act-btn" onclick="editUser(${user.id})" title="Modifier">✏️</button>
-                        <button class="act-btn" onclick="deleteUser(${user.id})" title="Supprimer">🗑️</button>
-                    </div>
-                </td>
-            </tr>
-        `;
+  if (!matricule) {
+    showMsg("Le matricule est obligatoire", "error");
+    return;
+  }
+
+  const body = {
+    matricule,
+    nom: document.getElementById("nom").value,
+    prenom: document.getElementById("prenom").value,
+    email: document.getElementById("email").value,
+    telephone: document.getElementById("telephone").value,
+    password: document.getElementById("password").value,
+    role: document.getElementById("role").value,
+  };
+
+  try {
+    const url = id ? `${API_U}/users/${id}` : `${API_U}/users`;
+    const method = id ? "PUT" : "POST";
+    const res = await fetch(url, {
+      method,
+      headers: getAuthHeaders(),
+      body: JSON.stringify(body),
     });
-    
-    html += `
-            </tbody>
-        </table>
-    `;
-    
-    container.innerHTML = html;
-}
-
-// Create new user
-async function createUser(event) {
-    event.preventDefault();
-    
-    const token = localStorage.getItem('token');
-    const userData = {
-        nom: document.getElementById('nom').value,
-        prenom: document.getElementById('prenom').value,
-        email: document.getElementById('email').value,
-        password: document.getElementById('password').value,
-        telephone: document.getElementById('telephone').value,
-        fonction: document.getElementById('fonction').value,
-        matricule: document.getElementById('matricule').value,
-        role: document.getElementById('role').value
-    };
-    
-    try {
-        const response = await fetch(`${API_BASE_URL}/users`, {
-            method: 'POST',
-            headers: {
-                'Authorization': `Bearer ${token}`,
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(userData)
-        });
-        
-        if (response.ok) {
-            showMessage('✅ Utilisateur créé avec succès!', 'success');
-            setTimeout(() => {
-                window.location.href = '/api/users';
-            }, 1500);
-        } else {
-            const error = await response.json();
-            showMessage('❌ ' + (error.message || 'Erreur lors de la création'), 'error');
-        }
-    } catch (error) {
-        console.error('Error creating user:', error);
-        showMessage('❌ Erreur de connexion au serveur', 'error');
+    const data = await res.json().catch(() => ({}));
+    if (res.ok) {
+      showMsg("Utilisateur sauvegardé avec succès !", "success");
+      setTimeout(() => (window.location.href = "/users-list"), 1000);
+    } else {
+      showMsg(data.message || "Erreur: " + res.status, "error");
     }
+  } catch (e) {
+    showMsg("Erreur réseau", "error");
+  }
 }
 
-// Edit user
-async function editUser(id) {
-    window.location.href = `/api/users/edit/${id}`;
+function showMsg(msg, type) {
+  const el = document.getElementById("messageArea");
+  if (el) el.innerHTML = `<div class="${type}-message">${msg}</div>`;
 }
 
-// Load user for editing
-async function loadUserForEdit(id) {
-    const token = localStorage.getItem('token');
-    
-    try {
-        const response = await fetch(`${API_BASE_URL}/users/${id}`, {
-            headers: {
-                'Authorization': `Bearer ${token}`
-            }
-        });
-        
-        if (response.ok) {
-            const user = await response.json();
-            populateUserForm(user);
-            document.getElementById('userId').value = user.id;
-            document.getElementById('password').required = false;
-            document.querySelector('.page-title').textContent = 'Modifier un utilisateur';
-        }
-    } catch (error) {
-        console.error('Error loading user:', error);
-        showMessage('❌ Erreur lors du chargement', 'error');
+// ---- Users list ----
+async function loadUsers() {
+  try {
+    const res = await fetch(`${API_U}/users`, { headers: getAuthHeaders() });
+    if (!res.ok) {
+      renderUsersEmpty();
+      return;
     }
+    const users = await res.json();
+    renderUsers(users);
+  } catch (e) {
+    renderUsersEmpty();
+  }
 }
 
-// Populate form with user data
-function populateUserForm(user) {
-    document.getElementById('nom').value = user.nom || '';
-    document.getElementById('prenom').value = user.prenom || '';
-    document.getElementById('email').value = user.email || '';
-    document.getElementById('telephone').value = user.telephone || '';
-    document.getElementById('fonction').value = user.fonction || '';
-    document.getElementById('matricule').value = user.matricule || '';
-    document.getElementById('role').value = user.role || '';
+const roleLabels = {
+  ADMIN: "Administrateur",
+  DIRECTEUR: "Directeur",
+  CHEF_DEPARTEMENT: "Chef Département",
+  INGENIEUR_ETUDE_PMO: "PMO",
+  DEVELOPPEUR: "Développeur",
+};
+const roleColors = {
+  ADMIN: "#7c3aed",
+  DIRECTEUR: "#0d2b6e",
+  CHEF_DEPARTEMENT: "#0891b2",
+  INGENIEUR_ETUDE_PMO: "#059669",
+  DEVELOPPEUR: "#d97706",
+};
+
+function renderUsers(users) {
+  const tbody = document.querySelector(".data-table tbody");
+  if (!tbody) return;
+  if (users.length === 0) {
+    renderUsersEmpty();
+    return;
+  }
+  tbody.innerHTML = users
+    .map((u) => {
+      const color = roleColors[u.role] || "#8a9fbf";
+      const label = roleLabels[u.role] || u.role || "—";
+      return `<tr>
+      <td style="font-weight:700;color:#0d2b6e;letter-spacing:.04em">${u.matricule || "—"}</td>
+      <td>${u.prenom || ""} ${u.nom || ""}</td>
+      <td>${u.email || "—"}</td>
+      <td><span style="background:${color}22;color:${color};padding:3px 10px;border-radius:20px;font-size:11px;font-weight:700">${label}</span></td>
+      <td>${u.telephone || "—"}</td>
+      <td>
+        <button onclick="editUser(${u.id})" style="background:#eef4ff;border:none;padding:5px 12px;border-radius:6px;cursor:pointer;font-size:11px;color:#0d2b6e;font-weight:600">Modifier</button>
+        <button onclick="deleteUser(${u.id})" style="background:#fee;border:none;padding:5px 12px;border-radius:6px;cursor:pointer;font-size:11px;color:#c00;font-weight:600;margin-left:4px">Supprimer</button>
+      </td>
+    </tr>`;
+    })
+    .join("");
 }
 
-// Update user
-async function updateUser(event) {
-    event.preventDefault();
-    
-    const token = localStorage.getItem('token');
-    const userId = document.getElementById('userId').value;
-    
-    const userData = {
-        nom: document.getElementById('nom').value,
-        prenom: document.getElementById('prenom').value,
-        email: document.getElementById('email').value,
-        telephone: document.getElementById('telephone').value,
-        fonction: document.getElementById('fonction').value,
-        matricule: document.getElementById('matricule').value,
-        role: document.getElementById('role').value
-    };
-    
-    const password = document.getElementById('password').value;
-    if (password) {
-        userData.password = password;
-    }
-    
-    try {
-        const response = await fetch(`${API_BASE_URL}/users/${userId}`, {
-            method: 'PUT',
-            headers: {
-                'Authorization': `Bearer ${token}`,
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(userData)
-        });
-        
-        if (response.ok) {
-            showMessage('✅ Utilisateur modifié avec succès!', 'success');
-            setTimeout(() => {
-                window.location.href = '/api/users';
-            }, 1500);
-        } else {
-            const error = await response.json();
-            showMessage('❌ ' + (error.message || 'Erreur lors de la modification'), 'error');
-        }
-    } catch (error) {
-        console.error('Error updating user:', error);
-        showMessage('❌ Erreur de connexion au serveur', 'error');
-    }
+function renderUsersEmpty() {
+  const tbody = document.querySelector(".data-table tbody");
+  if (tbody)
+    tbody.innerHTML =
+      '<tr><td colspan="6" style="text-align:center;padding:40px;color:#b0bdd0">Aucun utilisateur trouvé</td></tr>';
 }
 
-// Delete user
+function editUser(id) {
+  window.location.href = "/users/edit/" + id;
+}
+
 async function deleteUser(id) {
-    if (confirm('Êtes-vous sûr de vouloir supprimer cet utilisateur ?')) {
-        const token = localStorage.getItem('token');
-        
-        try {
-            const response = await fetch(`${API_BASE_URL}/users/${id}`, {
-                method: 'DELETE',
-                headers: {
-                    'Authorization': `Bearer ${token}`
-                }
-            });
-            
-            if (response.ok) {
-                showMessage('✅ Utilisateur supprimé avec succès!', 'success');
-                loadUsers();
-            } else {
-                showMessage('❌ Erreur lors de la suppression', 'error');
-            }
-        } catch (error) {
-            console.error('Error deleting user:', error);
-            showMessage('❌ Erreur de connexion au serveur', 'error');
-        }
-    }
+  if (!confirm("Supprimer cet utilisateur ?")) return;
+  try {
+    const res = await fetch(`${API_U}/users/${id}`, {
+      method: "DELETE",
+      headers: getAuthHeaders(),
+    });
+    if (res.ok) loadUsers();
+    else alert("Erreur suppression");
+  } catch (e) {
+    alert("Erreur réseau");
+  }
 }
 
-// Handle form submission
-function handleUserSubmit(event) {
-    const userId = document.getElementById('userId')?.value;
-    if (userId) {
-        updateUser(event);
-    } else {
-        createUser(event);
-    }
+// Load user for edit
+async function loadUserForEdit() {
+  const parts = window.location.pathname.split("/");
+  const idx = parts.indexOf("edit");
+  if (idx === -1) return;
+  const id = parts[idx + 1];
+  if (!id) return;
+
+  try {
+    const res = await fetch(`${API_U}/users/${id}`, {
+      headers: getAuthHeaders(),
+    });
+    if (!res.ok) return;
+    const u = await res.json();
+    document.getElementById("userId").value = u.id;
+    document.getElementById("matricule").value = u.matricule || "";
+    document.getElementById("nom").value = u.nom || "";
+    document.getElementById("prenom").value = u.prenom || "";
+    document.getElementById("email").value = u.email || "";
+    document.getElementById("telephone").value = u.telephone || "";
+    document.getElementById("role").value = u.role || "";
+    const title = document.getElementById("pageTitle");
+    if (title)
+      title.textContent =
+        "Modifier : " + (u.prenom || "") + " " + (u.nom || "");
+  } catch (e) {}
 }
 
-// Helper functions
-function getRoleText(role) {
-    switch(role) {
-        case 'ADMIN': return 'Administrateur';
-        case 'CHEF_PROJET': return 'Chef de projet';
-        case 'CONSULTANT': return 'Consultant';
-        default: return role;
-    }
-}
-
-function showMessage(message, type) {
-    const messageArea = document.getElementById('messageArea');
-    if (messageArea) {
-        const className = type === 'error' ? 'error-message' : 'success-message';
-        messageArea.innerHTML = `<div class="${className}">${message}</div>`;
-        setTimeout(() => {
-            messageArea.innerHTML = '';
-        }, 3000);
-    } else {
-        alert(message);
-    }
-}
-
-function showError(message) {
-    showMessage(message, 'error');
-}
-
-// Initialize based on page
-document.addEventListener('DOMContentLoaded', () => {
-    if (window.location.pathname === '/api/users') {
-        loadUsers();
-    } else if (window.location.pathname.includes('/api/users/edit/')) {
-        const id = window.location.pathname.split('/').pop();
-        if (id && !isNaN(id)) {
-            loadUserForEdit(id);
-        }
-    }
+document.addEventListener("DOMContentLoaded", () => {
+  const path = window.location.pathname;
+  if (path.includes("users-list")) loadUsers();
+  if (path.includes("users/edit")) loadUserForEdit();
 });

@@ -85,7 +85,7 @@
           <div class="nav-section-label">Projets</div>
           <div
             class="nav-item"
-            onclick="window.location.href = '/api/projets-list'">
+            onclick="window.location.href = '/projets-list'">
             <div class="nav-icon">
               <svg viewBox="0 0 24 24" fill="none">
                 <rect
@@ -129,9 +129,7 @@
           <div class="nav-section-label" style="margin-top: 8px">
             Administration
           </div>
-          <div
-            class="nav-item"
-            onclick="window.location.href = '/api/users-list'">
+          <div class="nav-item" onclick="window.location.href = '/users-list'">
             <div class="nav-icon">
               <svg viewBox="0 0 24 24" fill="none">
                 <circle
@@ -154,9 +152,7 @@
             </div>
             <span class="nav-label">Créer User</span>
           </div>
-          <div
-            class="nav-item"
-            onclick="window.location.href = '/api/projets/new'">
+          <div class="nav-item" onclick="window.location.href = '/projets/new'">
             <div class="nav-icon">
               <svg viewBox="0 0 24 24" fill="none">
                 <rect
@@ -185,7 +181,7 @@
 
           <!-- AGENDA -->
           <div class="nav-section-label" style="margin-top: 8px">Agenda</div>
-          <div class="nav-item" onclick="window.location.href = '/api/agenda'">
+          <div class="nav-item" onclick="window.location.href = '/agenda'">
             <div class="nav-icon">
               <svg viewBox="0 0 24 24" fill="none">
                 <rect
@@ -211,9 +207,7 @@
           <div class="nav-section-label" style="margin-top: 8px">
             Paramètres
           </div>
-          <div
-            class="nav-item"
-            onclick="window.location.href = '/api/parametres'">
+          <div class="nav-item" onclick="window.location.href = '/parametres'">
             <div class="nav-icon">
               <svg viewBox="0 0 24 24" fill="none">
                 <circle
@@ -231,6 +225,24 @@
             <span class="nav-label">Paramètres</span>
           </div>
 
+          <div class="nav-item" onclick="window.location.href = '/problemes'">
+            <div class="nav-icon">
+              <svg viewBox="0 0 24 24" fill="none">
+                <circle
+                  cx="12"
+                  cy="12"
+                  r="10"
+                  stroke="rgba(255,255,255,0.5)"
+                  stroke-width="1.5" />
+                <path
+                  d="M12 8v4M12 16h.01"
+                  stroke="rgba(255,255,255,0.5)"
+                  stroke-width="1.8"
+                  stroke-linecap="round" />
+              </svg>
+            </div>
+            <span class="nav-label">Problèmes</span>
+          </div>
           <div class="sidebar-bottom">
             <div class="logout-btn" onclick="logout()">
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none">
@@ -251,25 +263,19 @@
           <div class="quick-cards">
             <div
               class="qcard accent"
-              onclick="
-                window.location.href = '/api/projets-list?filter=encours'
-              ">
+              onclick="window.location.href = '/projets-list?filter=encours'">
               <div class="qcard-num">0</div>
               <div class="qcard-label">En cours</div>
             </div>
             <div
               class="qcard warn"
-              onclick="
-                window.location.href = '/api/projets-list?filter=attente'
-              ">
+              onclick="window.location.href = '/projets-list?filter=attente'">
               <div class="qcard-num">0</div>
               <div class="qcard-label">En attente</div>
             </div>
             <div
               class="qcard"
-              onclick="
-                window.location.href = '/api/projets-list?filter=termine'
-              ">
+              onclick="window.location.href = '/projets-list?filter=termine'">
               <div class="qcard-num">0</div>
               <div class="qcard-label">Terminés</div>
             </div>

@@ -35,8 +35,8 @@ public class SetupController {
         
         try {
             createUser("ADM-001", "admin@bea.dz", "admin123", "Admin", "System", Role.ADMIN, "Administrateur", result);
-            createUser("CHF-001", "chef@bea.dz", "chef123", "Benali", "Karim", Role.CHEF_PROJET, "Chef de projet", result);
-            createUser("CON-001", "consultant@bea.dz", "consult123", "Said", "Fatima", Role.CONSULTANT, "Consultant", result);
+            createUser("CHF-001", "chef@bea.dz", "chef123", "Benali", "Karim", Role.CHEF_DEPARTEMENT, "Chef de département", result);
+            createUser("CON-001", "consultant@bea.dz", "consult123", "Said", "Fatima", Role.DEVELOPPEUR, "Développeur", result);
 
             result.append("<hr><strong>Total users: " + userRepository.count() + "</strong><br>");
         } catch (Exception e) {
@@ -56,7 +56,7 @@ public class SetupController {
             user.setNom(nom);
             user.setPrenom(prenom);
             user.setRole(role);
-            user.setFonction(fonction);
+    
             userRepository.save(user);
             result.append("✅ Créé: " + matricule + " / " + password + "<br>");
         } else {

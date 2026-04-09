@@ -1,8 +1,5 @@
 package com.bea.gestion.dto;
 
-import lombok.Data;
-
-@Data
 public class LoginResponse {
     private String token;
     private String type = "Bearer";
@@ -11,13 +8,25 @@ public class LoginResponse {
     private String nom;
     private String prenom;
     private String role;
-    
-    public LoginResponse(String token, Long id, String email, String nom, String prenom, String role) {
+    private String matricule;
+
+    public LoginResponse(String token, Long id, String email,
+                         String nom, String prenom, String role, String matricule) {
         this.token = token;
         this.id = id;
         this.email = email;
         this.nom = nom;
         this.prenom = prenom;
         this.role = role;
+        this.matricule = matricule;
     }
+
+    public String getToken() { return token; }
+    public String getType() { return type; }
+    public Long getId() { return id; }
+    public String getEmail() { return email; }
+    public String getNom() { return nom; }
+    public String getPrenom() { return prenom; }
+    public String getRole() { return role; }
+    public String getMatricule() { return matricule; }
 }

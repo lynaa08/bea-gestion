@@ -9,7 +9,7 @@ package com.bea.gestion;
         SpringApplication.run(GestionApplication.class, args);
         System.out.println("========================================");
         System.out.println("Application started successfully!");
-        System.out.println("Login at: http://localhost:8082/api/login");
+        System.out.println("Login at: http://localhost:8081/login");
         System.out.println("========================================");
     }
  }

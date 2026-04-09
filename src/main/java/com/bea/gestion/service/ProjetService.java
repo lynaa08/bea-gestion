@@ -13,40 +13,44 @@ import com.bea.gestion.repository.UserRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+
 import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
 public class ProjetService {
-    
+
     private final ProjetRepository projetRepository;
     private final UserRepository userRepository;
     private final ProjetMapper projetMapper;
+    private final NotificationService notificationService;   // ← NEW
 
+    public ProjetService(ProjetRepository projetRepository,
+                         UserRepository userRepository,
+                         ProjetMapper projetMapper,
+                         NotificationService notificationService) {  // ← NEW
+        this.projetRepository    = projetRepository;
+        this.userRepository      = userRepository;
+        this.projetMapper        = projetMapper;
+        this.notificationService = notificationService;               // ← NEW
+    }
 
-    
- public ProjetService(ProjetRepository projetRepository,
-                     UserRepository userRepository,
-                     ProjetMapper projetMapper) {
-        this.projetRepository = projetRepository;
-        this.userRepository = userRepository;
-        this.projetMapper = projetMapper;
-    
+    public Page<ProjetDTO> getAllProjets(String nom, StatutProjet statut, TypeProjet type,
+                                         LocalDate dateDebut, Long chefProjetId, Pageable pageable) {
+        return projetRepository.findByFilters(nom, statut, type, dateDebut, chefProjetId, pageable)
+                               .map(projetMapper::toDTO);
     }
-    
-    public Page<ProjetDTO> getAllProjets(String nom, StatutProjet statut, TypeProjet type, LocalDate dateDebut, Long chefProjetId, Pageable pageable) {
-        return projetRepository.findByFilters(nom, statut, type, dateDebut, chefProjetId, pageable).map(projetMapper::toDTO);
-    }
-    
+
     public List<ProjetDTO> getAllProjetsList() {
         return projetRepository.findAll().stream().map(projetMapper::toDTO).collect(Collectors.toList());
     }
-    
+
     public ProjetDTO getProjetById(Long id) {
-        return projetMapper.toDTO(projetRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Projet not found")));
+        return projetMapper.toDTO(projetRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Projet not found")));
     }
-    
+
     public ProjetDTO createProjet(CreateProjetRequest request) {
         Projet projet = new Projet();
         projet.setNom(request.getNom());
@@ -57,17 +61,25 @@ public class ProjetService {
         projet.setStatut(request.getStatut() != null ? request.getStatut() : StatutProjet.EN_ATTENTE);
         projet.setType(request.getType());
         projet.setPriorite(request.getPriorite());
+
         if (request.getChefProjetId() != null) {
             User chef = userRepository.findById(request.getChefProjetId()).orElse(null);
             projet.setChefProjet(chef);
         }
+
         Projet saved = projetRepository.save(projet);
-        
+
+        // ── Notification ──────────────────────────────────────────────────────
+        notificationService.notifyProjetCreated(saved);
+        // ─────────────────────────────────────────────────────────────────────
+
         return projetMapper.toDTO(saved);
     }
-    
+
     public ProjetDTO updateProjet(Long id, CreateProjetRequest request) {
-        Projet projet = projetRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Projet not found"));
+        Projet projet = projetRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Projet not found"));
+
         projet.setNom(request.getNom());
         projet.setDescription(request.getDescription());
         projet.setDateDebut(request.getDateDebut());
@@ -75,25 +87,32 @@ public class ProjetService {
         projet.setStatut(request.getStatut());
         projet.setType(request.getType());
         projet.setPriorite(request.getPriorite());
+
         if (request.getChefProjetId() != null) {
             User chef = userRepository.findById(request.getChefProjetId()).orElse(null);
             projet.setChefProjet(chef);
         }
+
         Projet saved = projetRepository.save(projet);
-      
         return projetMapper.toDTO(saved);
     }
-    
+
     public void deleteProjet(Long id) {
         projetRepository.deleteById(id);
     }
-    
+
     public ProjetDTO updateProjetStatut(Long id, StatutProjet statut) {
-        Projet projet = projetRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Projet not found"));
+        Projet projet = projetRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Projet not found"));
+
+        StatutProjet ancienStatut = projet.getStatut();   // ← save old status
         projet.setStatut(statut);
         Projet saved = projetRepository.save(projet);
-        
-        return projetMapper.toDTO(saved);
-    } 
 
+        // ── Notification ──────────────────────────────────────────────────────
+        notificationService.notifyStatutChanged(saved, ancienStatut);
+        // ─────────────────────────────────────────────────────────────────────
+
+        return projetMapper.toDTO(saved);
+    }
 }

@@ -4,17 +4,19 @@
 
 async function loadSidebarBadges() {
   try {
-    const resp = await fetch('/api/dashboard/stats', { headers: getAuthHeaders() });
+    const resp = await fetch("/api/dashboard/stats", {
+      headers: getAuthHeaders(),
+    });
     if (!resp.ok) return;
     const stats = await resp.json();
 
-    const b1 = document.getElementById('badge-encours');
-    const b2 = document.getElementById('badge-attente');
-    const b3 = document.getElementById('badge-termine');
+    const b1 = document.getElementById("badge-encours");
+    const b2 = document.getElementById("badge-attente");
+    const b3 = document.getElementById("badge-termine");
 
-    if (b1) b1.textContent = stats.EN_COURS   || 0;
-    if (b2) b2.textContent = stats.EN_ATTENTE  || 0;
-    if (b3) b3.textContent = stats.TERMINE     || 0;
+    if (b1) b1.textContent = stats.EN_COURS || 0;
+    if (b2) b2.textContent = stats.EN_ATTENTE || 0;
+    if (b3) b3.textContent = stats.TERMINE || 0;
   } catch (e) {
     // Silently fail — badges will stay at 0
   }
