@@ -1,198 +1,435 @@
 <!doctype html>
 <html xmlns:th="http://www.thymeleaf.org">
-<head>
-  <meta charset="UTF-8"/>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Utilisateurs - BEA</title>
-  <link rel="stylesheet" th:href="@{/css/style.css}"/>
-  <style>
-    .users-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:20px}
-    .btn-add{background:#0d2b6e;color:white;padding:10px 20px;border:none;border-radius:8px;cursor:pointer;display:flex;align-items:center;gap:8px;font-size:13px;font-weight:600}
-    .btn-add:hover{background:#1a3f8f}
-    .empty-state{text-align:center;padding:60px;color:#8a9fbf;font-size:13px}
-    .search-bar{display:flex;align-items:center;gap:10px;margin-bottom:16px}
-    .search-input-u{padding:8px 14px;border:1.5px solid #d8e6f2;border-radius:8px;font-size:13px;outline:none;width:260px}
-    .search-input-u:focus{border-color:#5bb8e8}
-  </style>
-</head>
-<body>
-<div class="app-shell">
-  <div class="topbar">
-    <div class="topbar-brand">
-      <div class="topbar-logo">
-        <svg viewBox="0 0 32 32" fill="none" width="20" height="20">
-          <circle cx="16" cy="16" r="13" fill="#0D2B6E"/>
-          <ellipse cx="16" cy="16" rx="5" ry="13" stroke="#5BB8E8" stroke-width="1.4" fill="none"/>
-          <line x1="3" y1="16" x2="29" y2="16" stroke="#5BB8E8" stroke-width="1.4"/>
-          <circle cx="16" cy="16" r="13" stroke="#5BB8E8" stroke-width="1.4" fill="none"/>
-        </svg>
-      </div>
-      <div class="brand-text">
-        <div class="brand-name">Banque Extérieure d'Algérie</div>
-        <div class="brand-sub">Gestion de projets</div>
-      </div>
-    </div>
-    <div class="topbar-right">
-      <div class="notif-btn" style="position:relative;cursor:pointer">
-        <svg width="15" height="15" viewBox="0 0 24 24" fill="none">
-          <path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9M13.73 21a2 2 0 01-3.46 0" stroke="#4A6A9E" stroke-width="1.8" stroke-linecap="round"/>
-        </svg>
-        <div class="notif-dot"></div>
-      </div>
-      <div class="user-chip">
-        <div class="user-chip-avatar"></div>
-        <div class="user-chip-info">
-          <div class="user-chip-name"></div>
-          <div class="user-chip-role"></div>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <div class="body">
-    <div class="sidebar">
-      <div class="sidebar-profile">
-        <div class="avatar-ring">
-          <svg viewBox="0 0 36 36" fill="none">
-            <circle cx="18" cy="13" r="7" fill="rgba(255,255,255,0.9)"/>
-            <path d="M4 32c0-7.7 6.3-14 14-14s14 6.3 14 14" fill="rgba(255,255,255,0.9)"/>
-          </svg>
-        </div>
-        <div class="sidebar-name"></div>
-        <div class="sidebar-role"></div>
-      </div>
-
-      <div class="nav-section-label">Navigation</div>
-      <div class="nav-item" onclick="window.location.href='/dashboard'">
-        <div class="nav-icon"><svg viewBox="0 0 24 24" fill="none"><rect x="3" y="3" width="7" height="7" rx="1.5" stroke="rgba(255,255,255,0.5)" stroke-width="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5" stroke="rgba(255,255,255,0.5)" stroke-width="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5" stroke="rgba(255,255,255,0.5)" stroke-width="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5" stroke="rgba(255,255,255,0.5)" stroke-width="1.5"/></svg></div>
-        <span class="nav-label">Dashboard</span>
-      </div>
-      <div class="nav-item" onclick="window.location.href='/projets-list'">
-        <div class="nav-icon"><svg viewBox="0 0 24 24" fill="none"><rect x="3" y="5" width="18" height="16" rx="2" stroke="rgba(255,255,255,0.5)" stroke-width="1.5" fill="none"/><path d="M8 3v4M16 3v4M3 11h18" stroke="rgba(255,255,255,0.5)" stroke-width="1.5" stroke-linecap="round"/></svg></div>
-        <span class="nav-label">Liste des projets</span>
-      </div>
-      <div class="nav-item" onclick="window.location.href='/projets/new'">
-        <div class="nav-icon"><svg viewBox="0 0 24 24" fill="none"><path d="M12 5v14M5 12h14" stroke="rgba(255,255,255,0.5)" stroke-width="2" stroke-linecap="round"/></svg></div>
-        <span class="nav-label">Créer un projet</span>
-      </div>
-      <div class="nav-section-label" style="margin-top:8px">Administration</div>
-      <div class="nav-item active">
-        <div class="nav-icon"><svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="8" r="4" stroke="#5BB8E8" stroke-width="1.5"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7" stroke="#5BB8E8" stroke-width="1.5" stroke-linecap="round"/><path d="M19 8v6M22 11h-6" stroke="#5BB8E8" stroke-width="1.5" stroke-linecap="round"/></svg></div>
-        <span class="nav-label">Utilisateurs</span>
-      </div>
-      <div class="nav-item" onclick="window.location.href='/problemes'">
-        <div class="nav-icon"><svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="10" stroke="rgba(255,255,255,0.5)" stroke-width="1.5"/><path d="M12 8v4M12 16h.01" stroke="rgba(255,255,255,0.5)" stroke-width="1.8" stroke-linecap="round"/></svg></div>
-        <span class="nav-label">Problèmes</span>
-      </div>
-
-      <div class="sidebar-bottom">
-        <div class="logout-btn" onclick="logout()">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none">
-            <path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4M16 17l5-5-5-5M21 12H9" stroke="#E8896A" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
-          </svg>
-          <span class="logout-label">Déconnexion</span>
-        </div>
-      </div>
-    </div>
-
-    <div class="main">
-      <div class="table-card">
-        <div class="users-header">
-          <div>
-            <div class="page-title">Gestion des utilisateurs</div>
-            <div class="page-sub">Consultez et gérez tous les utilisateurs enregistrés.</div>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Utilisateurs - BEA</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}" />
+    <style>
+      .users-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 20px;
+      }
+      .btn-add {
+        background: #0d2b6e;
+        color: white;
+        padding: 10px 20px;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-size: 13px;
+        font-weight: 600;
+      }
+      .btn-add:hover {
+        background: #1a3f8f;
+      }
+      .empty-state {
+        text-align: center;
+        padding: 60px;
+        color: #8a9fbf;
+        font-size: 13px;
+      }
+      .search-bar {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        margin-bottom: 16px;
+      }
+      .search-input-u {
+        padding: 8px 14px;
+        border: 1.5px solid #d8e6f2;
+        border-radius: 8px;
+        font-size: 13px;
+        outline: none;
+        width: 260px;
+      }
+      .search-input-u:focus {
+        border-color: #5bb8e8;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="app-shell">
+      <div class="topbar">
+        <div class="topbar-brand">
+          <div class="topbar-logo">
+            <svg viewBox="0 0 32 32" fill="none" width="20" height="20">
+              <circle cx="16" cy="16" r="13" fill="#0D2B6E" />
+              <ellipse
+                cx="16"
+                cy="16"
+                rx="5"
+                ry="13"
+                stroke="#5BB8E8"
+                stroke-width="1.4"
+                fill="none"
+              />
+              <line
+                x1="3"
+                y1="16"
+                x2="29"
+                y2="16"
+                stroke="#5BB8E8"
+                stroke-width="1.4"
+              />
+              <circle
+                cx="16"
+                cy="16"
+                r="13"
+                stroke="#5BB8E8"
+                stroke-width="1.4"
+                fill="none"
+              />
+            </svg>
           </div>
-          <button class="btn-add" onclick="window.location.href='/users/new'">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M12 5v14M5 12h14" stroke="white" stroke-width="2.2" stroke-linecap="round"/></svg>
-            Nouvel utilisateur
-          </button>
+          <div class="brand-text">
+            <div class="brand-name">Banque Extérieure d'Algérie</div>
+            <div class="brand-sub">Gestion de projets</div>
+          </div>
+        </div>
+        <div class="topbar-right">
+          <div class="notif-btn" style="position: relative; cursor: pointer">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none">
+              <path
+                d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9M13.73 21a2 2 0 01-3.46 0"
+                stroke="#4A6A9E"
+                stroke-width="1.8"
+                stroke-linecap="round"
+              />
+            </svg>
+            <div class="notif-dot"></div>
+          </div>
+          <div class="user-chip">
+            <div class="user-chip-avatar"></div>
+            <div class="user-chip-info">
+              <div class="user-chip-name"></div>
+              <div class="user-chip-role"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="body">
+        <div class="sidebar">
+          <div class="sidebar-profile">
+            <div class="avatar-ring">
+              <svg viewBox="0 0 36 36" fill="none">
+                <circle cx="18" cy="13" r="7" fill="rgba(255,255,255,0.9)" />
+                <path
+                  d="M4 32c0-7.7 6.3-14 14-14s14 6.3 14 14"
+                  fill="rgba(255,255,255,0.9)"
+                />
+              </svg>
+            </div>
+            <div class="sidebar-name"></div>
+            <div class="sidebar-role"></div>
+          </div>
+
+          <div class="nav-section-label">Navigation</div>
+          <div class="nav-item" onclick="window.location.href = '/dashboard'">
+            <div class="nav-icon">
+              <svg viewBox="0 0 24 24" fill="none">
+                <rect
+                  x="3"
+                  y="3"
+                  width="7"
+                  height="7"
+                  rx="1.5"
+                  stroke="rgba(255,255,255,0.5)"
+                  stroke-width="1.5"
+                />
+                <rect
+                  x="14"
+                  y="3"
+                  width="7"
+                  height="7"
+                  rx="1.5"
+                  stroke="rgba(255,255,255,0.5)"
+                  stroke-width="1.5"
+                />
+                <rect
+                  x="3"
+                  y="14"
+                  width="7"
+                  height="7"
+                  rx="1.5"
+                  stroke="rgba(255,255,255,0.5)"
+                  stroke-width="1.5"
+                />
+                <rect
+                  x="14"
+                  y="14"
+                  width="7"
+                  height="7"
+                  rx="1.5"
+                  stroke="rgba(255,255,255,0.5)"
+                  stroke-width="1.5"
+                />
+              </svg>
+            </div>
+            <span class="nav-label">Dashboard</span>
+          </div>
+          <div
+            class="nav-item"
+            onclick="window.location.href = '/projets-list'"
+          >
+            <div class="nav-icon">
+              <svg viewBox="0 0 24 24" fill="none">
+                <rect
+                  x="3"
+                  y="5"
+                  width="18"
+                  height="16"
+                  rx="2"
+                  stroke="rgba(255,255,255,0.5)"
+                  stroke-width="1.5"
+                  fill="none"
+                />
+                <path
+                  d="M8 3v4M16 3v4M3 11h18"
+                  stroke="rgba(255,255,255,0.5)"
+                  stroke-width="1.5"
+                  stroke-linecap="round"
+                />
+              </svg>
+            </div>
+            <span class="nav-label">Liste des projets</span>
+          </div>
+          <div class="nav-item" onclick="window.location.href = '/projets/new'">
+            <div class="nav-icon">
+              <svg viewBox="0 0 24 24" fill="none">
+                <path
+                  d="M12 5v14M5 12h14"
+                  stroke="rgba(255,255,255,0.5)"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                />
+              </svg>
+            </div>
+            <span class="nav-label">Créer un projet</span>
+          </div>
+          <div class="nav-section-label" style="margin-top: 8px">
+            Administration
+          </div>
+          <div class="nav-item active">
+            <div class="nav-icon">
+              <svg viewBox="0 0 24 24" fill="none">
+                <circle
+                  cx="12"
+                  cy="8"
+                  r="4"
+                  stroke="#5BB8E8"
+                  stroke-width="1.5"
+                />
+                <path
+                  d="M4 20c0-4 3.6-7 8-7s8 3 8 7"
+                  stroke="#5BB8E8"
+                  stroke-width="1.5"
+                  stroke-linecap="round"
+                />
+                <path
+                  d="M19 8v6M22 11h-6"
+                  stroke="#5BB8E8"
+                  stroke-width="1.5"
+                  stroke-linecap="round"
+                />
+              </svg>
+            </div>
+            <span class="nav-label">Utilisateurs</span>
+          </div>
+          <div class="nav-item" onclick="window.location.href = '/problemes'">
+            <div class="nav-icon">
+              <svg viewBox="0 0 24 24" fill="none">
+                <circle
+                  cx="12"
+                  cy="12"
+                  r="10"
+                  stroke="rgba(255,255,255,0.5)"
+                  stroke-width="1.5"
+                />
+                <path
+                  d="M12 8v4M12 16h.01"
+                  stroke="rgba(255,255,255,0.5)"
+                  stroke-width="1.8"
+                  stroke-linecap="round"
+                />
+              </svg>
+            </div>
+            <span class="nav-label">Problèmes</span>
+          </div>
+
+          <div class="sidebar-bottom">
+            <div class="logout-btn" onclick="logout()">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none">
+                <path
+                  d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4M16 17l5-5-5-5M21 12H9"
+                  stroke="#E8896A"
+                  stroke-width="1.8"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                />
+              </svg>
+              <span class="logout-label">Déconnexion</span>
+            </div>
+          </div>
         </div>
 
-        <div class="search-bar">
-          <input class="search-input-u" type="text" id="searchInput" placeholder="Rechercher par nom ou matricule…" oninput="filterUsers()"/>
-        </div>
+        <div class="main">
+          <div class="table-card">
+            <div class="users-header">
+              <div>
+                <div class="page-title">Gestion des utilisateurs</div>
+                <div class="page-sub">
+                  Consultez et gérez tous les utilisateurs enregistrés.
+                </div>
+              </div>
+              <button
+                class="btn-add"
+                onclick="window.location.href = '/users/new'"
+              >
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none">
+                  <path
+                    d="M12 5v14M5 12h14"
+                    stroke="white"
+                    stroke-width="2.2"
+                    stroke-linecap="round"
+                  />
+                </svg>
+                Nouvel utilisateur
+              </button>
+            </div>
 
-        <table class="data-table">
-          <thead>
-            <tr>
-              <th>Matricule</th>
-              <th>Nom complet</th>
-              <th>Email</th>
-              <th>Rôle</th>
-              <th>Téléphone</th>
-              <th>Actions</th>
-            </tr>
-          </thead>
-          <tbody id="usersTableBody">
-            <tr><td colspan="6" style="text-align:center;padding:40px;color:#b0bdd0">Chargement...</td></tr>
-          </tbody>
-        </table>
+            <div class="search-bar">
+              <input
+                class="search-input-u"
+                type="text"
+                id="searchInput"
+                placeholder="Rechercher par nom ou matricule…"
+                oninput="filterUsers()"
+              />
+            </div>
+
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>Matricule</th>
+                  <th>Nom complet</th>
+                  <th>Email</th>
+                  <th>Rôle</th>
+                  <th>Téléphone</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody id="usersTableBody">
+                <tr>
+                  <td
+                    colspan="6"
+                    style="text-align: center; padding: 40px; color: #b0bdd0"
+                  >
+                    Chargement...
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
       </div>
     </div>
-  </div>
-</div>
 
-<script th:src="@{/js/auth.js}"></script>
-<script th:src="@{/js/users.js}"></script>
-<script>
-let allUsers = [];
-async function loadUsers() {
-  try {
-    const res = await fetch('/api/users', {headers: getAuthHeaders()});
-    if (!res.ok) { showEmpty(); return; }
-    allUsers = await res.json();
-    renderUsersTable(allUsers);
-  } catch(e) { showEmpty(); }
-}
+    <script th:src="@{/js/auth.js}"></script>
+    <script th:src="@{/js/users.js}"></script>
+    <script>
+      let allUsers = [];
+      async function loadUsers() {
+        try {
+          const res = await fetch("/api/users", { headers: getAuthHeaders() });
+          if (!res.ok) {
+            showEmpty();
+            return;
+          }
+          allUsers = await res.json();
+          renderUsersTable(allUsers);
+        } catch (e) {
+          showEmpty();
+        }
+      }
 
-const roleLabels = {ADMIN:'Administrateur',DIRECTEUR:'Directeur',CHEF_DEPARTEMENT:'Chef Département',INGENIEUR_ETUDE_PMO:'PMO',DEVELOPPEUR:'Développeur'};
-const roleColors = {ADMIN:'#7c3aed',DIRECTEUR:'#0d2b6e',CHEF_DEPARTEMENT:'#0891b2',INGENIEUR_ETUDE_PMO:'#059669',DEVELOPPEUR:'#d97706'};
+      const roleLabels = {
+        ADMIN: "Administrateur",
+        DIRECTEUR: "Directeur",
+        CHEF_DEPARTEMENT: "Chef Département",
+        INGENIEUR_ETUDE_PMO: "PMO",
+        DEVELOPPEUR: "Développeur",
+      };
+      const roleColors = {
+        ADMIN: "#7c3aed",
+        DIRECTEUR: "#0d2b6e",
+        CHEF_DEPARTEMENT: "#0891b2",
+        INGENIEUR_ETUDE_PMO: "#059669",
+        DEVELOPPEUR: "#d97706",
+      };
 
-function renderUsersTable(list) {
-  const tbody = document.getElementById('usersTableBody');
-  if (!list || list.length === 0) { showEmpty(); return; }
-  tbody.innerHTML = list.map(u => {
-    const c = roleColors[u.role] || '#8a9fbf';
-    const l = roleLabels[u.role] || u.role || '—';
-    return `<tr>
-      <td style="font-weight:700;color:#0d2b6e;letter-spacing:.06em;font-size:13px">${u.matricule||'—'}</td>
-      <td>${u.prenom||''} ${u.nom||''}</td>
-      <td style="color:#5a78aa">${u.email||'—'}</td>
+      function renderUsersTable(list) {
+        const tbody = document.getElementById("usersTableBody");
+        if (!list || list.length === 0) {
+          showEmpty();
+          return;
+        }
+        tbody.innerHTML = list
+          .map((u) => {
+            const c = roleColors[u.role] || "#8a9fbf";
+            const l = roleLabels[u.role] || u.role || "—";
+            return `<tr>
+      <td style="font-weight:700;color:#0d2b6e;letter-spacing:.06em;font-size:13px">${u.matricule || "—"}</td>
+      <td>${u.prenom || ""} ${u.nom || ""}</td>
+      <td style="color:#5a78aa">${u.email || "—"}</td>
       <td><span style="background:${c}22;color:${c};padding:3px 10px;border-radius:20px;font-size:11px;font-weight:700">${l}</span></td>
-      <td>${u.telephone||'—'}</td>
+      <td>${u.telephone || "—"}</td>
       <td>
         <button onclick="window.location.href='/users/edit/${u.id}'" style="background:#eef4ff;border:none;padding:5px 12px;border-radius:6px;cursor:pointer;font-size:11px;color:#0d2b6e;font-weight:600">Modifier</button>
         <button onclick="deleteUser(${u.id})" style="background:#fee;border:none;padding:5px 12px;border-radius:6px;cursor:pointer;font-size:11px;color:#c00;font-weight:600;margin-left:4px">Supprimer</button>
       </td>
     </tr>`;
-  }).join('');
-}
+          })
+          .join("");
+      }
 
-function showEmpty() {
-  document.getElementById('usersTableBody').innerHTML =
-    '<tr><td colspan="6" style="text-align:center;padding:50px;color:#b0bdd0">Aucun utilisateur trouvé</td></tr>';
-}
+      function showEmpty() {
+        document.getElementById("usersTableBody").innerHTML =
+          '<tr><td colspan="6" style="text-align:center;padding:50px;color:#b0bdd0">Aucun utilisateur trouvé</td></tr>';
+      }
 
-function filterUsers() {
-  const q = document.getElementById('searchInput').value.toLowerCase();
-  const filtered = allUsers.filter(u =>
-    (u.nom||'').toLowerCase().includes(q) ||
-    (u.prenom||'').toLowerCase().includes(q) ||
-    (u.matricule||'').toLowerCase().includes(q)
-  );
-  renderUsersTable(filtered);
-}
+      function filterUsers() {
+        const q = document.getElementById("searchInput").value.toLowerCase();
+        const filtered = allUsers.filter(
+          (u) =>
+            (u.nom || "").toLowerCase().includes(q) ||
+            (u.prenom || "").toLowerCase().includes(q) ||
+            (u.matricule || "").toLowerCase().includes(q),
+        );
+        renderUsersTable(filtered);
+      }
 
-async function deleteUser(id) {
-  if (!confirm('Supprimer cet utilisateur ?')) return;
-  try {
-    const res = await fetch(`/api/users/${id}`, {method:'DELETE', headers: getAuthHeaders()});
-    if (res.ok) loadUsers();
-    else alert('Erreur lors de la suppression');
-  } catch(e) { alert('Erreur réseau'); }
-}
+      async function deleteUser(id) {
+        if (!confirm("Supprimer cet utilisateur ?")) return;
+        try {
+          const res = await fetch(`/api/users/${id}`, {
+            method: "DELETE",
+            headers: getAuthHeaders(),
+          });
+          if (res.ok) loadUsers();
+          else alert("Erreur lors de la suppression");
+        } catch (e) {
+          alert("Erreur réseau");
+        }
+      }
 
-document.addEventListener('DOMContentLoaded', loadUsers);
-</script>
-</body>
+      document.addEventListener("DOMContentLoaded", loadUsers);
+    </script>
+  </body>
 </html>
