@@ -8,7 +8,7 @@ import java.time.LocalDateTime;
 public class Remarque {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column(length = 2000, nullable = false)
