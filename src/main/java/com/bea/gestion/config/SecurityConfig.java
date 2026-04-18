@@ -42,7 +42,7 @@ public class SecurityConfig {
                     "/users-list", "/users/new", "/users/edit/**",
                     "/agenda", "/problemes",
                     "/css/**", "/js/**", "/images/**",
-                    "/error"
+                    "/error", "/remarques", "/notifications"
                 ).permitAll()
                 // Auth endpoint - public
                 .requestMatchers("/api/auth/**").permitAll()

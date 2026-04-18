@@ -46,6 +46,8 @@ function showMsg(msg, type) {
 }
 
 // ---- Users list ----
+let allUsersCache = [];
+
 async function loadUsers() {
   try {
     const res = await fetch(`${API_U}/users`, { headers: getAuthHeaders() });
@@ -53,11 +55,29 @@ async function loadUsers() {
       renderUsersEmpty();
       return;
     }
-    const users = await res.json();
-    renderUsers(users);
+    allUsersCache = await res.json();
+    renderUsers(allUsersCache);
   } catch (e) {
     renderUsersEmpty();
   }
+}
+
+function filterUsers() {
+  const q = (document.getElementById("searchInput")?.value || "")
+    .toLowerCase()
+    .trim();
+  if (!q) {
+    renderUsers(allUsersCache);
+    return;
+  }
+  const filtered = allUsersCache.filter(
+    (u) =>
+      (u.matricule || "").toLowerCase().includes(q) ||
+      ((u.prenom || "") + " " + (u.nom || "")).toLowerCase().includes(q) ||
+      (u.email || "").toLowerCase().includes(q) ||
+      (u.role || "").toLowerCase().includes(q),
+  );
+  renderUsers(filtered);
 }
 
 const roleLabels = {

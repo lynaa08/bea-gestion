@@ -38,4 +38,7 @@ public class ViewController {
 
     @GetMapping("/problemes")
     public String problemes() { return "problemes"; }
+
+    @GetMapping("/remarques")
+    public String remarques() { return "remarques"; }
 }

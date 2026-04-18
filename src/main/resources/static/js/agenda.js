@@ -31,33 +31,27 @@ const MONTHS_SHORT = [
 let currentMonth = new Date().getMonth();
 let currentYear = new Date().getFullYear();
 
-let allProjets = [
-  {
-    nom: "Projet Alpha",
-    statut: "EN_COURS",
-    dateDebut: `${new Date().getFullYear()}-${String(new Date().getMonth() + 1).padStart(2, "0")}-01`,
-    deadline: `${new Date().getFullYear()}-${String(new Date().getMonth() + 1).padStart(2, "0")}-15`,
-  },
-  {
-    nom: "BEA Web",
-    statut: "EN_ATTENTE",
-    dateDebut: `${new Date().getFullYear()}-${String(new Date().getMonth() + 1).padStart(2, "0")}-05`,
-    deadline: `${new Date().getFullYear()}-${String(new Date().getMonth() + 1).padStart(2, "0")}-20`,
-  },
-  {
-    nom: "Audit",
-    statut: "TERMINE",
-    dateDebut: `${new Date().getFullYear()}-${String(new Date().getMonth() + 1).padStart(2, "0")}-10`,
-    deadline: `${new Date().getFullYear()}-${String(new Date().getMonth() + 1).padStart(2, "0")}-14`,
-  },
-];
+// ── Nouveaux statuts ──────────────────────────────────────────────────────
+const AGENDA_STATUT_LABEL = {
+  EN_COURS: "Projet en cours",
+  CLOTURE: "Projet clôturé",
+  NON_COMMENCE: "Projet non commencé",
+  PAS_DE_VISIBILITE: "Pas de visibilité",
+};
+const AGENDA_STATUT_COLOR = {
+  EN_COURS: { ev: "ev-blue", dot: "blue", badge: "en-cours" },
+  CLOTURE: { ev: "ev-green", dot: "green", badge: "valider" },
+  NON_COMMENCE: { ev: "ev-orange", dot: "orange", badge: "urgent" },
+  PAS_DE_VISIBILITE: { ev: "ev-teal", dot: "blue", badge: "en-cours" },
+};
+
+let allProjets = [];
 
 document.addEventListener("DOMContentLoaded", async () => {
   renderCalendar();
   renderDeadlines();
   setupMonthTabs();
   setupSearch();
-  await loadSidebarBadges();
   await loadProjets();
   renderCalendar();
   renderDeadlines();
@@ -73,29 +67,12 @@ async function loadProjets() {
   } catch (e) {}
 }
 
-async function loadSidebarBadges() {
-  try {
-    const resp = await fetch("/api/dashboard/stats", {
-      headers: getAuthHeaders(),
-    });
-    if (!resp.ok) return;
-    const stats = await resp.json();
-    const b1 = document.getElementById("badge-encours");
-    const b2 = document.getElementById("badge-attente");
-    const b3 = document.getElementById("badge-termine");
-    if (b1) b1.textContent = stats.EN_COURS || 0;
-    if (b2) b2.textContent = stats.EN_ATTENTE || 0;
-    if (b3) b3.textContent = stats.TERMINE || 0;
-  } catch (e) {}
-}
-
 function renderCalendar() {
   const grid = document.getElementById("calendarGrid");
   if (!grid) return;
 
   document.getElementById("calendarTitle").textContent =
     `AGENDA — ${MONTHS_FR[currentMonth]} ${currentYear}`;
-  document.getElementById("weekLabel").textContent = "";
 
   const today = new Date();
   today.setHours(0, 0, 0, 0);
@@ -103,14 +80,15 @@ function renderCalendar() {
   const firstDay = new Date(currentYear, currentMonth, 1);
   let startDow = firstDay.getDay() - 1;
   if (startDow < 0) startDow = 6;
-
   const daysInMonth = new Date(currentYear, currentMonth + 1, 0).getDate();
 
   let html = "";
+  // Day headers
   DAYS_FR.forEach((d) => {
     html += `<div class="cal-day-header" style="font-size:12px;padding:8px 4px;">${d}</div>`;
   });
 
+  // Empty cells before month start
   for (let i = 0; i < startDow; i++) {
     html += `<div class="cal-cell" style="background:#fafbff;height:90px;"></div>`;
   }
@@ -147,9 +125,9 @@ function renderCalendar() {
       const isDeadline =
         p.deadline &&
         new Date(p.deadline).toDateString() === cellDate.toDateString();
-      const color = getProjetColor(p.statut);
+      const evClass = getProjetEvClass(p.statut);
       const badge = isDebut ? "DÉBUT" : isDeadline ? "FIN" : "";
-      html += `<div class="cal-event ${color}" style="margin-bottom:2px;font-size:10px;padding:2px 5px;border-radius:4px;">
+      html += `<div class="cal-event ${evClass}" style="margin-bottom:2px;font-size:10px;padding:2px 5px;border-radius:4px;">
         ${p.nom.length > 12 ? p.nom.substring(0, 12) + "…" : p.nom}
         ${badge ? `<span style="font-size:9px;font-weight:700;margin-left:3px;opacity:0.8;">${badge}</span>` : ""}
       </div>`;
@@ -161,6 +139,7 @@ function renderCalendar() {
     html += `</div>`;
   }
 
+  // Trailing empty cells
   const totalCells = startDow + daysInMonth;
   const remaining = totalCells % 7 === 0 ? 0 : 7 - (totalCells % 7);
   for (let i = 0; i < remaining; i++) {
@@ -178,13 +157,15 @@ function renderLegend() {
     legend = document.createElement("div");
     legend.id = "calendarLegend";
     legend.style.cssText =
-      "display:flex;gap:16px;padding:10px 20px;font-size:11px;color:#4a6080;border-top:1px solid #e8f0f8;";
-    document.querySelector(".agenda-card").appendChild(legend);
+      "display:flex;gap:16px;flex-wrap:wrap;padding:10px 20px;font-size:11px;color:#4a6080;border-top:1px solid #e8f0f8;";
+    const card = document.querySelector(".agenda-card");
+    if (card) card.appendChild(legend);
   }
   legend.innerHTML = `
     <span><span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:#1a5fa8;margin-right:4px;"></span>En cours</span>
-    <span><span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:#8a9fbf;margin-right:4px;"></span>En attente</span>
-    <span><span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:#42c97e;margin-right:4px;"></span>Terminé</span>
+    <span><span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:#22c55e;margin-right:4px;"></span>Clôturé</span>
+    <span><span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:#f59e0b;margin-right:4px;"></span>Non commencé</span>
+    <span><span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:#8a9fbf;margin-right:4px;"></span>Pas de visibilité</span>
     <span style="margin-left:auto;"><strong>DÉBUT</strong> = date de début &nbsp;|&nbsp; <strong>FIN</strong> = deadline</span>
   `;
 }
@@ -196,7 +177,7 @@ function renderDeadlines() {
   const upcoming = allProjets
     .filter((p) => p.deadline)
     .sort((a, b) => new Date(a.deadline) - new Date(b.deadline))
-    .slice(0, 5);
+    .slice(0, 6);
 
   if (upcoming.length === 0) {
     list.innerHTML =
@@ -205,24 +186,36 @@ function renderDeadlines() {
   }
 
   list.innerHTML = upcoming
-    .map(
-      (p) => `
-    <div class="deadline-item">
-      <div class="dl-dot ${statusDotClass(p.statut)}"></div>
+    .map((p) => {
+      const cfg = AGENDA_STATUT_COLOR[p.statut] || {
+        dot: "blue",
+        badge: "en-cours",
+      };
+      const lbl = AGENDA_STATUT_LABEL[p.statut] || p.statut || "—";
+      return `<div class="deadline-item" onclick="window.location.href='/projets/edit/${p.id || ""}'">
+      <div class="dl-dot ${cfg.dot}"></div>
       <div class="dl-body">
         <div class="dl-name">${p.nom}</div>
         <div class="dl-meta">Échéance · ${formatDate(p.deadline)}</div>
       </div>
-      <span class="dl-badge ${statusBadgeClass(p.statut)}">${statusLabel(p.statut)}</span>
-    </div>`,
-    )
+      <span class="dl-badge ${cfg.badge}">${lbl}</span>
+    </div>`;
+    })
     .join("");
 }
 
 function setupMonthTabs() {
+  // Render all 12 month tabs dynamically
+  const tabsEl = document.getElementById("monthTabs");
+  if (tabsEl) {
+    tabsEl.innerHTML = MONTHS_SHORT.map(
+      (m, i) =>
+        `<div class="mtab${i === currentMonth ? " active" : ""}" data-m="${i}">${m}</div>`,
+    ).join("");
+  }
+
+  // Month click
   document.querySelectorAll(".mtab").forEach((tab) => {
-    const m = parseInt(tab.dataset.m);
-    tab.classList.toggle("active", m === currentMonth);
     tab.addEventListener("click", () => {
       document
         .querySelectorAll(".mtab")
@@ -233,6 +226,39 @@ function setupMonthTabs() {
       renderDeadlines();
     });
   });
+
+  // Year label init
+  updateYearLabel();
+
+  // Previous year
+  const prevBtn = document.getElementById("prevYear");
+  if (prevBtn) {
+    prevBtn.addEventListener("click", () => {
+      currentYear--;
+      updateYearLabel();
+      renderCalendar();
+      renderDeadlines();
+    });
+  }
+
+  // Next year
+  const nextBtn = document.getElementById("nextYear");
+  if (nextBtn) {
+    nextBtn.addEventListener("click", () => {
+      currentYear++;
+      updateYearLabel();
+      renderCalendar();
+      renderDeadlines();
+    });
+  }
+}
+
+function updateYearLabel() {
+  const el = document.getElementById("yearLabel");
+  if (el) el.textContent = currentYear;
+  // Also disable prev if too far back (optional guard)
+  const prevBtn = document.getElementById("prevYear");
+  if (prevBtn) prevBtn.style.opacity = currentYear <= 2020 ? "0.3" : "1";
 }
 
 function setupSearch() {
@@ -252,55 +278,37 @@ function setupSearch() {
       filtered.length === 0
         ? '<div style="color:#8a9fbf;font-size:13px;">Aucun résultat</div>'
         : filtered
-            .map(
-              (p) => `
-        <div class="deadline-item">
-          <div class="dl-dot ${statusDotClass(p.statut)}"></div>
-          <div class="dl-body">
-            <div class="dl-name">${p.nom}</div>
-            <div class="dl-meta">${p.dateDebut ? "Début · " + formatDate(p.dateDebut) : ""} ${p.deadline ? "· Fin · " + formatDate(p.deadline) : ""}</div>
-          </div>
-          <span class="dl-badge ${statusBadgeClass(p.statut)}">${statusLabel(p.statut)}</span>
-        </div>`,
-            )
+            .map((p) => {
+              const cfg = AGENDA_STATUT_COLOR[p.statut] || {
+                dot: "blue",
+                badge: "en-cours",
+              };
+              const lbl = AGENDA_STATUT_LABEL[p.statut] || p.statut || "—";
+              return `<div class="deadline-item" onclick="window.location.href='/projets/edit/${p.id || ""}'">
+            <div class="dl-dot ${cfg.dot}"></div>
+            <div class="dl-body">
+              <div class="dl-name">${p.nom}</div>
+              <div class="dl-meta">${p.dateDebut ? "Début · " + formatDate(p.dateDebut) : ""} ${p.deadline ? "· Fin · " + formatDate(p.deadline) : ""}</div>
+            </div>
+            <span class="dl-badge ${cfg.badge}">${lbl}</span>
+          </div>`;
+            })
             .join("");
   });
 }
 
-function getProjetColor(statut) {
-  if (!statut) return "ev-blue";
-  const s = statut.toUpperCase();
-  if (s.includes("COURS")) return "ev-blue";
-  if (s.includes("ATTENTE")) return "ev-teal";
-  return "ev-green";
-}
-
-function statusDotClass(statut) {
-  if (!statut) return "blue";
-  const s = statut.toUpperCase();
-  if (s.includes("COURS")) return "blue";
-  if (s.includes("ATTENTE")) return "orange";
-  return "green";
-}
-
-function statusBadgeClass(statut) {
-  if (!statut) return "en-cours";
-  const s = statut.toUpperCase();
-  if (s.includes("COURS")) return "en-cours";
-  if (s.includes("ATTENTE")) return "urgent";
-  return "valider";
-}
-
-function statusLabel(statut) {
-  if (!statut) return "";
-  const s = statut.toUpperCase();
-  if (s.includes("COURS")) return "En cours";
-  if (s.includes("ATTENTE")) return "En attente";
-  return "Terminé";
+function getProjetEvClass(statut) {
+  const map = {
+    EN_COURS: "ev-blue",
+    CLOTURE: "ev-green",
+    NON_COMMENCE: "ev-orange",
+    PAS_DE_VISIBILITE: "ev-teal",
+  };
+  return map[statut] || "ev-blue";
 }
 
 function formatDate(dateStr) {
   if (!dateStr) return "—";
   const d = new Date(dateStr);
-  return `${d.getDate()} ${MONTHS_SHORT[d.getMonth()]}`;
+  return `${d.getDate()} ${MONTHS_SHORT[d.getMonth()]} ${d.getFullYear()}`;
 }

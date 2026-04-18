@@ -1,9 +1,10 @@
 package com.bea.gestion.enums;
 
 public enum StatutProjet {
-    EN_COURS("En cours"),
-    EN_ATTENTE("En attente"),
-    TERMINE("Terminé");
+    EN_COURS("Projet en cours"),
+    CLOTURE("Projet clôturé"),
+    NON_COMMENCE("Projet non commencé"),
+    PAS_DE_VISIBILITE("Pas de visibilité");
     
     private final String value;
     

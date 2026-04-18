@@ -1,33 +1,130 @@
 const API_BASE = "/api";
 
+// ---- Statut maps (nouveaux états) ----
+const STATUT_LABEL = {
+  EN_COURS: "Projet en cours",
+  CLOTURE: "Projet clôturé",
+  NON_COMMENCE: "Projet non commencé",
+  PAS_DE_VISIBILITE: "Pas de visibilité",
+  // Legacy fallback
+  EN_ATTENTE: "En attente",
+  TERMINE: "Terminé",
+};
+const STATUT_COLOR = {
+  EN_COURS: "#5bb8e8",
+  CLOTURE: "#22c55e",
+  NON_COMMENCE: "#f59e0b",
+  PAS_DE_VISIBILITE: "#8a9fbf",
+  EN_ATTENTE: "#f59e0b",
+  TERMINE: "#22c55e",
+};
+
+// ---- Multi-select state ----
+let allUsers = [];
+let selectedMembresIds = new Set();
+
+async function loadUsersForSelects() {
+  try {
+    const res = await fetch(`${API_BASE}/users`, { headers: getAuthHeaders() });
+    if (!res.ok) return;
+    allUsers = await res.json();
+    populateChefSelect();
+    renderMembresDropdown();
+  } catch (e) {}
+}
+
+function populateChefSelect() {
+  const sel = document.getElementById("chefProjetSelect");
+  if (!sel) return;
+  allUsers.forEach((u) => {
+    const opt = document.createElement("option");
+    opt.value = u.id;
+    opt.textContent = `${u.matricule} — ${u.prenom || ""} ${u.nom || ""}`;
+    sel.appendChild(opt);
+  });
+}
+
+function renderMembresDropdown(filter = "") {
+  const dd = document.getElementById("membresDropdown");
+  if (!dd) return;
+  const q = filter.toLowerCase();
+  const filtered = allUsers.filter(
+    (u) =>
+      (u.matricule || "").toLowerCase().includes(q) ||
+      ((u.prenom || "") + " " + (u.nom || "")).toLowerCase().includes(q),
+  );
+  if (filtered.length === 0) {
+    dd.innerHTML =
+      '<div style="padding:12px;color:#b0bdd0;font-size:12px;text-align:center">Aucun utilisateur trouvé</div>';
+    return;
+  }
+  dd.innerHTML = filtered
+    .map((u) => {
+      const isSel = selectedMembresIds.has(u.id);
+      return `<div class="multi-select-opt ${isSel ? "selected" : ""}" onclick="toggleMembre(${u.id})">
+        <span class="multi-select-opt-mat">${u.matricule || ""}</span>
+        <span class="multi-select-opt-name">${u.prenom || ""} ${u.nom || ""}</span>
+        ${isSel ? '<span style="margin-left:auto;color:#5bb8e8;font-weight:700">✓</span>' : ""}
+      </div>`;
+    })
+    .join("");
+}
+
+function toggleMembre(userId) {
+  if (selectedMembresIds.has(userId)) {
+    selectedMembresIds.delete(userId);
+  } else {
+    selectedMembresIds.add(userId);
+  }
+  renderMembresChips();
+  renderMembresDropdown(document.getElementById("membresSearch")?.value || "");
+}
+
+function renderMembresChips() {
+  const chipsEl = document.getElementById("membresChips");
+  const searchEl = document.getElementById("membresSearch");
+  if (!chipsEl) return;
+  // Remove old chips (keep the search input)
+  chipsEl.querySelectorAll(".multi-chip").forEach((c) => c.remove());
+  selectedMembresIds.forEach((id) => {
+    const u = allUsers.find((u) => u.id === id);
+    if (!u) return;
+    const chip = document.createElement("div");
+    chip.className = "multi-chip";
+    chip.innerHTML = `<span>${u.matricule}</span><span class="multi-chip-remove" onclick="toggleMembre(${id})">×</span>`;
+    chipsEl.insertBefore(chip, searchEl);
+  });
+}
+
+function filterMembresDropdown() {
+  const q = document.getElementById("membresSearch")?.value || "";
+  renderMembresDropdown(q);
+}
+
+function showMembresDropdown() {
+  const dd = document.getElementById("membresDropdown");
+  if (dd) dd.style.display = "block";
+}
+
+function hideMembresDropdown() {
+  const dd = document.getElementById("membresDropdown");
+  if (dd) dd.style.display = "none";
+}
+
+// Close dropdown when clicking outside
+document.addEventListener("click", (e) => {
+  const wrapper = document.getElementById("membresWrapper");
+  if (wrapper && !wrapper.contains(e.target)) hideMembresDropdown();
+});
+
 async function handleProjectSubmit(event) {
   event.preventDefault();
   const id = document.getElementById("projectId").value;
-  const chefMatricule = (
-    document.getElementById("chefMatricule")?.value || ""
-  ).trim();
 
-  // Resolve chef by matricule
-  let chefProjetId = null;
-  if (chefMatricule) {
-    try {
-      const usersRes = await fetch(`${API_BASE}/users`, {
-        headers: getAuthHeaders(),
-      });
-      if (usersRes.ok) {
-        const users = await usersRes.json();
-        const found = users.find((u) => u.matricule === chefMatricule);
-        if (found) chefProjetId = found.id;
-        else {
-          showFormMsg(
-            "Matricule du chef de projet introuvable : " + chefMatricule,
-            "err",
-          );
-          return;
-        }
-      }
-    } catch (e) {}
-  }
+  // Chef via select dropdown
+  const chefSelect = document.getElementById("chefProjetSelect");
+  const chefProjetId =
+    chefSelect && chefSelect.value ? parseInt(chefSelect.value) : null;
 
   const body = {
     nom: document.getElementById("nom").value,
@@ -38,6 +135,7 @@ async function handleProjectSubmit(event) {
     deadline: document.getElementById("deadline").value || null,
     description: document.getElementById("description").value,
     chefProjetId,
+    membresIds: Array.from(selectedMembresIds),
   };
 
   try {
@@ -110,8 +208,9 @@ function renderProjects() {
   const statutMap = {
     Tous: null,
     "En cours": "EN_COURS",
-    "En attente": "EN_ATTENTE",
-    Terminé: "TERMINE",
+    Clôturé: "CLOTURE",
+    "Non commencé": "NON_COMMENCE",
+    "Pas de visibilité": "PAS_DE_VISIBILITE",
   };
   let list = allProjets;
 
@@ -132,23 +231,20 @@ function renderProjects() {
 
   tbody.innerHTML = list
     .map((p) => {
-      const statutColor =
-        { EN_COURS: "#5bb8e8", EN_ATTENTE: "#f59e0b", TERMINE: "#22c55e" }[
-          p.statut
-        ] || "#8a9fbf";
-      const statutLabel =
-        { EN_COURS: "En cours", EN_ATTENTE: "En attente", TERMINE: "Terminé" }[
-          p.statut
-        ] ||
-        p.statut ||
-        "—";
+      const color = STATUT_COLOR[p.statut] || "#8a9fbf";
+      const label = STATUT_LABEL[p.statut] || p.statut || "—";
+      const membres =
+        p.membresMatricules && p.membresMatricules.length > 0
+          ? p.membresMatricules.join(", ")
+          : "—";
       return `<tr>
       <td>${p.id}</td>
       <td style="font-weight:600;color:#1a2d5a">${p.nom || "—"}</td>
       <td>${p.dateDebut || "—"}</td>
-      <td><span style="background:${statutColor}22;color:${statutColor};padding:3px 10px;border-radius:20px;font-size:11px;font-weight:700">${statutLabel}</span></td>
+      <td><span style="background:${color}22;color:${color};padding:3px 10px;border-radius:20px;font-size:11px;font-weight:700">${label}</span></td>
       <td>${p.type || "—"}</td>
       <td>${p.chefProjetNom || (p.chefProjet ? p.chefProjet.prenom + " " + p.chefProjet.nom : "—")}</td>
+      <td style="font-size:11px;color:#6a80a0;max-width:160px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap" title="${membres}">${membres}</td>
       <td>
         <button onclick="editProjet(${p.id})" style="background:#eef4ff;border:none;padding:5px 12px;border-radius:6px;cursor:pointer;font-size:11px;color:#0d2b6e;font-weight:600">Modifier</button>
         <button onclick="deleteProjet(${p.id})" style="background:#fee;border:none;padding:5px 12px;border-radius:6px;cursor:pointer;font-size:11px;color:#c00;font-weight:600;margin-left:4px">Supprimer</button>
@@ -205,10 +301,20 @@ async function loadProjectForEdit() {
     document.getElementById("dateDebut").value = p.dateDebut || "";
     document.getElementById("deadline").value = p.deadline || "";
     document.getElementById("description").value = p.description || "";
-    if (document.getElementById("chefMatricule") && p.chefProjet) {
-      document.getElementById("chefMatricule").value =
-        p.chefProjet.matricule || "";
+
+    // Chef select
+    if (p.chefProjetId) {
+      const chefSel = document.getElementById("chefProjetSelect");
+      if (chefSel) chefSel.value = p.chefProjetId;
     }
+
+    // Membres multi-select
+    if (p.membresIds && p.membresIds.length > 0) {
+      p.membresIds.forEach((id) => selectedMembresIds.add(id));
+      renderMembresChips();
+      renderMembresDropdown();
+    }
+
     const title = document.getElementById("pageTitle");
     if (title) title.textContent = "Modifier le projet : " + p.nom;
   } catch (e) {}
@@ -225,7 +331,11 @@ document.addEventListener("DOMContentLoaded", () => {
         renderProjects();
       });
   }
-  if (path.includes("projets/edit")) {
-    loadProjectForEdit();
+  if (path.includes("projets/new") || path.includes("projets/edit")) {
+    loadUsersForSelects().then(() => {
+      if (path.includes("projets/edit")) {
+        loadProjectForEdit();
+      }
+    });
   }
 });

@@ -51,24 +51,14 @@ async function loadStatistics() {
 
 // Update dashboard statistics cards
 function updateDashboardStats(stats) {
-  // Update main cards
-  const encoursCard = document.querySelector(".qcard.accent .qcard-num");
-  const attenteCard = document.querySelector(".qcard.warn .qcard-num");
-  const termineCard = document.querySelector(
-    ".qcard:not(.accent):not(.warn) .qcard-num",
-  );
-
-  if (encoursCard) encoursCard.textContent = stats.EN_COURS || 0;
-  if (attenteCard) attenteCard.textContent = stats.EN_ATTENTE || 0;
-  if (termineCard) termineCard.textContent = stats.TERMINE || 0;
-
-  // Update sidebar badges
-  const badges = document.querySelectorAll(".nav-badge");
-  if (badges.length >= 3) {
-    badges[0].textContent = stats.EN_COURS || 0;
-    badges[1].textContent = stats.EN_ATTENTE || 0;
-    badges[2].textContent = stats.TERMINE || 0;
-  }
+  const set = (id, val) => {
+    const el = document.getElementById(id);
+    if (el) el.textContent = val || 0;
+  };
+  set("qcard-encours", stats.EN_COURS);
+  set("qcard-noncommence", stats.NON_COMMENCE);
+  set("qcard-cloture", stats.CLOTURE);
+  set("qcard-pasvisibilite", stats.PAS_DE_VISIBILITE);
 }
 
 // Load statistics by project type
@@ -87,6 +77,19 @@ async function loadStatsByType() {
   }
 }
 
+const STATUT_LABEL_DASH = {
+  EN_COURS: "En cours",
+  CLOTURE: "Clôturé",
+  NON_COMMENCE: "Non commencé",
+  PAS_DE_VISIBILITE: "Pas de visibilité",
+};
+const STATUT_COLOR_DASH = {
+  EN_COURS: "#5BB8E8",
+  CLOTURE: "#22c55e",
+  NON_COMMENCE: "#F5A623",
+  PAS_DE_VISIBILITE: "#8a9fbf",
+};
+
 // Display statistics by type
 function displayStatsByType(stats) {
   const container = document.getElementById("stats-by-type");
@@ -103,51 +106,29 @@ function displayStatsByType(stats) {
 
   for (const [type, data] of Object.entries(stats)) {
     const total = data.TOTAL || 0;
-    const encours = data.EN_COURS || 0;
-    const attente = data.EN_ATTENTE || 0;
-    const termine = data.TERMINE || 0;
-
-    const encoursPercent = total > 0 ? ((encours / total) * 100).toFixed(0) : 0;
-    const attentePercent = total > 0 ? ((attente / total) * 100).toFixed(0) : 0;
-    const terminePercent = total > 0 ? ((termine / total) * 100).toFixed(0) : 0;
+    const bars = ["EN_COURS", "NON_COMMENCE", "CLOTURE", "PAS_DE_VISIBILITE"]
+      .map((s) => {
+        const cnt = data[s] || 0;
+        const pct = total > 0 ? ((cnt / total) * 100).toFixed(0) : 0;
+        return `<div style="margin-bottom:8px">
+          <div style="display:flex;justify-content:space-between;font-size:11px;margin-bottom:4px">
+            <span>${STATUT_LABEL_DASH[s]}</span>
+            <span><strong>${cnt}</strong> (${pct}%)</span>
+          </div>
+          <div style="height:6px;background:#E8EFF8;border-radius:3px;overflow:hidden">
+            <div style="width:${pct}%;height:100%;background:${STATUT_COLOR_DASH[s]};border-radius:3px"></div>
+          </div>
+        </div>`;
+      })
+      .join("");
 
     html += `
-            <div style="background: #F8FAFD; border-radius: 10px; padding: 16px; border: 0.5px solid #D8E6F2;">
-                <div style="font-size: 14px; font-weight: 700; color: #0D2B6E; margin-bottom: 12px;">${type}</div>
-                <div style="font-size: 28px; font-weight: 700; color: #1A4BA8; margin-bottom: 8px;">${total}</div>
-                <div style="font-size: 11px; color: #8A9FBF; margin-bottom: 12px;">Total projets</div>
-                
-                <div style="margin-bottom: 8px;">
-                    <div style="display: flex; justify-content: space-between; font-size: 11px; margin-bottom: 4px;">
-                        <span>En cours</span>
-                        <span><strong>${encours}</strong> (${encoursPercent}%)</span>
-                    </div>
-                    <div style="height: 6px; background: #E8EFF8; border-radius: 3px; overflow: hidden;">
-                        <div style="width: ${encoursPercent}%; height: 100%; background: #5BB8E8; border-radius: 3px;"></div>
-                    </div>
-                </div>
-                
-                <div style="margin-bottom: 8px;">
-                    <div style="display: flex; justify-content: space-between; font-size: 11px; margin-bottom: 4px;">
-                        <span>En attente</span>
-                        <span><strong>${attente}</strong> (${attentePercent}%)</span>
-                    </div>
-                    <div style="height: 6px; background: #E8EFF8; border-radius: 3px; overflow: hidden;">
-                        <div style="width: ${attentePercent}%; height: 100%; background: #F5A623; border-radius: 3px;"></div>
-                    </div>
-                </div>
-                
-                <div>
-                    <div style="display: flex; justify-content: space-between; font-size: 11px; margin-bottom: 4px;">
-                        <span>Terminé</span>
-                        <span><strong>${termine}</strong> (${terminePercent}%)</span>
-                    </div>
-                    <div style="height: 6px; background: #E8EFF8; border-radius: 3px; overflow: hidden;">
-                        <div style="width: ${terminePercent}%; height: 100%; background: #1A7A40; border-radius: 3px;"></div>
-                    </div>
-                </div>
-            </div>
-        `;
+      <div style="background:#F8FAFD;border-radius:10px;padding:16px;border:.5px solid #D8E6F2;">
+        <div style="font-size:14px;font-weight:700;color:#0D2B6E;margin-bottom:12px;">${type}</div>
+        <div style="font-size:28px;font-weight:700;color:#1A4BA8;margin-bottom:8px;">${total}</div>
+        <div style="font-size:11px;color:#8A9FBF;margin-bottom:12px;">Total projets</div>
+        ${bars}
+      </div>`;
   }
 
   html += "</div>";
@@ -220,29 +201,23 @@ function formatDate(dateString) {
 }
 
 function getStatusClass(statut) {
-  switch (statut) {
-    case "EN_COURS":
-      return "p-encours";
-    case "EN_ATTENTE":
-      return "p-attente";
-    case "TERMINE":
-      return "p-termine";
-    default:
-      return "";
-  }
+  const map = {
+    EN_COURS: "p-encours",
+    CLOTURE: "p-cloture",
+    NON_COMMENCE: "p-noncommence",
+    PAS_DE_VISIBILITE: "p-pasvisibilite",
+  };
+  return map[statut] || "";
 }
 
 function getStatusText(statut) {
-  switch (statut) {
-    case "EN_COURS":
-      return "En cours";
-    case "EN_ATTENTE":
-      return "En attente";
-    case "TERMINE":
-      return "Terminé";
-    default:
-      return statut;
-  }
+  const map = {
+    EN_COURS: "Projet en cours",
+    CLOTURE: "Projet clôturé",
+    NON_COMMENCE: "Projet non commencé",
+    PAS_DE_VISIBILITE: "Pas de visibilité",
+  };
+  return map[statut] || statut || "—";
 }
 
 function escapeHtml(text) {

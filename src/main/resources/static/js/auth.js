@@ -210,14 +210,15 @@ function closeNotifPanel() {
 
 function outsideNotifClick(e) {
   const panel = document.getElementById("notif-panel");
-  const btn = document.querySelector(".notif-btn");
+  const btn = document.getElementById("notifBellBtn");
   if (panel && !panel.contains(e.target) && btn && !btn.contains(e.target)) {
     closeNotifPanel();
   }
 }
 
 function injectNotifPanel() {
-  const notifBtn = document.querySelector(".notif-btn");
+  // Find the bell notification button by its specific ID
+  const notifBtn = document.getElementById("notifBellBtn");
   if (!notifBtn || document.getElementById("notif-panel")) return;
 
   notifBtn.style.cursor = "pointer";
@@ -258,5 +259,223 @@ document.addEventListener("DOMContentLoaded", () => {
     injectNotifPanel();
     loadNotifCount();
     setInterval(loadNotifCount, 30000);
+    // Badges sidebar (statuts + remarques)
+    if (typeof loadSidebarBadges === "function") loadSidebarBadges();
+    if (typeof loadRemarquesBadge === "function") loadRemarquesBadge();
+    // Remarque panel
+    injectRemarquePanel();
+    // Search icon topbar → focuses current page search bar
+    injectSearchIcon();
   }
 });
+
+// ── REMARQUE PANEL ────────────────────────────────────────────────────────────
+
+function injectRemarquePanel() {
+  // Find the remarque topbar icon button
+  const rBtn = document.getElementById("remarqueBtnTopbar");
+  if (!rBtn || document.getElementById("remarque-panel")) return;
+
+  rBtn.style.cursor = "pointer";
+  rBtn.onclick = (e) => {
+    e.stopPropagation();
+    toggleRemarquePanel();
+  };
+
+  const panel = document.createElement("div");
+  panel.id = "remarque-panel";
+  panel.style.cssText =
+    "display:none;position:fixed;top:56px;right:58px;width:380px;max-height:500px;" +
+    "background:#fff;border-radius:14px;border:.5px solid #D8E6F0;" +
+    "box-shadow:0 12px 40px rgba(13,43,110,0.14);z-index:9000;flex-direction:column;overflow:hidden;";
+  panel.innerHTML = `
+    <div style="display:flex;align-items:center;justify-content:space-between;padding:14px 16px 12px;border-bottom:.5px solid #EEF2F8;flex-shrink:0;">
+      <span style="font-size:13px;font-weight:700;color:#0D2B6E;">💬 Remarques récentes</span>
+      <a href="/remarques" style="font-size:10px;color:#5BB8E8;text-decoration:none;font-weight:500;">Voir tout →</a>
+    </div>
+    <div id="remarque-panel-list" style="overflow-y:auto;flex:1;max-height:380px;"></div>
+    <div style="padding:10px 16px;border-top:.5px solid #EEF2F8;text-align:center;flex-shrink:0;">
+      <span onclick="closeRemarquePanel()" style="font-size:11px;color:#5BB8E8;cursor:pointer;font-weight:500;">Fermer ✕</span>
+    </div>`;
+  document.body.appendChild(panel);
+}
+
+async function loadRemarquePanel() {
+  const list = document.getElementById("remarque-panel-list");
+  if (!list) return;
+  list.innerHTML =
+    '<div style="padding:30px;text-align:center;color:#B0BDD0;font-size:12px;">Chargement...</div>';
+  try {
+    const projRes = await fetch("/api/projets/all", {
+      headers: getAuthHeaders(),
+    });
+    if (!projRes.ok) {
+      list.innerHTML =
+        '<div style="padding:30px;text-align:center;color:#ef4444;font-size:12px;">Erreur</div>';
+      return;
+    }
+    const projets = await projRes.json();
+
+    // Fetch remarques for all projects in parallel
+    const all = await Promise.all(
+      projets.map(async (p) => {
+        try {
+          const r = await fetch(`/api/projets/${p.id}/remarques`, {
+            headers: getAuthHeaders(),
+          });
+          const items = r.ok ? await r.json() : [];
+          return items.map((rq) => ({
+            ...rq,
+            projetId: p.id,
+            projetNom: p.nom,
+          }));
+        } catch {
+          return [];
+        }
+      }),
+    );
+
+    const flat = all
+      .flat()
+      .sort(
+        (a, b) => new Date(b.dateCreation || 0) - new Date(a.dateCreation || 0),
+      )
+      .slice(0, 15);
+
+    if (flat.length === 0) {
+      list.innerHTML =
+        '<div style="padding:40px;text-align:center;color:#B0BDD0;font-size:12px;">💬<br><br>Aucune remarque</div>';
+      return;
+    }
+
+    list.innerHTML = flat
+      .map((r) => {
+        const auteur =
+          r.auteurNom ||
+          (r.auteur ? r.auteur.prenom + " " + r.auteur.nom : "—");
+        const initiales = auteur
+          .split(" ")
+          .map((w) => w[0] || "")
+          .join("")
+          .substring(0, 2)
+          .toUpperCase();
+        const date = r.dateCreation
+          ? new Date(r.dateCreation).toLocaleDateString("fr-FR", {
+              day: "2-digit",
+              month: "short",
+            })
+          : "";
+        const contenu =
+          (r.contenu || "").substring(0, 80) +
+          ((r.contenu || "").length > 80 ? "…" : "");
+        return `<div onclick="window.location.href='/projets/edit/${r.projetId}'"
+        style="display:flex;gap:10px;padding:11px 16px;border-bottom:.5px solid #F4F7FC;cursor:pointer;transition:background 0.1s;"
+        onmouseover="this.style.background='#F8FAFD'" onmouseout="this.style.background='#fff'">
+        <div style="width:32px;height:32px;border-radius:50%;background:linear-gradient(135deg,#0d2b6e,#5bb8e8);
+          display:flex;align-items:center;justify-content:center;color:#fff;font-size:11px;font-weight:700;flex-shrink:0;">${initiales}</div>
+        <div style="flex:1;min-width:0;">
+          <div style="font-size:11px;font-weight:700;color:#0D2B6E;margin-bottom:1px;">${escapeHtmlSafe(r.projetNom)}</div>
+          <div style="font-size:11px;color:#6A80A0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${escapeHtmlSafe(contenu)}</div>
+          <div style="font-size:10px;color:#B0BDD0;margin-top:2px;">${auteur} · ${date}</div>
+        </div>
+        <div style="font-size:10px;color:#5BB8E8;font-weight:600;white-space:nowrap;align-self:center;">Voir →</div>
+      </div>`;
+      })
+      .join("");
+  } catch (e) {
+    list.innerHTML =
+      '<div style="padding:30px;text-align:center;color:#ef4444;font-size:12px;">Erreur de connexion</div>';
+  }
+}
+
+function toggleRemarquePanel() {
+  const panel = document.getElementById("remarque-panel");
+  if (!panel) return;
+  if (panel.style.display === "flex") {
+    closeRemarquePanel();
+  } else {
+    panel.style.display = "flex";
+    loadRemarquePanel();
+    setTimeout(
+      () => document.addEventListener("click", outsideRemarqueClick),
+      50,
+    );
+  }
+}
+
+function closeRemarquePanel() {
+  const panel = document.getElementById("remarque-panel");
+  if (panel) panel.style.display = "none";
+  document.removeEventListener("click", outsideRemarqueClick);
+}
+
+function outsideRemarqueClick(e) {
+  const panel = document.getElementById("remarque-panel");
+  const btn = document.getElementById("remarqueBtnTopbar");
+  if (panel && !panel.contains(e.target) && btn && !btn.contains(e.target)) {
+    closeRemarquePanel();
+  }
+}
+
+// ── SEARCH ICON TOPBAR ───────────────────────────────────────────────────────
+function injectSearchIcon() {
+  // Don't inject if page already has a topbar search button
+  if (
+    document.getElementById("topbarSearchBtn") ||
+    document.getElementById("searchBtn")
+  )
+    return;
+
+  // Find all search inputs on the page
+  const searchInputIds = [
+    "searchInput",
+    "agendaSearch",
+    "search-input",
+    "searchQuery",
+  ];
+  const searchClasses = [
+    ".search-input",
+    ".search-input-u",
+    ".agenda-search-wrap input",
+  ];
+
+  let searchEl = null;
+  for (const id of searchInputIds) {
+    const el = document.getElementById(id);
+    if (el) {
+      searchEl = el;
+      break;
+    }
+  }
+  if (!searchEl) {
+    for (const cls of searchClasses) {
+      const el = document.querySelector(cls);
+      if (el) {
+        searchEl = el;
+        break;
+      }
+    }
+  }
+  if (!searchEl) return;
+
+  const topbarRight = document.querySelector(".topbar-right");
+  if (!topbarRight) return;
+
+  const btn = document.createElement("div");
+  btn.id = "topbarSearchBtn";
+  btn.title = "Rechercher";
+  btn.style.cssText =
+    "cursor:pointer;display:flex;align-items:center;justify-content:center;width:32px;height:32px;border-radius:8px;background:#eef4ff;margin-right:6px;transition:background 0.15s;flex-shrink:0;";
+  btn.innerHTML = `<svg width="15" height="15" viewBox="0 0 24 24" fill="none">
+    <circle cx="11" cy="11" r="8" stroke="#0d2b6e" stroke-width="1.8"/>
+    <path d="M21 21l-4.35-4.35" stroke="#0d2b6e" stroke-width="1.8" stroke-linecap="round"/>
+  </svg>`;
+  btn.onmouseover = () => (btn.style.background = "#d8e8ff");
+  btn.onmouseout = () => (btn.style.background = "#eef4ff");
+  btn.onclick = () => {
+    searchEl.focus();
+    searchEl.select();
+    searchEl.scrollIntoView({ behavior: "smooth", block: "center" });
+  };
+  topbarRight.insertBefore(btn, topbarRight.firstChild);
+}

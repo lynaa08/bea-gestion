@@ -3,6 +3,7 @@ package com.bea.gestion.dto;
 import com.bea.gestion.enums.StatutProjet;
 import com.bea.gestion.enums.TypeProjet;
 import java.time.LocalDate;
+import java.util.List;
 
 public class ProjetDTO {
     private Long id;
@@ -17,6 +18,9 @@ public class ProjetDTO {
     private Long chefProjetId;
     private String chefProjetNom;
     private String chefProjetMatricule;
+    private List<Long> membresIds;
+    private List<String> membresMatricules;
+    private List<String> membresNoms;
 
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
@@ -42,4 +46,10 @@ public class ProjetDTO {
     public void setChefProjetNom(String chefProjetNom) { this.chefProjetNom = chefProjetNom; }
     public String getChefProjetMatricule() { return chefProjetMatricule; }
     public void setChefProjetMatricule(String chefProjetMatricule) { this.chefProjetMatricule = chefProjetMatricule; }
+    public List<Long> getMembresIds() { return membresIds; }
+    public void setMembresIds(List<Long> membresIds) { this.membresIds = membresIds; }
+    public List<String> getMembresMatricules() { return membresMatricules; }
+    public void setMembresMatricules(List<String> membresMatricules) { this.membresMatricules = membresMatricules; }
+    public List<String> getMembresNoms() { return membresNoms; }
+    public void setMembresNoms(List<String> membresNoms) { this.membresNoms = membresNoms; }
 }

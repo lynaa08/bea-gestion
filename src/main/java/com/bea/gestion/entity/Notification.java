@@ -16,7 +16,7 @@ public class Notification {
     @Column(length = 1000)
     private String message;
 
-    private String type; // PROJET_CREE, PROJET_MODIFIE, PROJET_TERMINE, PROBLEME_SIGNALE
+    private String type; // PROJET_CREE, PROJET_MODIFIE, PROJET_cloture, PROBLEME_SIGNALE
 
     private boolean lue = false;
 

@@ -4,6 +4,8 @@ import com.bea.gestion.enums.StatutProjet;
 import com.bea.gestion.enums.TypeProjet;
 import jakarta.persistence.*;
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "projets")
@@ -34,6 +36,14 @@ public class Projet {
     @ManyToOne
     @JoinColumn(name = "chef_projet_id")
     private User chefProjet;
+
+    @ManyToMany
+    @JoinTable(
+        name = "projet_membres",
+        joinColumns = @JoinColumn(name = "projet_id"),
+        inverseJoinColumns = @JoinColumn(name = "user_id")
+    )
+    private List<User> membres = new ArrayList<>();
     
     // Getters and Setters
     public Long getId() { return id; }
@@ -65,4 +75,7 @@ public class Projet {
     
     public User getChefProjet() { return chefProjet; }
     public void setChefProjet(User chefProjet) { this.chefProjet = chefProjet; }
+
+    public List<User> getMembres() { return membres; }
+    public void setMembres(List<User> membres) { this.membres = membres; }
 }
