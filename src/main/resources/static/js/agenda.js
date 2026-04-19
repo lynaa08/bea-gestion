@@ -90,7 +90,7 @@ function renderCalendar() {
 
   // Empty cells before month start
   for (let i = 0; i < startDow; i++) {
-    html += `<div class="cal-cell" style="background:#fafbff;height:90px;"></div>`;
+    html += `<div class="cal-cell" style="background:#fafbff;height:110px;"></div>`;
   }
 
   for (let day = 1; day <= daysInMonth; day++) {
@@ -111,14 +111,12 @@ function renderCalendar() {
       );
     });
 
-    html += `<div class="cal-cell" style="height:90px;vertical-align:top;padding:4px;">
-      <div style="font-size:13px;font-weight:${isToday ? "700" : "500"};color:${isToday ? "#fff" : "#2d4a7a"};
-        background:${isToday ? "#5bb8e8" : "transparent"};width:22px;height:22px;border-radius:50%;
-        display:inline-flex;align-items:center;justify-content:center;margin-bottom:3px;">
+    html += `<div class="cal-cell" style="height:110px;vertical-align:top;padding:3px 3px 2px;">
+      <div class="cal-day-num ${isToday ? "cal-today" : ""}">
         ${day}
       </div>`;
 
-    dayProjets.slice(0, 2).forEach((p) => {
+    dayProjets.slice(0, 3).forEach((p) => {
       const isDebut =
         p.dateDebut &&
         new Date(p.dateDebut).toDateString() === cellDate.toDateString();
@@ -126,15 +124,16 @@ function renderCalendar() {
         p.deadline &&
         new Date(p.deadline).toDateString() === cellDate.toDateString();
       const evClass = getProjetEvClass(p.statut);
-      const badge = isDebut ? "DÉBUT" : isDeadline ? "FIN" : "";
-      html += `<div class="cal-event ${evClass}" style="margin-bottom:2px;font-size:10px;padding:2px 5px;border-radius:4px;">
-        ${p.nom.length > 12 ? p.nom.substring(0, 12) + "…" : p.nom}
-        ${badge ? `<span style="font-size:9px;font-weight:700;margin-left:3px;opacity:0.8;">${badge}</span>` : ""}
+      const badge = isDebut ? "D" : isDeadline ? "F" : "";
+      const shortName =
+        p.nom.length > 10 ? p.nom.substring(0, 10) + "…" : p.nom;
+      html += `<div class="cal-ev ${evClass}">
+        <span class="cal-ev-name">${shortName}</span>${badge ? `<span class="cal-ev-badge">${badge}</span>` : ""}
       </div>`;
     });
 
-    if (dayProjets.length > 2) {
-      html += `<div style="font-size:9px;color:#8a9fbf;">+${dayProjets.length - 2} autres</div>`;
+    if (dayProjets.length > 3) {
+      html += `<div class="cal-more">+${dayProjets.length - 3}</div>`;
     }
     html += `</div>`;
   }
@@ -143,7 +142,7 @@ function renderCalendar() {
   const totalCells = startDow + daysInMonth;
   const remaining = totalCells % 7 === 0 ? 0 : 7 - (totalCells % 7);
   for (let i = 0; i < remaining; i++) {
-    html += `<div class="cal-cell" style="background:#fafbff;height:90px;"></div>`;
+    html += `<div class="cal-cell" style="background:#fafbff;height:110px;"></div>`;
   }
 
   grid.style.gridTemplateColumns = "repeat(7, 1fr)";

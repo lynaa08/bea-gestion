@@ -1,5 +1,5 @@
 // ── SIDEBAR BADGE LOADER ──────────────────────────────────────────────────
-// Chargé automatiquement. Met à jour badges sidebar : statuts projets + remarques.
+// Chargé automatiquement. Met à jour badges sidebar + point topbar remarques.
 
 async function loadSidebarBadges() {
   try {
@@ -24,6 +24,7 @@ async function loadSidebarBadges() {
 }
 
 async function loadRemarquesBadge() {
+  // Only update the topbar dot (badge in sidebar has been removed)
   try {
     const projRes = await fetch("/api/projets/all", {
       headers: getAuthHeaders(),
@@ -44,11 +45,7 @@ async function loadRemarquesBadge() {
         } catch (e) {}
       }),
     );
-    const badge = document.getElementById("sidebarRemarqueBadge");
-    if (badge) {
-      badge.textContent = total;
-      badge.style.display = total > 0 ? "flex" : "none";
-    }
+    // Only update topbar dot
     const dot = document.getElementById("remarqueDot");
     if (dot) dot.style.display = total > 0 ? "block" : "none";
   } catch (e) {}

@@ -219,13 +219,14 @@ function outsideNotifClick(e) {
 function injectNotifPanel() {
   // Find the bell notification button by its specific ID
   const notifBtn = document.getElementById("notifBellBtn");
-  if (!notifBtn || document.getElementById("notif-panel")) return;
-
+  if (!notifBtn) return;
+  // Wire click even if panel already exists (for all pages)
   notifBtn.style.cursor = "pointer";
   notifBtn.onclick = (e) => {
     e.stopPropagation();
     toggleNotifPanel();
   };
+  if (document.getElementById("notif-panel")) return;
 
   const dot = notifBtn.querySelector(".notif-dot");
   if (dot) dot.style.display = "none";
@@ -256,25 +257,33 @@ document.addEventListener("DOMContentLoaded", () => {
   const path = window.location.pathname;
   if (!path.includes("/login")) {
     checkAuth();
+    // Wire panels immediately and also after short delay (for th:replace fragments)
     injectNotifPanel();
+    injectRemarquePanel();
+    setTimeout(() => {
+      injectNotifPanel();
+      injectRemarquePanel();
+    }, 200);
     loadNotifCount();
     setInterval(loadNotifCount, 30000);
     // Badges sidebar (statuts + remarques)
     if (typeof loadSidebarBadges === "function") loadSidebarBadges();
     if (typeof loadRemarquesBadge === "function") loadRemarquesBadge();
-    // Remarque panel
-    injectRemarquePanel();
-    // Search icon topbar → focuses current page search bar
-    injectSearchIcon();
   }
 });
 
 // ── REMARQUE PANEL ────────────────────────────────────────────────────────────
 
 function injectRemarquePanel() {
-  // Find the remarque topbar icon button
   const rBtn = document.getElementById("remarqueBtnTopbar");
-  if (!rBtn || document.getElementById("remarque-panel")) return;
+  if (!rBtn) return;
+  // Wire click every time (works across all pages)
+  rBtn.style.cursor = "pointer";
+  rBtn.onclick = (e) => {
+    e.stopPropagation();
+    toggleRemarquePanel();
+  };
+  if (document.getElementById("remarque-panel")) return;
 
   rBtn.style.cursor = "pointer";
   rBtn.onclick = (e) => {
@@ -415,67 +424,4 @@ function outsideRemarqueClick(e) {
   if (panel && !panel.contains(e.target) && btn && !btn.contains(e.target)) {
     closeRemarquePanel();
   }
-}
-
-// ── SEARCH ICON TOPBAR ───────────────────────────────────────────────────────
-function injectSearchIcon() {
-  // Don't inject if page already has a topbar search button
-  if (
-    document.getElementById("topbarSearchBtn") ||
-    document.getElementById("searchBtn")
-  )
-    return;
-
-  // Find all search inputs on the page
-  const searchInputIds = [
-    "searchInput",
-    "agendaSearch",
-    "search-input",
-    "searchQuery",
-  ];
-  const searchClasses = [
-    ".search-input",
-    ".search-input-u",
-    ".agenda-search-wrap input",
-  ];
-
-  let searchEl = null;
-  for (const id of searchInputIds) {
-    const el = document.getElementById(id);
-    if (el) {
-      searchEl = el;
-      break;
-    }
-  }
-  if (!searchEl) {
-    for (const cls of searchClasses) {
-      const el = document.querySelector(cls);
-      if (el) {
-        searchEl = el;
-        break;
-      }
-    }
-  }
-  if (!searchEl) return;
-
-  const topbarRight = document.querySelector(".topbar-right");
-  if (!topbarRight) return;
-
-  const btn = document.createElement("div");
-  btn.id = "topbarSearchBtn";
-  btn.title = "Rechercher";
-  btn.style.cssText =
-    "cursor:pointer;display:flex;align-items:center;justify-content:center;width:32px;height:32px;border-radius:8px;background:#eef4ff;margin-right:6px;transition:background 0.15s;flex-shrink:0;";
-  btn.innerHTML = `<svg width="15" height="15" viewBox="0 0 24 24" fill="none">
-    <circle cx="11" cy="11" r="8" stroke="#0d2b6e" stroke-width="1.8"/>
-    <path d="M21 21l-4.35-4.35" stroke="#0d2b6e" stroke-width="1.8" stroke-linecap="round"/>
-  </svg>`;
-  btn.onmouseover = () => (btn.style.background = "#d8e8ff");
-  btn.onmouseout = () => (btn.style.background = "#eef4ff");
-  btn.onclick = () => {
-    searchEl.focus();
-    searchEl.select();
-    searchEl.scrollIntoView({ behavior: "smooth", block: "center" });
-  };
-  topbarRight.insertBefore(btn, topbarRight.firstChild);
 }

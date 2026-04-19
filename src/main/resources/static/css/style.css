@@ -19,9 +19,15 @@ body {
 /* LOGIN PAGE STYLES */
 .login-page {
   display: flex;
+  width: 100%;
+  height: 100%;
   min-height: 100vh;
-  border-radius: 14px;
-  overflow: hidden;
+}
+
+/* Hide sidebar on login page */
+body.no-sidebar .sidebar,
+body.no-sidebar #mainSidebar {
+  display: none !important;
 }
 
 .left-panel {
@@ -441,6 +447,26 @@ body {
   flex-direction: column;
   flex-shrink: 0;
   overflow: hidden;
+  height: 100%;
+}
+
+/* Scrollable nav area inside sidebar */
+.sidebar-nav {
+  flex: 1;
+  overflow-y: auto;
+  overflow-x: hidden;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255, 255, 255, 0.15) transparent;
+}
+.sidebar-nav::-webkit-scrollbar {
+  width: 3px;
+}
+.sidebar-nav::-webkit-scrollbar-track {
+  background: transparent;
+}
+.sidebar-nav::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.15);
+  border-radius: 2px;
 }
 
 .sidebar-profile {
@@ -499,7 +525,7 @@ body {
   display: flex;
   align-items: center;
   gap: 10px;
-  padding: 9px 20px;
+  padding: 9px 16px;
   cursor: pointer;
   border-radius: 0;
   transition: background 0.15s;
@@ -528,9 +554,9 @@ body {
 }
 
 .nav-icon {
-  width: 32px;
-  height: 32px;
-  border-radius: 8px;
+  width: 28px;
+  height: 28px;
+  border-radius: 7px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -543,19 +569,20 @@ body {
 }
 
 .nav-icon svg {
-  width: 15px;
-  height: 15px;
+  width: 14px;
+  height: 14px;
 }
 
 .nav-label {
   font-size: 12px;
-  color: rgba(255, 255, 255, 0.6);
+  color: rgba(255, 255, 255, 0.65);
   font-weight: 400;
+  letter-spacing: 0.01em;
 }
 
 .nav-item.active .nav-label {
   color: #fff;
-  font-weight: 500;
+  font-weight: 600;
 }
 
 .nav-badge {
@@ -571,26 +598,37 @@ body {
 }
 
 .sidebar-bottom {
-  margin-top: auto;
-  padding: 12px 16px;
-  border-top: 0.5px solid rgba(255, 255, 255, 0.08);
+  padding: 14px 14px;
+  border-top: 0.5px solid rgba(255, 255, 255, 0.1);
+  flex-shrink: 0;
+  background: #0d2b6e;
 }
 
 .logout-btn {
   display: flex;
   align-items: center;
-  gap: 8px;
-  padding: 8px 12px;
-  border-radius: 8px;
+  gap: 10px;
+  width: 100%;
+  padding: 10px 14px;
+  border-radius: 10px;
   cursor: pointer;
-  background: rgba(224, 90, 43, 0.1);
-  border: 0.5px solid rgba(224, 90, 43, 0.2);
+  background: rgba(232, 137, 106, 0.12);
+  border: 1px solid rgba(232, 137, 106, 0.25);
+  color: #e8896a;
+  transition: all 0.18s;
+  font-family: inherit;
+}
+
+.logout-btn:hover {
+  background: rgba(232, 137, 106, 0.22);
+  border-color: rgba(232, 137, 106, 0.45);
+  transform: translateX(2px);
 }
 
 .logout-label {
-  font-size: 11px;
-  color: #e8896a;
-  font-weight: 500;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.02em;
 }
 
 /* MAIN CONTENT STYLES */
@@ -601,42 +639,226 @@ body {
   padding: 24px 28px;
 }
 
+/* ── DASHBOARD QUICK CARDS ── */
 .quick-cards {
-  display: flex;
-  gap: 10px;
-  flex-wrap: wrap;
-  justify-content: center;
-  margin-bottom: 20px;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 14px;
+  margin-bottom: 18px;
 }
 
 .qcard {
   background: #fff;
-  border-radius: 10px;
+  border-radius: 14px;
   border: 0.5px solid #d8e4f0;
-  padding: 12px 16px;
-  min-width: 110px;
-  text-align: center;
+  padding: 18px 18px 14px;
   cursor: pointer;
+  transition:
+    transform 0.15s,
+    box-shadow 0.15s;
+  position: relative;
+  overflow: hidden;
+}
+.qcard:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(13, 43, 110, 0.1);
+}
+
+/* Card accent strips */
+.qcard-encours {
+  border-top: 3px solid #5bb8e8;
+}
+.qcard-noncommence {
+  border-top: 3px solid #f5a623;
+}
+.qcard-cloture {
+  border-top: 3px solid #22c55e;
+}
+.qcard-pasvisibilite {
+  border-top: 3px solid #8a9fbf;
+}
+
+.qcard-icon {
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 12px;
+}
+.qcard-encours .qcard-icon {
+  background: #e8f5ff;
+  color: #5bb8e8;
+}
+.qcard-noncommence .qcard-icon {
+  background: #fff7e6;
+  color: #f5a623;
+}
+.qcard-cloture .qcard-icon {
+  background: #e8faf0;
+  color: #22c55e;
+}
+.qcard-pasvisibilite .qcard-icon {
+  background: #f4f6f9;
+  color: #8a9fbf;
 }
 
 .qcard-num {
-  font-size: 22px;
+  font-size: 32px;
+  font-weight: 800;
+  color: #0d2b6e;
+  line-height: 1;
+  margin-bottom: 4px;
+}
+.qcard-label {
+  font-size: 11px;
+  color: #8a9fbf;
+  font-weight: 500;
+  margin-bottom: 12px;
+}
+
+/* Progress bar inside card */
+.qcard-bar {
+  height: 5px;
+  background: #eef2f8;
+  border-radius: 3px;
+  overflow: hidden;
+}
+.qcard-bar-fill {
+  height: 100%;
+  border-radius: 3px;
+  width: 0%;
+  transition: width 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.qcard-encours .qcard-bar-fill {
+  background: #5bb8e8;
+}
+.qcard-noncommence .qcard-bar-fill {
+  background: #f5a623;
+}
+.qcard-cloture .qcard-bar-fill {
+  background: #22c55e;
+}
+.qcard-pasvisibilite .qcard-bar-fill {
+  background: #8a9fbf;
+}
+
+/* ── DASHBOARD TWO-COLUMN GRID ── */
+.dash-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  margin-bottom: 0;
+}
+
+/* ── AVANCEMENT PROGRESS ROWS ── */
+.dash-progress-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 0;
+  border-bottom: 0.5px solid #f0f4fa;
+}
+.dash-progress-row:last-child {
+  border-bottom: none;
+}
+.dash-progress-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+.dash-progress-label {
+  font-size: 12px;
+  font-weight: 600;
+  color: #1a2d5a;
+  min-width: 150px;
+}
+.dash-progress-bar-wrap {
+  flex: 1;
+  height: 7px;
+  background: #eef2f8;
+  border-radius: 4px;
+  overflow: hidden;
+}
+.dash-progress-bar-inner {
+  height: 100%;
+  border-radius: 4px;
+  transition: width 0.9s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.dash-progress-pct {
+  font-size: 12px;
   font-weight: 700;
   color: #0d2b6e;
+  min-width: 36px;
+  text-align: right;
 }
-
-.qcard-label {
-  font-size: 10px;
+.dash-progress-count {
+  font-size: 11px;
   color: #8a9fbf;
-  margin-top: 2px;
+  min-width: 24px;
+  text-align: right;
 }
 
-.qcard.accent .qcard-num {
-  color: #5bb8e8;
+/* ── RECENT PROJECTS LIST ── */
+.dash-recent-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 0;
+  border-bottom: 0.5px solid #f0f4fa;
+  cursor: pointer;
+  transition: background 0.1s;
+  border-radius: 6px;
+}
+.dash-recent-item:last-child {
+  border-bottom: none;
+}
+.dash-recent-item:hover {
+  background: #f8fafd;
+  padding-left: 6px;
+}
+.dash-recent-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+.dash-recent-name {
+  font-size: 13px;
+  font-weight: 600;
+  color: #1a2d5a;
+  flex: 1;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.dash-recent-date {
+  font-size: 10px;
+  color: #b0bdd0;
+  white-space: nowrap;
+}
+.dash-recent-badge {
+  font-size: 10px;
+  font-weight: 700;
+  padding: 2px 8px;
+  border-radius: 20px;
+  white-space: nowrap;
 }
 
-.qcard.warn .qcard-num {
-  color: #e05a2b;
+@media (max-width: 900px) {
+  .quick-cards {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .dash-grid {
+    grid-template-columns: 1fr;
+  }
+}
+@media (max-width: 520px) {
+  .quick-cards {
+    grid-template-columns: 1fr 1fr;
+  }
 }
 
 /* FORM STYLES */
