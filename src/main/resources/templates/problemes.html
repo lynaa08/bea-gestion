@@ -261,7 +261,24 @@
           </div>
         </div>
         <div class="topbar-right">
-          <div class="notif-btn" style="position: relative; cursor: pointer">
+          <div
+            class="notif-btn"
+            id="remarqueBtnTopbar"
+            title="Remarques"
+            style="cursor: pointer; margin-right: 2px">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none">
+              <path
+                d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"
+                stroke="#4A6A9E"
+                stroke-width="1.8"
+                fill="none" />
+            </svg>
+            <div class="notif-dot" id="remarqueDot" style="display: none"></div>
+          </div>
+          <div
+            class="notif-btn"
+            id="notifBellBtn"
+            style="position: relative; cursor: pointer">
             <svg width="15" height="15" viewBox="0 0 24 24" fill="none">
               <path
                 d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9M13.73 21a2 2 0 01-3.46 0"
@@ -281,109 +298,7 @@
       </div>
 
       <div class="body">
-        <div class="sidebar">
-          <div class="sidebar-profile">
-            <div class="avatar-ring">
-              <svg viewBox="0 0 36 36" fill="none">
-                <circle cx="18" cy="13" r="7" fill="rgba(255,255,255,0.9)" />
-                <path
-                  d="M4 32c0-7.7 6.3-14 14-14s14 6.3 14 14"
-                  fill="rgba(255,255,255,0.9)" />
-              </svg>
-            </div>
-            <div class="sidebar-name"></div>
-            <div class="sidebar-role"></div>
-          </div>
-          <div class="nav-section-label">Navigation</div>
-          <div class="nav-item" onclick="window.location.href = '/dashboard'">
-            <div class="nav-icon">
-              <svg viewBox="0 0 24 24" fill="none">
-                <rect
-                  x="3"
-                  y="3"
-                  width="7"
-                  height="7"
-                  rx="1.5"
-                  stroke="rgba(255,255,255,0.5)"
-                  stroke-width="1.5" />
-                <rect
-                  x="14"
-                  y="3"
-                  width="7"
-                  height="7"
-                  rx="1.5"
-                  stroke="rgba(255,255,255,0.5)"
-                  stroke-width="1.5" />
-                <rect
-                  x="3"
-                  y="14"
-                  width="7"
-                  height="7"
-                  rx="1.5"
-                  stroke="rgba(255,255,255,0.5)"
-                  stroke-width="1.5" />
-                <rect
-                  x="14"
-                  y="14"
-                  width="7"
-                  height="7"
-                  rx="1.5"
-                  stroke="rgba(255,255,255,0.5)"
-                  stroke-width="1.5" />
-              </svg>
-            </div>
-            <span class="nav-label">Dashboard</span>
-          </div>
-          <div
-            class="nav-item"
-            onclick="window.location.href = '/projets-list'">
-            <div class="nav-icon">
-              <svg viewBox="0 0 24 24" fill="none">
-                <rect
-                  x="3"
-                  y="5"
-                  width="18"
-                  height="16"
-                  rx="2"
-                  stroke="rgba(255,255,255,0.5)"
-                  stroke-width="1.5"
-                  fill="none" />
-              </svg>
-            </div>
-            <span class="nav-label">Projets</span>
-          </div>
-          <div class="nav-item active">
-            <div class="nav-icon">
-              <svg viewBox="0 0 24 24" fill="none">
-                <circle
-                  cx="12"
-                  cy="12"
-                  r="10"
-                  stroke="#5BB8E8"
-                  stroke-width="1.5" />
-                <path
-                  d="M12 8v4M12 16h.01"
-                  stroke="#5BB8E8"
-                  stroke-width="2"
-                  stroke-linecap="round" />
-              </svg>
-            </div>
-            <span class="nav-label">Problèmes</span>
-          </div>
-          <div class="sidebar-bottom">
-            <div class="logout-btn" onclick="logout()">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none">
-                <path
-                  d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4M16 17l5-5-5-5M21 12H9"
-                  stroke="#E8896A"
-                  stroke-width="1.8"
-                  stroke-linecap="round"
-                  stroke-linejoin="round" />
-              </svg>
-              <span class="logout-label">Déconnexion</span>
-            </div>
-          </div>
-        </div>
+        <div th:replace="~{fragments/sidebar :: sidebar}"></div>
 
         <div class="main">
           <div id="msgArea"></div>
@@ -458,6 +373,7 @@
       </div>
     </div>
 
+    <script th:src="@{/js/sidebar-badge-loader.js}"></script>
     <script th:src="@{/js/auth.js}"></script>
     <script>
       const userProb = localStorage.getItem("user")
@@ -567,10 +483,14 @@
     <div class="prob-card">
       <div class="prob-header">
         <div>
-          <div class="prob-title">${p.titre || ""}</div>
+          <div class="prob-title"
+            style="${p.projet ? "cursor:pointer;" : ""}"
+            onclick="${p.projet ? "window.location.href='/projets/edit/" + p.projet.id + "'" : ""}">
+            ${p.titre || ""}
+          </div>
           <div class="prob-meta">
             Par ${p.declarant ? p.declarant.prenom + " " + p.declarant.nom + " (" + p.declarant.matricule + ")" : "—"}
-            ${p.projet ? " · Projet: " + p.projet.nom : ""}
+            ${p.projet ? ' · <a href="/projets/edit/' + p.projet.id + '" style="color:#5bb8e8;font-weight:600;text-decoration:none;">📁 ' + p.projet.nom + "</a>" : ""}
             · ${p.dateCreation ? new Date(p.dateCreation).toLocaleDateString("fr-FR") : ""}
           </div>
         </div>
@@ -629,6 +549,5 @@
         setTimeout(() => (el.innerHTML = ""), 4000);
       }
     </script>
-    <div th:replace="fragments/sidebar :: sidebar"></div>
   </body>
 </html>

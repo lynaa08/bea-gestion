@@ -15,17 +15,18 @@ public class Materiel {
     @Column(nullable = false)
     private String nom;
 
-    private String reference;
+    private String marque;
 
     @Column(length = 1000)
     private String description;
 
     @Enumerated(EnumType.STRING)
-    private EtatMateriel etat;
+    private EtatMateriel statut;
 
     private Integer quantite;
 
-    private String categorie; // Informatique, Réseau, Bureau, etc.
+    private String bureau;
+    private String service;
 
     private LocalDate dateAcquisition;
 
@@ -44,20 +45,22 @@ public class Materiel {
     public String getNom() { return nom; }
     public void setNom(String nom) { this.nom = nom; }
 
-    public String getReference() { return reference; }
-    public void setReference(String reference) { this.reference = reference; }
+    public String getMarque() { return marque; }
+    public void setMarque(String marque) { this.marque = marque; }
 
     public String getDescription() { return description; }
     public void setDescription(String description) { this.description = description; }
 
-    public EtatMateriel getEtat() { return etat; }
-    public void setEtat(EtatMateriel etat) { this.etat = etat; }
+    public EtatMateriel getStatut() { return statut; }
+    public void setStatut(EtatMateriel statut) { this.statut = statut; }
 
     public Integer getQuantite() { return quantite; }
     public void setQuantite(Integer quantite) { this.quantite = quantite; }
 
-    public String getCategorie() { return categorie; }
-    public void setCategorie(String categorie) { this.categorie = categorie; }
+    public String getBureau() { return bureau; }
+    public void setBureau(String bureau) { this.bureau = bureau; }
+    public String getService() { return service; }
+    public void setService(String service) { this.service = service; }
 
     public LocalDate getDateAcquisition() { return dateAcquisition; }
     public void setDateAcquisition(LocalDate dateAcquisition) { this.dateAcquisition = dateAcquisition; }
@@ -67,4 +70,8 @@ public class Materiel {
 
     public User getResponsable() { return responsable; }
     public void setResponsable(User responsable) { this.responsable = responsable; }
+    public String getCategorie() {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'getCategorie'");
+    }
 }

@@ -188,35 +188,52 @@
                   required />
               </div>
               <div class="field">
-                <label class="field-label">Référence</label>
+                <label class="field-label">Marque</label>
                 <input
                   type="text"
                   class="field-input"
-                  id="reference"
-                  placeholder="Ex: MAT-2025-001" />
+                  id="marque"
+                  placeholder="Ex: Dell, HP, Cisco..." />
               </div>
             </div>
 
             <div class="form-grid2">
               <div class="field">
-                <label class="field-label">Catégorie</label>
-                <select class="field-select" id="categorie">
-                  <option value="">-- Sélectionner --</option>
-                  <option value="Informatique">Informatique</option>
-                  <option value="Réseau">Réseau</option>
-                  <option value="Bureau">Bureau</option>
-                  <option value="Autre">Autre</option>
-                </select>
+                <label class="field-label">Bureau</label>
+                <input
+                  type="text"
+                  class="field-input"
+                  id="bureau"
+                  placeholder="Ex: Bureau 203, Direction informatique..." />
               </div>
               <div class="field">
-                <label class="field-label">État *</label>
-                <select class="field-select" id="etat" required>
+                <label class="field-label">Service</label>
+                <input
+                  type="text"
+                  class="field-input"
+                  id="service"
+                  placeholder="Ex: Service des systèmes, Service RH..." />
+              </div>
+            </div>
+            <div class="form-grid2">
+              <div class="field">
+                <label class="field-label">Statut *</label>
+                <select class="field-select" id="statut" required>
                   <option value="">-- Sélectionner --</option>
                   <option value="NEUF">Neuf</option>
                   <option value="BON_ETAT">Bon état</option>
                   <option value="USAGE">Usagé</option>
                   <option value="EN_PANNE">En panne</option>
                 </select>
+              </div>
+              <div class="field">
+                <label class="field-label">Quantité</label>
+                <input
+                  type="number"
+                  class="field-input"
+                  id="quantite"
+                  min="1"
+                  placeholder="1" />
               </div>
             </div>
 
@@ -322,9 +339,10 @@
           const m = await res.json();
           document.getElementById("materielId").value = m.id;
           document.getElementById("nom").value = m.nom || "";
-          document.getElementById("reference").value = m.reference || "";
-          document.getElementById("categorie").value = m.categorie || "";
-          document.getElementById("etat").value = m.etat || "";
+          document.getElementById("marque").value = m.marque || "";
+          document.getElementById("bureau").value = m.bureau || "";
+          document.getElementById("service").value = m.service || "";
+          document.getElementById("statut").value = m.statut || "";
           document.getElementById("quantite").value = m.quantite || "";
           document.getElementById("dateAcquisition").value =
             m.dateAcquisition || "";
@@ -341,21 +359,22 @@
       async function saveMateriel() {
         const id = document.getElementById("materielId").value;
         const nom = document.getElementById("nom").value.trim();
-        const etat = document.getElementById("etat").value;
+        const statut = document.getElementById("statut").value;
         if (!nom) {
           showMsg("Le nom est obligatoire", "err");
           return;
         }
-        if (!etat) {
-          showMsg("L'état est obligatoire", "err");
+        if (!statut) {
+          showMsg("Le statut est obligatoire", "err");
           return;
         }
 
         const body = {
           nom,
-          reference: document.getElementById("reference").value || null,
-          categorie: document.getElementById("categorie").value || null,
-          etat,
+          reference: document.getElementById("marque").value || null,
+          bureau: document.getElementById("bureau").value || null,
+          service: document.getElementById("service").value || null,
+          statut,
           quantite: parseInt(document.getElementById("quantite").value) || 1,
           dateAcquisition:
             document.getElementById("dateAcquisition").value || null,

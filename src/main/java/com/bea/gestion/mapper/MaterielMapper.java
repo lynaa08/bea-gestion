@@ -12,9 +12,11 @@ public class MaterielMapper {
         MaterielDTO dto = new MaterielDTO();
         dto.setId(m.getId());
         dto.setNom(m.getNom());
-        dto.setReference(m.getReference());
+        dto.setMarque(m.getMarque());
+        dto.setBureau(m.getBureau());
+        dto.setService(m.getService());
         dto.setDescription(m.getDescription());
-        dto.setEtat(m.getEtat());
+        dto.setStatut(m.getStatut());
         dto.setQuantite(m.getQuantite());
         dto.setCategorie(m.getCategorie());
         dto.setDateAcquisition(m.getDateAcquisition());

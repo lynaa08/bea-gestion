@@ -62,11 +62,12 @@ public class MaterielService {
 
     private void fillFromRequest(Materiel m, CreateMaterielRequest req) {
         m.setNom(req.getNom());
-        m.setReference(req.getReference());
+        m.setMarque(req.getMarque());
+        m.setBureau(req.getBureau());
+        m.setService(req.getService());
         m.setDescription(req.getDescription());
-        m.setEtat(req.getEtat());
+        m.setStatut(req.getStatut());
         m.setQuantite(req.getQuantite());
-        m.setCategorie(req.getCategorie());
         m.setDateAcquisition(req.getDateAcquisition());
 
         if (req.getProjetId() != null) {
