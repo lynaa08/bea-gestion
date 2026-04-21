@@ -3,6 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" type="image/png" href="/favicon.png" />
     <title>Matériel - BEA</title>
     <link rel="stylesheet" th:href="@{/css/style.css}" />
     <style>
@@ -107,21 +108,24 @@
                 ry="13"
                 stroke="#5BB8E8"
                 stroke-width="1.4"
-                fill="none" />
+                fill="none"
+              />
               <line
                 x1="3"
                 y1="16"
                 x2="29"
                 y2="16"
                 stroke="#5BB8E8"
-                stroke-width="1.4" />
+                stroke-width="1.4"
+              />
               <circle
                 cx="16"
                 cy="16"
                 r="13"
                 stroke="#5BB8E8"
                 stroke-width="1.4"
-                fill="none" />
+                fill="none"
+              />
             </svg>
           </div>
           <div class="brand-text">
@@ -134,13 +138,15 @@
             class="notif-btn"
             id="remarqueBtnTopbar"
             title="Remarques"
-            style="cursor: pointer; margin-right: 2px">
+            style="cursor: pointer; margin-right: 2px"
+          >
             <svg width="15" height="15" viewBox="0 0 24 24" fill="none">
               <path
                 d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"
                 stroke="#4A6A9E"
                 stroke-width="1.8"
-                fill="none" />
+                fill="none"
+              />
             </svg>
             <div class="notif-dot" id="remarqueDot" style="display: none"></div>
           </div>
@@ -150,7 +156,8 @@
                 d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9M13.73 21a2 2 0 01-3.46 0"
                 stroke="#4A6A9E"
                 stroke-width="1.8"
-                stroke-linecap="round" />
+                stroke-linecap="round"
+              />
             </svg>
             <div class="notif-dot"></div>
           </div>
@@ -185,7 +192,8 @@
                   class="field-input"
                   id="nom"
                   placeholder="Ex: Ordinateur portable Dell"
-                  required />
+                  required
+                />
               </div>
               <div class="field">
                 <label class="field-label">Marque</label>
@@ -193,7 +201,8 @@
                   type="text"
                   class="field-input"
                   id="marque"
-                  placeholder="Ex: Dell, HP, Cisco..." />
+                  placeholder="Ex: Dell, HP, Cisco..."
+                />
               </div>
             </div>
 
@@ -204,7 +213,8 @@
                   type="text"
                   class="field-input"
                   id="bureau"
-                  placeholder="Ex: Bureau 203, Direction informatique..." />
+                  placeholder="Ex: Bureau 203, Direction informatique..."
+                />
               </div>
               <div class="field">
                 <label class="field-label">Service</label>
@@ -212,7 +222,8 @@
                   type="text"
                   class="field-input"
                   id="service"
-                  placeholder="Ex: Service des systèmes, Service RH..." />
+                  placeholder="Ex: Service des systèmes, Service RH..."
+                />
               </div>
             </div>
             <div class="form-grid2">
@@ -233,7 +244,8 @@
                   class="field-input"
                   id="quantite"
                   min="1"
-                  placeholder="1" />
+                  placeholder="1"
+                />
               </div>
             </div>
 
@@ -245,7 +257,8 @@
                   class="field-input"
                   id="quantite"
                   min="1"
-                  placeholder="1" />
+                  placeholder="1"
+                />
               </div>
               <div class="field">
                 <label class="field-label">Date d'acquisition</label>
@@ -275,14 +288,16 @@
                 class="field-input"
                 id="description"
                 rows="3"
-                placeholder="Description du matériel..."></textarea>
+                placeholder="Description du matériel..."
+              ></textarea>
             </div>
 
             <div class="form-actions">
               <button
                 type="button"
                 class="btn-cancel"
-                onclick="window.location.href = '/materiels-list'">
+                onclick="window.location.href = '/materiels-list'"
+              >
                 Annuler
               </button>
               <button type="button" class="btn-submit" onclick="saveMateriel()">

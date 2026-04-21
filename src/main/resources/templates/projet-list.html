@@ -3,6 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" type="image/png" href="/favicon.png" />
     <title>Liste des projets - BEA</title>
     <link rel="stylesheet" th:href="@{/css/style.css}" />
     <!-- Tailwind CDN -->
@@ -120,21 +121,24 @@
                 ry="13"
                 stroke="#5BB8E8"
                 stroke-width="1.4"
-                fill="none" />
+                fill="none"
+              />
               <line
                 x1="3"
                 y1="16"
                 x2="29"
                 y2="16"
                 stroke="#5BB8E8"
-                stroke-width="1.4" />
+                stroke-width="1.4"
+              />
               <circle
                 cx="16"
                 cy="16"
                 r="13"
                 stroke="#5BB8E8"
                 stroke-width="1.4"
-                fill="none" />
+                fill="none"
+              />
             </svg>
           </div>
           <div class="brand-text">
@@ -147,7 +151,8 @@
             class="notif-btn"
             id="remarqueBtnTopbar"
             title="Remarques"
-            style="cursor: pointer; margin-right: 2px">
+            style="cursor: pointer; margin-right: 2px"
+          >
             <svg width="15" height="15" viewBox="0 0 24 24" fill="none">
               <path
                 d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"
@@ -155,12 +160,14 @@
                 stroke-width="1.8"
                 stroke-linecap="round"
                 stroke-linejoin="round"
-                fill="none" />
+                fill="none"
+              />
             </svg>
             <div
               class="notif-dot remarque-dot"
               id="remarqueDot"
-              style="display: none; background: #0d2b6e"></div>
+              style="display: none; background: #0d2b6e"
+            ></div>
           </div>
           <div class="notif-btn" style="position: relative; cursor: pointer">
             <svg width="15" height="15" viewBox="0 0 24 24" fill="none">
@@ -168,7 +175,8 @@
                 d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9M13.73 21a2 2 0 01-3.46 0"
                 stroke="#4A6A9E"
                 stroke-width="1.8"
-                stroke-linecap="round" />
+                stroke-linecap="round"
+              />
             </svg>
             <div class="notif-dot"></div>
           </div>
@@ -193,57 +201,67 @@
             <div class="flex items-center gap-3 mb-5 flex-wrap">
               <!-- Search -->
               <div
-                class="flex items-center gap-2 bg-white border border-slate-200 rounded-xl px-4 py-2.5 flex-1 min-w-[180px] max-w-xs shadow-sm">
+                class="flex items-center gap-2 bg-white border border-slate-200 rounded-xl px-4 py-2.5 flex-1 min-w-[180px] max-w-xs shadow-sm"
+              >
                 <svg
                   width="13"
                   height="13"
                   viewBox="0 0 24 24"
                   fill="none"
-                  class="shrink-0">
+                  class="shrink-0"
+                >
                   <circle
                     cx="11"
                     cy="11"
                     r="8"
                     stroke="#94a3b8"
-                    stroke-width="1.8" />
+                    stroke-width="1.8"
+                  />
                   <path
                     d="M21 21l-4.35-4.35"
                     stroke="#94a3b8"
                     stroke-width="1.8"
-                    stroke-linecap="round" />
+                    stroke-linecap="round"
+                  />
                 </svg>
                 <input
                   id="searchInput"
                   oninput="onSearch()"
                   class="border-none outline-none text-xs text-slate-700 w-full bg-transparent placeholder-slate-400"
-                  placeholder="Rechercher un projet…" />
+                  placeholder="Rechercher un projet…"
+                />
               </div>
 
               <!-- Filter tabs -->
               <div class="flex gap-1.5 bg-slate-100 rounded-xl p-1">
                 <button
                   class="ftab active px-3.5 py-1.5 rounded-lg text-xs font-semibold transition-all duration-150"
-                  onclick="setFilter('Tous', this)">
+                  onclick="setFilter('Tous', this)"
+                >
                   Tous
                 </button>
                 <button
                   class="ftab px-3.5 py-1.5 rounded-lg text-xs font-semibold transition-all duration-150 text-slate-500"
-                  onclick="setFilter('EN_COURS', this)">
+                  onclick="setFilter('EN_COURS', this)"
+                >
                   En cours
                 </button>
                 <button
                   class="ftab px-3.5 py-1.5 rounded-lg text-xs font-semibold transition-all duration-150 text-slate-500"
-                  onclick="setFilter('NON_COMMENCE', this)">
+                  onclick="setFilter('NON_COMMENCE', this)"
+                >
                   Non commencé
                 </button>
                 <button
                   class="ftab px-3.5 py-1.5 rounded-lg text-xs font-semibold transition-all duration-150 text-slate-500"
-                  onclick="setFilter('CLOTURE', this)">
+                  onclick="setFilter('CLOTURE', this)"
+                >
                   Clôturé
                 </button>
                 <button
                   class="ftab px-3.5 py-1.5 rounded-lg text-xs font-semibold transition-all duration-150 text-slate-500"
-                  onclick="setFilter('PAS_DE_VISIBILITE', this)">
+                  onclick="setFilter('PAS_DE_VISIBILITE', this)"
+                >
                   Pas de visibilité
                 </button>
               </div>
@@ -251,13 +269,15 @@
               <!-- New project button -->
               <button
                 onclick="window.location.href = '/projets/new'"
-                class="ml-auto flex items-center gap-2 bg-bea-800 hover:bg-bea-700 text-white text-xs font-semibold px-4 py-2.5 rounded-xl shadow-sm transition-all duration-150 border border-bea-700">
+                class="ml-auto flex items-center gap-2 bg-bea-800 hover:bg-bea-700 text-white text-xs font-semibold px-4 py-2.5 rounded-xl shadow-sm transition-all duration-150 border border-bea-700"
+              >
                 <svg width="12" height="12" viewBox="0 0 24 24" fill="none">
                   <path
                     d="M12 5v14M5 12h14"
                     stroke="white"
                     stroke-width="2.2"
-                    stroke-linecap="round" />
+                    stroke-linecap="round"
+                  />
                 </svg>
                 Nouveau projet
               </button>
@@ -265,13 +285,16 @@
 
             <!-- Table card -->
             <div
-              class="bg-white rounded-2xl border border-slate-100 shadow-sm overflow-hidden">
+              class="bg-white rounded-2xl border border-slate-100 shadow-sm overflow-hidden"
+            >
               <!-- Stat strip -->
               <div
-                class="flex items-center gap-6 px-5 py-3 border-b border-slate-100 bg-bea-50">
+                class="flex items-center gap-6 px-5 py-3 border-b border-slate-100 bg-bea-50"
+              >
                 <div class="flex items-center gap-2">
                   <span
-                    class="w-2 h-2 rounded-full bg-bea-400 inline-block"></span>
+                    class="w-2 h-2 rounded-full bg-bea-400 inline-block"
+                  ></span>
                   <span class="text-xs text-slate-500 font-medium" id="pageInfo"
                     >0 projet(s)</span
                   >
@@ -286,31 +309,38 @@
                 <thead>
                   <tr class="bg-bea-800">
                     <th
-                      class="text-left px-5 py-3 text-xs font-semibold text-white/70 uppercase tracking-wider w-12">
+                      class="text-left px-5 py-3 text-xs font-semibold text-white/70 uppercase tracking-wider w-12"
+                    >
                       ID
                     </th>
                     <th
-                      class="text-left px-5 py-3 text-xs font-semibold text-white uppercase tracking-wider">
+                      class="text-left px-5 py-3 text-xs font-semibold text-white uppercase tracking-wider"
+                    >
                       Nom projet
                     </th>
                     <th
-                      class="text-left px-5 py-3 text-xs font-semibold text-white/80 uppercase tracking-wider">
+                      class="text-left px-5 py-3 text-xs font-semibold text-white/80 uppercase tracking-wider"
+                    >
                       Date début
                     </th>
                     <th
-                      class="text-left px-5 py-3 text-xs font-semibold text-white/80 uppercase tracking-wider">
+                      class="text-left px-5 py-3 text-xs font-semibold text-white/80 uppercase tracking-wider"
+                    >
                       État
                     </th>
                     <th
-                      class="text-left px-5 py-3 text-xs font-semibold text-white/80 uppercase tracking-wider">
+                      class="text-left px-5 py-3 text-xs font-semibold text-white/80 uppercase tracking-wider"
+                    >
                       Type
                     </th>
                     <th
-                      class="text-left px-5 py-3 text-xs font-semibold text-white/80 uppercase tracking-wider">
+                      class="text-left px-5 py-3 text-xs font-semibold text-white/80 uppercase tracking-wider"
+                    >
                       Chef de projet
                     </th>
                     <th
-                      class="text-left px-5 py-3 text-xs font-semibold text-white/80 uppercase tracking-wider">
+                      class="text-left px-5 py-3 text-xs font-semibold text-white/80 uppercase tracking-wider"
+                    >
                       Actions
                     </th>
                   </tr>
@@ -319,7 +349,8 @@
                   <tr>
                     <td
                       colspan="7"
-                      class="text-center py-12 text-slate-300 text-sm">
+                      class="text-center py-12 text-slate-300 text-sm"
+                    >
                       Chargement...
                     </td>
                   </tr>
@@ -336,25 +367,29 @@
     <div
       class="drawer-overlay"
       id="drawerOverlay"
-      onclick="closeDrawer()"></div>
+      onclick="closeDrawer()"
+    ></div>
 
     <!-- ── PANNEAU LATÉRAL ── -->
     <div class="drawer" id="drawer">
       <!-- Header dégradé -->
       <div
         style="background: linear-gradient(135deg, #0d2b6e 0%, #1a4a9e 100%)"
-        class="px-5 py-5 flex-shrink-0">
+        class="px-5 py-5 flex-shrink-0"
+      >
         <div class="flex items-start justify-between gap-3">
           <div class="min-w-0 flex-1">
             <p
               class="text-xs font-semibold mb-1"
               style="color: #7ab4e8"
-              id="d-id">
+              id="d-id"
+            >
               Projet #—
             </p>
             <h2
               class="text-lg font-bold text-white mb-2 leading-snug"
-              id="d-nom">
+              id="d-nom"
+            >
               —
             </h2>
             <span
@@ -368,7 +403,8 @@
             class="w-8 h-8 rounded-full flex items-center justify-center text-white text-sm font-bold flex-shrink-0 mt-0.5 transition-all"
             style="background: rgba(255, 255, 255, 0.15)"
             onmouseover="this.style.background = 'rgba(255,255,255,0.28)'"
-            onmouseout="this.style.background = 'rgba(255,255,255,0.15)'">
+            onmouseout="this.style.background = 'rgba(255,255,255,0.15)'"
+          >
             ✕
           </button>
         </div>
@@ -382,7 +418,8 @@
           <div class="grid grid-cols-2 gap-2.5">
             <div class="bg-slate-50 border border-slate-100 rounded-xl p-3">
               <p
-                class="text-xs text-slate-400 uppercase tracking-wide font-semibold mb-1">
+                class="text-xs text-slate-400 uppercase tracking-wide font-semibold mb-1"
+              >
                 Type
               </p>
               <p class="text-sm font-semibold text-bea-800" id="d-type">—</p>
@@ -390,7 +427,8 @@
 
             <div class="bg-slate-50 border border-slate-100 rounded-xl p-3">
               <p
-                class="text-xs text-slate-400 uppercase tracking-wide font-semibold mb-1">
+                class="text-xs text-slate-400 uppercase tracking-wide font-semibold mb-1"
+              >
                 Priorité
               </p>
               <p class="text-sm font-bold" id="d-priorite">—</p>
@@ -398,7 +436,8 @@
 
             <div class="bg-slate-50 border border-slate-100 rounded-xl p-3">
               <p
-                class="text-xs text-slate-400 uppercase tracking-wide font-semibold mb-1">
+                class="text-xs text-slate-400 uppercase tracking-wide font-semibold mb-1"
+              >
                 Date création
               </p>
               <p class="text-sm font-semibold text-bea-800" id="d-dateCreation">
@@ -408,7 +447,8 @@
 
             <div class="bg-slate-50 border border-slate-100 rounded-xl p-3">
               <p
-                class="text-xs text-slate-400 uppercase tracking-wide font-semibold mb-1">
+                class="text-xs text-slate-400 uppercase tracking-wide font-semibold mb-1"
+              >
                 Date début
               </p>
               <p class="text-sm font-semibold text-bea-800" id="d-dateDebut">
@@ -417,9 +457,11 @@
             </div>
 
             <div
-              class="bg-slate-50 border border-slate-100 rounded-xl p-3 col-span-2">
+              class="bg-slate-50 border border-slate-100 rounded-xl p-3 col-span-2"
+            >
               <p
-                class="text-xs text-slate-400 uppercase tracking-wide font-semibold mb-1">
+                class="text-xs text-slate-400 uppercase tracking-wide font-semibold mb-1"
+              >
                 Deadline
               </p>
               <p class="text-sm font-semibold" id="d-deadline">—</p>
@@ -432,7 +474,8 @@
           <div class="d-section mb-3">Description</div>
           <div
             class="bg-slate-50 border border-slate-100 rounded-xl p-4 text-sm text-slate-500 leading-relaxed whitespace-pre-wrap min-h-[60px]"
-            id="d-desc">
+            id="d-desc"
+          >
             —
           </div>
         </div>
