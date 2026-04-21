@@ -207,45 +207,131 @@
         border-radius: 8px;
         font-size: 12px;
       }
+      /* Multi-select styles */
+      .multi-select-wrapper {
+        position: relative;
+        border: 1.5px solid #d8e6f2;
+        border-radius: 8px;
+        background: #fff;
+        min-height: 42px;
+        cursor: text;
+        transition: border-color 0.15s;
+      }
+      .multi-select-wrapper:focus-within {
+        border-color: #5bb8e8;
+      }
+      .multi-select-chips {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 6px;
+        padding: 7px 10px;
+        align-items: center;
+      }
+      .multi-chip {
+        display: inline-flex;
+        align-items: center;
+        gap: 5px;
+        background: #eef4ff;
+        border: 1px solid #c0d4f0;
+        color: #0d2b6e;
+        font-size: 11px;
+        font-weight: 600;
+        padding: 3px 8px;
+        border-radius: 20px;
+      }
+      .multi-chip-remove {
+        cursor: pointer;
+        color: #4a6a9e;
+        font-size: 14px;
+        line-height: 1;
+        font-weight: 700;
+      }
+      .multi-chip-remove:hover {
+        color: #e05a2b;
+      }
+      .multi-select-search {
+        border: none;
+        outline: none;
+        font-size: 13px;
+        color: #1a2d5a;
+        flex: 1;
+        min-width: 180px;
+        padding: 2px 0;
+        background: transparent;
+        font-family: inherit;
+      }
+      .multi-select-dropdown {
+        position: absolute;
+        top: calc(100% + 4px);
+        left: 0;
+        right: 0;
+        background: #fff;
+        border: 1.5px solid #d8e6f2;
+        border-radius: 8px;
+        max-height: 200px;
+        overflow-y: auto;
+        z-index: 100;
+        box-shadow: 0 4px 16px rgba(13, 43, 110, 0.12);
+      }
+      .multi-select-opt {
+        padding: 9px 14px;
+        font-size: 12px;
+        color: #1a2d5a;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        border-bottom: 0.5px solid #f0f4fa;
+      }
+      .multi-select-opt:last-child {
+        border-bottom: none;
+      }
+      .multi-select-opt:hover,
+      .multi-select-opt.selected {
+        background: #eef4ff;
+      }
+      .multi-select-opt.selected {
+        color: #0d2b6e;
+        font-weight: 600;
+      }
+      .multi-select-opt-mat {
+        font-weight: 700;
+        color: #0d2b6e;
+        min-width: 70px;
+      }
+      .multi-select-opt-name {
+        color: #4a6080;
+      }
     </style>
   </head>
   <body>
     <div class="app-shell">
-      <div class="topbar">
+        <div class="topbar">
         <div class="topbar-brand">
-          <div class="topbar-logo">
-            <svg viewBox="0 0 32 32" fill="none" width="20" height="20">
-              <circle cx="16" cy="16" r="13" fill="#0D2B6E" />
-              <ellipse
-                cx="16"
-                cy="16"
-                rx="5"
-                ry="13"
-                stroke="#5BB8E8"
-                stroke-width="1.4"
-                fill="none" />
-              <line
-                x1="3"
-                y1="16"
-                x2="29"
-                y2="16"
-                stroke="#5BB8E8"
-                stroke-width="1.4" />
-              <circle
-                cx="16"
-                cy="16"
-                r="13"
-                stroke="#5BB8E8"
-                stroke-width="1.4"
-                fill="none" />
-            </svg>
-          </div>
-          <div class="brand-text">
-            <div class="brand-name">Banque Extérieure d'Algérie</div>
-            <div class="brand-sub">Gestion de projets</div>
-          </div>
+          <img th:src="@{/images/logo_sidebar.svg}" 
+               alt="Logo BEA" 
+               style="height: 40px; width: auto;" />
         </div>
         <div class="topbar-right">
+          <div
+            class="notif-btn"
+            id="remarqueBtnTopbar"
+            title="Remarques"
+            style="cursor: pointer; margin-right: 2px">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none">
+              <path
+                d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"
+                stroke="#4A6A9E"
+                stroke-width="1.8"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                fill="none" />
+            </svg>
+            <div
+              class="notif-dot remarque-dot"
+              id="remarqueDot"
+              style="display: none; background: #0d2b6e"></div>
+          </div>
           <div class="notif-btn" style="position: relative; cursor: pointer">
             <svg width="15" height="15" viewBox="0 0 24 24" fill="none">
               <path
@@ -266,119 +352,7 @@
       </div>
 
       <div class="body">
-        <div class="sidebar">
-          <div class="sidebar-profile">
-            <div class="avatar-ring">
-              <svg viewBox="0 0 36 36" fill="none">
-                <circle cx="18" cy="13" r="7" fill="rgba(255,255,255,0.9)" />
-                <path
-                  d="M4 32c0-7.7 6.3-14 14-14s14 6.3 14 14"
-                  fill="rgba(255,255,255,0.9)" />
-              </svg>
-            </div>
-            <div class="sidebar-name"></div>
-            <div class="sidebar-role"></div>
-          </div>
-          <div class="nav-section-label">Navigation</div>
-          <div class="nav-item" onclick="window.location.href = '/dashboard'">
-            <div class="nav-icon">
-              <svg viewBox="0 0 24 24" fill="none">
-                <rect
-                  x="3"
-                  y="3"
-                  width="7"
-                  height="7"
-                  rx="1.5"
-                  stroke="rgba(255,255,255,0.5)"
-                  stroke-width="1.5" />
-                <rect
-                  x="14"
-                  y="3"
-                  width="7"
-                  height="7"
-                  rx="1.5"
-                  stroke="rgba(255,255,255,0.5)"
-                  stroke-width="1.5" />
-                <rect
-                  x="3"
-                  y="14"
-                  width="7"
-                  height="7"
-                  rx="1.5"
-                  stroke="rgba(255,255,255,0.5)"
-                  stroke-width="1.5" />
-                <rect
-                  x="14"
-                  y="14"
-                  width="7"
-                  height="7"
-                  rx="1.5"
-                  stroke="rgba(255,255,255,0.5)"
-                  stroke-width="1.5" />
-              </svg>
-            </div>
-            <span class="nav-label">Dashboard</span>
-          </div>
-          <div class="nav-item active">
-            <div class="nav-icon">
-              <svg viewBox="0 0 24 24" fill="none">
-                <rect
-                  x="3"
-                  y="5"
-                  width="18"
-                  height="16"
-                  rx="2"
-                  stroke="#5BB8E8"
-                  stroke-width="1.5"
-                  fill="none" />
-                <path
-                  d="M8 3v4M16 3v4M3 11h18"
-                  stroke="#5BB8E8"
-                  stroke-width="1.5"
-                  stroke-linecap="round" />
-              </svg>
-            </div>
-            <span class="nav-label">Projets</span>
-          </div>
-          <div
-            class="nav-item"
-            onclick="window.location.href = '/projets-list'">
-            <div class="nav-icon">
-              <svg viewBox="0 0 24 24" fill="none">
-                <rect
-                  x="3"
-                  y="3"
-                  width="7"
-                  height="7"
-                  rx="1.5"
-                  stroke="rgba(255,255,255,0.5)"
-                  stroke-width="1.5" />
-                <rect
-                  x="14"
-                  y="3"
-                  width="7"
-                  height="7"
-                  rx="1.5"
-                  stroke="rgba(255,255,255,0.5)"
-                  stroke-width="1.5" />
-              </svg>
-            </div>
-            <span class="nav-label">Liste des projets</span>
-          </div>
-          <div class="sidebar-bottom">
-            <div class="logout-btn" onclick="logout()">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none">
-                <path
-                  d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4M16 17l5-5-5-5M21 12H9"
-                  stroke="#E8896A"
-                  stroke-width="1.8"
-                  stroke-linecap="round"
-                  stroke-linejoin="round" />
-              </svg>
-              <span class="logout-label">Déconnexion</span>
-            </div>
-          </div>
-        </div>
+        <div th:replace="~{fragments/sidebar :: sidebar}"></div>
 
         <div class="main">
           <div class="page-layout">
@@ -411,7 +385,7 @@
               <form id="projectForm" onsubmit="handleProjectSubmit(event)">
                 <input type="hidden" id="projectId" />
 
-                <div class="section-label">📋 Informations générales</div>
+                <div class="section-label">Informations générales</div>
                 <div class="field">
                   <label class="field-label"
                     >Nom du projet <span class="req">*</span></label
@@ -424,15 +398,14 @@
                     placeholder="Entrez le nom du projet" />
                 </div>
 
-                <div class="section-label">🏷️ Matricule chef de projet</div>
+                <div class="section-label"> Chef de projet</div>
                 <div class="field">
-                  <label class="field-label">Matricule du chef de projet</label>
-                  <input
-                    type="text"
-                    class="field-input"
-                    id="chefMatricule"
-                    placeholder="Ex: PMO001, CDEP001"
-                    style="font-weight: 600; letter-spacing: 0.04em" />
+                  <label class="field-label">Chef de projet</label>
+                  <select class="field-select" id="chefProjetSelect">
+                    <option value="">
+                      -- Sélectionner un chef de projet --
+                    </option>
+                  </select>
                   <small
                     style="
                       color: #8a9fbf;
@@ -440,7 +413,38 @@
                       margin-top: 3px;
                       display: block;
                     ">
-                    Entrez le matricule du responsable du projet
+                    Sélectionnez le responsable du projet
+                  </small>
+                </div>
+
+                <div class="section-label"> Membres du projet</div>
+                <div class="field">
+                  <label class="field-label"
+                    >Membres (sélection multiple)</label
+                  >
+                  <div class="multi-select-wrapper" id="membresWrapper">
+                    <div class="multi-select-chips" id="membresChips">
+                      <input
+                        type="text"
+                        class="multi-select-search"
+                        id="membresSearch"
+                        placeholder="Rechercher un membre par matricule ou nom..."
+                        oninput="filterMembresDropdown()"
+                        onfocus="showMembresDropdown()" />
+                    </div>
+                    <div
+                      class="multi-select-dropdown"
+                      id="membresDropdown"
+                      style="display: none"></div>
+                  </div>
+                  <small
+                    style="
+                      color: #8a9fbf;
+                      font-size: 10px;
+                      margin-top: 3px;
+                      display: block;
+                    ">
+                    Cliquez pour sélectionner plusieurs membres
                   </small>
                 </div>
 
@@ -451,9 +455,12 @@
                     >
                     <select class="field-select" id="statut" required>
                       <option value="">-- Sélectionner --</option>
-                      <option value="EN_COURS">En cours</option>
-                      <option value="EN_ATTENTE">En attente</option>
-                      <option value="TERMINE">Terminé</option>
+                      <option value="EN_COURS">Projet en cours</option>
+                      <option value="CLOTURE">Projet clôturé</option>
+                      <option value="NON_COMMENCE">Projet non commencé</option>
+                      <option value="PAS_DE_VISIBILITE">
+                        Pas de visibilité
+                      </option>
                     </select>
                   </div>
                   <div class="field">
@@ -480,7 +487,7 @@
                   </div>
                 </div>
 
-                <div class="section-label">📅 Dates</div>
+                <div class="section-label">Dates</div>
                 <div class="form-grid2">
                   <div class="field">
                     <label class="field-label">Date début</label>
@@ -492,7 +499,7 @@
                   </div>
                 </div>
 
-                <div class="section-label">📝 Description</div>
+                <div class="section-label"> Description</div>
                 <div class="field">
                   <label class="field-label">Description</label>
                   <textarea
@@ -550,6 +557,7 @@
       </div>
     </div>
 
+    <script th:src="@{/js/sidebar-badge-loader.js}"></script>
     <script th:src="@{/js/auth.js}"></script>
     <script th:src="@{/js/projets.js}"></script>
     <script>

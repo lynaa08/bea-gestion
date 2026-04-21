@@ -1,299 +1,258 @@
-// Dashboard functionality
-let statsChart = null;
+// ── Dashboard ─────────────────────────────────────────────────────────────
 
-// Check authentication on page load
-if (document.readyState === "loading") {
-  document.addEventListener("DOMContentLoaded", () => {
-    if (!checkAuth()) return;
-    loadUserInfo();
-    loadDashboard();
-  });
-} else {
+const STATUT_LABEL = {
+  EN_COURS: "Projet en cours",
+  CLOTURE: "Projet clôturé",
+  NON_COMMENCE: "Projet non commencé",
+  PAS_DE_VISIBILITE: "Pas de visibilité",
+};
+const STATUT_COLOR = {
+  EN_COURS: "#5BB8E8",
+  CLOTURE: "#22c55e",
+  NON_COMMENCE: "#F5A623",
+  PAS_DE_VISIBILITE: "#8a9fbf",
+};
+
+document.addEventListener("DOMContentLoaded", () => {
   if (!checkAuth()) return;
-  loadUserInfo();
   loadDashboard();
-}
+});
 
-// Load all dashboard data
 async function loadDashboard() {
-  try {
-    // Load statistics for cards
-    await loadStatistics();
-
-    // Load statistics by type
-    await loadStatsByType();
-
-    // Load recent projects (optional)
-    await loadRecentProjects();
-  } catch (error) {
-    console.error("Error loading dashboard:", error);
-    showNotification("Erreur lors du chargement du tableau de bord", "error");
-  }
+  await Promise.all([
+    loadStatistics(),
+    loadStatsByType(),
+    loadRecentProjects(),
+  ]);
 }
 
-// Load statistics for cards
+// ── 1. Cartes + barres de progression ──────────────────────────────────────
 async function loadStatistics() {
   try {
-    const response = await fetch(`/api/dashboard/stats`, {
+    const res = await fetch("/api/dashboard/stats", {
       headers: getAuthHeaders(),
     });
-
-    if (response.ok) {
-      const stats = await response.json();
-      updateDashboardStats(stats);
-    } else if (response.status === 401) {
+    if (res.status === 401) {
       logout();
+      return;
     }
-  } catch (error) {
-    console.error("Error loading stats:", error);
+    if (!res.ok) return;
+    const stats = await res.json();
+    updateCards(stats);
+  } catch (e) {}
+}
+
+function updateCards(stats) {
+  const total = stats.TOTAL || 0;
+  const keys = [
+    { key: "EN_COURS", id: "qcard-encours", bar: "bar-encours" },
+    { key: "NON_COMMENCE", id: "qcard-noncommence", bar: "bar-noncommence" },
+    { key: "CLOTURE", id: "qcard-cloture", bar: "bar-cloture" },
+    {
+      key: "PAS_DE_VISIBILITE",
+      id: "qcard-pasvisibilite",
+      bar: "bar-pasvisibilite",
+    },
+  ];
+
+  keys.forEach(({ key, id, bar }) => {
+    const val = stats[key] || 0;
+    const pct = total > 0 ? Math.round((val / total) * 100) : 0;
+
+    const numEl = document.getElementById(id);
+    if (numEl) {
+      numEl.textContent = val;
+      // Animate number
+      animateNumber(numEl, val);
+    }
+
+    const barEl = document.getElementById(bar);
+    if (barEl) {
+      setTimeout(() => {
+        barEl.style.width = pct + "%";
+      }, 100);
+      barEl.title = pct + "% du total";
+    }
+  });
+
+  // Also update the avancement section
+  renderAvancement(stats, total);
+}
+
+function animateNumber(el, target) {
+  let current = 0;
+  const step = Math.max(1, Math.floor(target / 20));
+  const timer = setInterval(() => {
+    current = Math.min(current + step, target);
+    el.textContent = current;
+    if (current >= target) clearInterval(timer);
+  }, 40);
+}
+
+// ── 2. Avancement global (barres de pourcentage) ────────────────────────────
+function renderAvancement(stats, total) {
+  const container = document.getElementById("dash-avancement");
+  if (!container) return;
+
+  if (total === 0) {
+    container.innerHTML =
+      '<div style="text-align:center;padding:40px;color:#b0bdd0;font-size:13px">Aucun projet enregistré</div>';
+    return;
+  }
+
+  const rows = [
+    { key: "EN_COURS", label: "En cours", color: "#5BB8E8" },
+    { key: "CLOTURE", label: "Clôturés", color: "#22c55e" },
+    { key: "NON_COMMENCE", label: "Non commencés", color: "#F5A623" },
+    { key: "PAS_DE_VISIBILITE", label: "Pas de visibilité", color: "#8a9fbf" },
+  ];
+
+  // Total badge
+  container.innerHTML = `
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;padding-bottom:12px;border-bottom:0.5px solid #eef2f8;">
+      <span style="font-size:13px;font-weight:600;color:#1a2d5a;">Total projets</span>
+      <span style="font-size:26px;font-weight:800;color:#0d2b6e;">${total}</span>
+    </div>
+    ${rows
+      .map(({ key, label, color }) => {
+        const val = stats[key] || 0;
+        const pct = Math.round((val / total) * 100);
+        return `<div class="dash-progress-row">
+        <div class="dash-progress-dot" style="background:${color}"></div>
+        <span class="dash-progress-label">${label}</span>
+        <div class="dash-progress-bar-wrap">
+          <div class="dash-progress-bar-inner" style="width:0%;background:${color}" data-pct="${pct}"></div>
+        </div>
+        <span class="dash-progress-pct">${pct}%</span>
+        <span class="dash-progress-count">${val}</span>
+      </div>`;
+      })
+      .join("")}
+  `;
+
+  // Animate progress bars
+  setTimeout(() => {
+    container.querySelectorAll(".dash-progress-bar-inner").forEach((bar) => {
+      bar.style.width = bar.dataset.pct + "%";
+    });
+  }, 150);
+}
+
+// ── 3. Projets récents ──────────────────────────────────────────────────────
+async function loadRecentProjects() {
+  const container = document.getElementById("dash-recent");
+  if (!container) return;
+  try {
+    const res = await fetch("/api/dashboard/recent?limit=6", {
+      headers: getAuthHeaders(),
+    });
+    if (!res.ok) {
+      container.innerHTML =
+        '<div style="padding:20px;color:#b0bdd0;font-size:12px;text-align:center">Indisponible</div>';
+      return;
+    }
+    const projects = await res.json();
+
+    if (!projects || projects.length === 0) {
+      container.innerHTML =
+        '<div style="padding:40px;color:#b0bdd0;font-size:13px;text-align:center">Aucun projet récent</div>';
+      return;
+    }
+
+    container.innerHTML = projects
+      .map((p) => {
+        const color = STATUT_COLOR[p.statut] || "#8a9fbf";
+        const label = STATUT_LABEL[p.statut] || p.statut || "—";
+        const date = p.dateCreation
+          ? new Date(p.dateCreation).toLocaleDateString("fr-FR", {
+              day: "2-digit",
+              month: "short",
+              year: "numeric",
+            })
+          : "";
+        return `<div class="dash-recent-item" onclick="window.location.href='/projets/edit/${p.id}'">
+        <div class="dash-recent-dot" style="background:${color}"></div>
+        <span class="dash-recent-name" title="${p.nom || ""}">${p.nom || "—"}</span>
+        <span class="dash-recent-date">${date}</span>
+        <span class="dash-recent-badge" style="background:${color}22;color:${color}">${label}</span>
+      </div>`;
+      })
+      .join("");
+  } catch (e) {
+    container.innerHTML =
+      '<div style="padding:20px;color:#ef4444;font-size:12px;text-align:center">Erreur chargement</div>';
   }
 }
 
-// Update dashboard statistics cards
-function updateDashboardStats(stats) {
-  // Update main cards
-  const encoursCard = document.querySelector(".qcard.accent .qcard-num");
-  const attenteCard = document.querySelector(".qcard.warn .qcard-num");
-  const termineCard = document.querySelector(
-    ".qcard:not(.accent):not(.warn) .qcard-num",
-  );
-
-  if (encoursCard) encoursCard.textContent = stats.EN_COURS || 0;
-  if (attenteCard) attenteCard.textContent = stats.EN_ATTENTE || 0;
-  if (termineCard) termineCard.textContent = stats.TERMINE || 0;
-
-  // Update sidebar badges
-  const badges = document.querySelectorAll(".nav-badge");
-  if (badges.length >= 3) {
-    badges[0].textContent = stats.EN_COURS || 0;
-    badges[1].textContent = stats.EN_ATTENTE || 0;
-    badges[2].textContent = stats.TERMINE || 0;
-  }
-}
-
-// Load statistics by project type
+// ── 4. Stats par type ───────────────────────────────────────────────────────
 async function loadStatsByType() {
   try {
-    const response = await fetch(`/api/dashboard/stats/by-type`, {
+    const res = await fetch("/api/dashboard/stats/by-type", {
       headers: getAuthHeaders(),
     });
-
-    if (response.ok) {
-      const stats = await response.json();
-      displayStatsByType(stats);
-    }
-  } catch (error) {
-    console.error("Error loading stats by type:", error);
-  }
+    if (!res.ok) return;
+    const stats = await res.json();
+    displayStatsByType(stats);
+  } catch (e) {}
 }
 
-// Display statistics by type
 function displayStatsByType(stats) {
   const container = document.getElementById("stats-by-type");
   if (!container) return;
 
   if (!stats || Object.keys(stats).length === 0) {
     container.innerHTML =
-      '<div style="text-align: center; padding: 40px; color: #8A9FBF;">Aucune donnée disponible</div>';
+      '<div style="text-align:center;padding:40px;color:#8A9FBF;">Aucune donnée disponible</div>';
     return;
   }
 
-  let html =
-    '<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; margin-top: 16px;">';
+  const statKeys = [
+    { key: "EN_COURS", label: "En cours", color: "#5BB8E8" },
+    { key: "CLOTURE", label: "Clôturés", color: "#22c55e" },
+    { key: "NON_COMMENCE", label: "Non commencés", color: "#F5A623" },
+    { key: "PAS_DE_VISIBILITE", label: "Pas de visibilité", color: "#8a9fbf" },
+  ];
 
-  for (const [type, data] of Object.entries(stats)) {
-    const total = data.TOTAL || 0;
-    const encours = data.EN_COURS || 0;
-    const attente = data.EN_ATTENTE || 0;
-    const termine = data.TERMINE || 0;
+  container.innerHTML = `<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px;margin-top:14px;">
+    ${Object.entries(stats)
+      .map(([type, data]) => {
+        const total = data.TOTAL || 0;
+        const bars = statKeys
+          .map(({ key, label, color }) => {
+            const val = data[key] || 0;
+            const pct = total > 0 ? Math.round((val / total) * 100) : 0;
+            return `<div style="margin-bottom:9px">
+          <div style="display:flex;justify-content:space-between;font-size:11px;margin-bottom:4px;color:#4a6080">
+            <span>${label}</span>
+            <span style="font-weight:700;color:${color}">${pct}% <span style="color:#b0bdd0;font-weight:400">(${val})</span></span>
+          </div>
+          <div style="height:6px;background:#EEF2F8;border-radius:3px;overflow:hidden">
+            <div style="width:${pct}%;height:100%;background:${color};border-radius:3px;transition:width 0.8s"></div>
+          </div>
+        </div>`;
+          })
+          .join("");
 
-    const encoursPercent = total > 0 ? ((encours / total) * 100).toFixed(0) : 0;
-    const attentePercent = total > 0 ? ((attente / total) * 100).toFixed(0) : 0;
-    const terminePercent = total > 0 ? ((termine / total) * 100).toFixed(0) : 0;
-
-    html += `
-            <div style="background: #F8FAFD; border-radius: 10px; padding: 16px; border: 0.5px solid #D8E6F2;">
-                <div style="font-size: 14px; font-weight: 700; color: #0D2B6E; margin-bottom: 12px;">${type}</div>
-                <div style="font-size: 28px; font-weight: 700; color: #1A4BA8; margin-bottom: 8px;">${total}</div>
-                <div style="font-size: 11px; color: #8A9FBF; margin-bottom: 12px;">Total projets</div>
-                
-                <div style="margin-bottom: 8px;">
-                    <div style="display: flex; justify-content: space-between; font-size: 11px; margin-bottom: 4px;">
-                        <span>En cours</span>
-                        <span><strong>${encours}</strong> (${encoursPercent}%)</span>
-                    </div>
-                    <div style="height: 6px; background: #E8EFF8; border-radius: 3px; overflow: hidden;">
-                        <div style="width: ${encoursPercent}%; height: 100%; background: #5BB8E8; border-radius: 3px;"></div>
-                    </div>
-                </div>
-                
-                <div style="margin-bottom: 8px;">
-                    <div style="display: flex; justify-content: space-between; font-size: 11px; margin-bottom: 4px;">
-                        <span>En attente</span>
-                        <span><strong>${attente}</strong> (${attentePercent}%)</span>
-                    </div>
-                    <div style="height: 6px; background: #E8EFF8; border-radius: 3px; overflow: hidden;">
-                        <div style="width: ${attentePercent}%; height: 100%; background: #F5A623; border-radius: 3px;"></div>
-                    </div>
-                </div>
-                
-                <div>
-                    <div style="display: flex; justify-content: space-between; font-size: 11px; margin-bottom: 4px;">
-                        <span>Terminé</span>
-                        <span><strong>${termine}</strong> (${terminePercent}%)</span>
-                    </div>
-                    <div style="height: 6px; background: #E8EFF8; border-radius: 3px; overflow: hidden;">
-                        <div style="width: ${terminePercent}%; height: 100%; background: #1A7A40; border-radius: 3px;"></div>
-                    </div>
-                </div>
-            </div>
-        `;
-  }
-
-  html += "</div>";
-  container.innerHTML = html;
+        return `<div style="background:#F8FAFD;border-radius:12px;padding:16px 18px;border:0.5px solid #D8E6F2;">
+        <div style="font-size:13px;font-weight:700;color:#0D2B6E;margin-bottom:4px">${type}</div>
+        <div style="font-size:28px;font-weight:800;color:#1A4BA8;margin-bottom:2px">${total}</div>
+        <div style="font-size:10px;color:#B0BDD0;margin-bottom:14px;text-transform:uppercase;letter-spacing:.5px">projets</div>
+        ${bars}
+      </div>`;
+      })
+      .join("")}
+  </div>`;
 }
 
-// Load recent projects
-async function loadRecentProjects() {
-  try {
-    const response = await fetch(`/api/dashboard/recent?limit=5`, {
-      headers: getAuthHeaders(),
-    });
-
-    if (response.ok) {
-      const projects = await response.json();
-      displayRecentProjects(projects);
-    }
-  } catch (error) {
-    console.error("Error loading recent projects:", error);
-  }
+// Helper
+function escapeHtml(t) {
+  if (!t) return "";
+  const d = document.createElement("div");
+  d.textContent = t;
+  return d.innerHTML;
 }
 
-// Display recent projects
-function displayRecentProjects(projects) {
-  const container = document.getElementById("recent-projects");
-  if (!container) return;
-
-  if (!projects || projects.length === 0) {
-    container.innerHTML =
-      '<div style="text-align: center; padding: 20px; color: #8A9FBF;">Aucun projet récent</div>';
-    return;
-  }
-
-  let html = '<div style="margin-top: 16px;">';
-  projects.forEach((project) => {
-    html += `
-            <div onclick="window.location.href='/projets/view/${project.id}'" 
-                 style="display: flex; justify-content: space-between; align-items: center; padding: 12px; border-bottom: 0.5px solid #EEF2F8; cursor: pointer; hover:background: #F5F8FD;">
-                <div>
-                    <div style="font-weight: 600; color: #1A2D5A; margin-bottom: 4px;">${escapeHtml(project.nom)}</div>
-                    <div style="font-size: 11px; color: #8A9FBF;">${formatDate(project.dateCreation)}</div>
-                </div>
-                <span class="pill ${getStatusClass(project.statut)}">
-                    <span class="pill-dot"></span>${getStatusText(project.statut)}
-                </span>
-            </div>
-        `;
-  });
-  html += "</div>";
-
-  // Add recent projects section if not exists
-  const statsContainer = document.getElementById("stats-by-type");
-  if (statsContainer && !document.getElementById("recent-projects")) {
-    const recentSection = document.createElement("div");
-    recentSection.id = "recent-projects";
-    recentSection.innerHTML =
-      '<div class="section-label" style="margin-top: 24px;">📋 Projets récents</div>';
-    statsContainer.parentNode.appendChild(recentSection);
-    document.getElementById("recent-projects").innerHTML += html;
-  } else if (document.getElementById("recent-projects")) {
-    document.getElementById("recent-projects").innerHTML += html;
-  }
-}
-
-// Helper functions
-function formatDate(dateString) {
-  if (!dateString) return "";
-  const date = new Date(dateString);
-  return date.toLocaleDateString("fr-FR");
-}
-
-function getStatusClass(statut) {
-  switch (statut) {
-    case "EN_COURS":
-      return "p-encours";
-    case "EN_ATTENTE":
-      return "p-attente";
-    case "TERMINE":
-      return "p-termine";
-    default:
-      return "";
-  }
-}
-
-function getStatusText(statut) {
-  switch (statut) {
-    case "EN_COURS":
-      return "En cours";
-    case "EN_ATTENTE":
-      return "En attente";
-    case "TERMINE":
-      return "Terminé";
-    default:
-      return statut;
-  }
-}
-
-function escapeHtml(text) {
-  if (!text) return "";
-  const div = document.createElement("div");
-  div.textContent = text;
-  return div.innerHTML;
-}
-
-// Logout function
-function logout() {
-  localStorage.removeItem("token");
-  localStorage.removeItem("user");
-  window.location.href = "/login";
-}
-
-// Load user info
-function loadUserInfo() {
-  const userStr = localStorage.getItem("user");
-  if (!userStr) return;
-
-  const user = JSON.parse(userStr);
-  const roleText =
-    user.role === "ADMIN"
-      ? "Administrateur"
-      : user.role === "CHEF_PROJET"
-        ? "Chef de projet"
-        : "Consultant";
-
-  // Update user name in all places
-  document.querySelectorAll(".user-chip-name, .sidebar-name").forEach((el) => {
-    if (el) el.textContent = `${user.prenom} ${user.nom}`;
-  });
-
-  // Update role
-  document.querySelectorAll(".user-chip-role, .sidebar-role").forEach((el) => {
-    if (el) el.textContent = roleText;
-  });
-
-  // Update avatar
-  const initials =
-    `${user.prenom.charAt(0)}${user.nom.charAt(0)}`.toUpperCase();
-  document.querySelectorAll(".user-chip-avatar").forEach((el) => {
-    if (el) el.textContent = initials;
-  });
-}
-
-// Refresh dashboard periodically (every 30 seconds)
+// Auto-refresh toutes les 60s
 setInterval(() => {
-  if (window.location.pathname === "/dashboard") {
-    loadStatistics();
-    loadStatsByType();
-  }
-}, 30000);
+  if (window.location.pathname === "/dashboard") loadDashboard();
+}, 60000);

@@ -12,6 +12,7 @@ import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.security.access.prepost.PreAuthorize;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -48,23 +49,27 @@ public class ProjetController {
     }
 
     @PostMapping
+    @PreAuthorize("hasRole('CHEF_DEPARTEMENT')")
     public ResponseEntity<ProjetDTO> createProjet(@RequestBody CreateProjetRequest request) {
         return ResponseEntity.status(HttpStatus.CREATED).body(projetService.createProjet(request));
     }
 
     @PutMapping("/{id}")
+    @PreAuthorize("hasRole('CHEF_DEPARTEMENT')") 
     public ResponseEntity<ProjetDTO> updateProjet(@PathVariable Long id,
                                                    @RequestBody CreateProjetRequest request) {
         return ResponseEntity.ok(projetService.updateProjet(id, request));
     }
 
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasRole('CHEF_DEPARTEMENT')") 
     public ResponseEntity<Void> deleteProjet(@PathVariable Long id) {
         projetService.deleteProjet(id);
         return ResponseEntity.noContent().build();
     }
 
     @PatchMapping("/{id}/statut")
+    @PreAuthorize("hasRole('CHEF_DEPARTEMENT')")
     public ResponseEntity<ProjetDTO> updateProjetStatut(@PathVariable Long id,
                                                          @RequestBody StatutProjet statut) {
         return ResponseEntity.ok(projetService.updateProjetStatut(id, statut));

@@ -22,7 +22,7 @@ public class NotificationService {
         this.emailService = emailService;
     }
 
-    // ─── Save in-app notification (toujours) ─────────────────────────────────
+    // ─── Save in-app notification ─────────────────────────────────────────────
     private void save(User user, String titre, String message, String type,
                       Long projetId, String projetNom) {
         if (user == null) return;
@@ -45,59 +45,84 @@ public class NotificationService {
                 emailService.sendHtml(user.getEmail(), subject, html);
             }
         } catch (Exception e) {
-            // Email non bloquant - on continue même si l'envoi échoue
             System.err.println("⚠️ Email non envoyé à " + user.getEmail() + " : " + e.getMessage());
         }
     }
 
-    // ─── Notifications projet ────────────────────────────────────────────────
-
+    // ─── Projet créé avec statut EN_COURS → email à tous les membres ─────────
     public void notifyProjetCreated(Projet projet) {
-        if (projet.getChefProjet() == null) return;
-        User chef = projet.getChefProjet();
 
-        save(chef,
-             "Nouveau projet assigné",
-             "Le projet \"" + projet.getNom() + "\" vous a été assigné.",
-             "PROJET_CREE", projet.getId(), projet.getNom());
+        // ✅ Sécurité : on envoie seulement si EN_COURS
+        if (projet.getStatut() != StatutProjet.EN_COURS) return;
 
-        String subject = "[BEA] Nouveau projet : " + projet.getNom();
-        String html = buildHtml("Nouveau projet assigné",
-            "Bonjour " + chef.getPrenom() + " " + chef.getNom() + ",",
-            "Un nouveau projet vous a été assigné.",
-            new String[][]{
-                {"Nom", projet.getNom()},
-                {"Type", str(projet.getType())},
-                {"Priorité", str(projet.getPriorite())},
-                {"Statut", str(projet.getStatut())},
-                {"Date début", str(projet.getDateDebut())},
-                {"Deadline", str(projet.getDeadline())}
-            },
-            "Connectez-vous à la plateforme BEA pour consulter les détails.");
-        sendEmail(chef, subject, html);
+        if (projet.getMembres() == null || projet.getMembres().isEmpty()) return;
+
+        for (User dev : projet.getMembres()) {
+
+            // ✅ Notification interne
+            save(dev,
+                    "Nouveau projet affecté",
+                    "Le projet \"" + projet.getNom() + "\" vous a été affecté.",
+                    "PROJET_CREE",
+                    projet.getId(),
+                    projet.getNom());
+
+            // ✅ Email HTML
+            String html = buildHtml(
+                    "Projet affecté",
+                    "Bonjour " + dev.getPrenom() + " " + dev.getNom() + ",",
+                    "Un projet vous a été affecté et est maintenant en cours.",
+                    new String[][]{
+                            {"Nom",      projet.getNom()},
+                            {"Type",     str(projet.getType())},
+                            {"Priorité", str(projet.getPriorite())},
+                            {"Deadline", str(projet.getDeadline())}
+                    },
+                    "Veuillez vous connecter à la plateforme pour commencer le travail."
+            );
+
+            sendEmail(dev, "[BEA] Projet affecté : " + projet.getNom(), html);
+        }
     }
 
+    // ─── Changement statut NON_COMMENCE → EN_COURS → email aux membres ───────
     public void notifyStatutChanged(Projet projet, StatutProjet ancienStatut) {
-        if (projet.getChefProjet() == null) return;
-        User chef = projet.getChefProjet();
 
-        save(chef,
-             "Statut modifié : " + projet.getNom(),
-             "Statut passé de " + ancienStatut + " → " + projet.getStatut(),
-             "PROJET_MODIFIE", projet.getId(), projet.getNom());
+        if (ancienStatut == StatutProjet.NON_COMMENCE
+                && projet.getStatut() == StatutProjet.EN_COURS) {
 
-        String subject = "[BEA] Statut modifié : " + projet.getNom();
-        String html = buildHtml("Statut de projet modifié",
-            "Bonjour " + chef.getPrenom() + " " + chef.getNom() + ",",
-            "Le statut du projet <strong>" + projet.getNom() + "</strong> a été mis à jour.",
-            new String[][]{
-                {"Ancien statut", str(ancienStatut)},
-                {"Nouveau statut", str(projet.getStatut())}
-            },
-            "Connectez-vous à la plateforme BEA pour plus de détails.");
-        sendEmail(chef, subject, html);
+            if (projet.getMembres() == null || projet.getMembres().isEmpty()) return;
+
+            for (User dev : projet.getMembres()) {
+
+                // ✅ Notification interne
+                save(dev,
+                        "Projet validé",
+                        "Le projet \"" + projet.getNom() + "\" est maintenant en cours.",
+                        "PROJET_VALIDE",
+                        projet.getId(),
+                        projet.getNom());
+
+                // ✅ Email HTML
+                String html = buildHtml(
+                        "Projet validé",
+                        "Bonjour " + dev.getPrenom() + " " + dev.getNom() + ",",
+                        "Un projet vous a été affecté et validé.",
+                        new String[][]{
+                                {"Nom",      projet.getNom()},
+                                {"Type",     str(projet.getType())},
+                                {"Priorité", str(projet.getPriorite())},
+                                {"Deadline", str(projet.getDeadline())}
+                        },
+                        "Vous pouvez commencer le travail."
+                );
+
+                sendEmail(dev, "[BEA] Projet validé : " + projet.getNom(), html);
+            }
+        }
     }
 
+    // ─── Création utilisateur ─────────────────────────────────────────────────
     public void notifyUserCreated(User user, String plainPassword) {
         save(user,
              "Bienvenue sur la plateforme BEA",
@@ -105,18 +130,21 @@ public class NotificationService {
              "USER_CREE", null, null);
 
         String subject = "[BEA] Bienvenue sur la plateforme de gestion";
-        String html = buildHtml("Votre compte a été créé",
-            "Bonjour " + user.getPrenom() + " " + user.getNom() + ",",
-            "Votre compte sur la plateforme BEA a été créé avec succès.",
-            new String[][]{
-                {"Matricule", user.getMatricule()},
-                {"Mot de passe", plainPassword},
-                {"Rôle", str(user.getRole())}
-            },
-            "Veuillez changer votre mot de passe après votre première connexion.");
+        String html = buildHtml(
+                "Votre compte a été créé",
+                "Bonjour " + user.getPrenom() + " " + user.getNom() + ",",
+                "Votre compte sur la plateforme BEA a été créé avec succès.",
+                new String[][]{
+                        {"Matricule",    user.getMatricule()},
+                        {"Mot de passe", plainPassword},
+                        {"Rôle",         str(user.getRole())}
+                },
+                "Veuillez changer votre mot de passe après votre première connexion."
+        );
         sendEmail(user, subject, html);
     }
 
+    // ─── Problème signalé ─────────────────────────────────────────────────────
     public void notifyProblemeDeclare(User pmo, String titreProbleme,
                                       String declarantNom, Long projetId, String projetNom) {
         save(pmo,
@@ -125,8 +153,7 @@ public class NotificationService {
              "PROBLEME_SIGNALE", projetId, projetNom);
     }
 
-    // ─── Requêtes ────────────────────────────────────────────────────────────
-
+    // ─── Requêtes ─────────────────────────────────────────────────────────────
     public List<Notification> getNotificationsForUser(User user) {
         return notificationRepository.findByUserOrderByDateCreationDesc(user);
     }
@@ -147,7 +174,6 @@ public class NotificationService {
     }
 
     // ─── Builder HTML email ───────────────────────────────────────────────────
-
     private String buildHtml(String title, String greeting, String intro,
                              String[][] fields, String footer) {
         StringBuilder rows = new StringBuilder();

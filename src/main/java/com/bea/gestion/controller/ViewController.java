@@ -38,4 +38,16 @@ public class ViewController {
 
     @GetMapping("/problemes")
     public String problemes() { return "problemes"; }
+
+    @GetMapping("/remarques")
+    public String remarques() { return "remarques"; }
+
+    @GetMapping("/materiels-list")
+    public String materielsList() { return "materiel-list"; }
+
+    @GetMapping("/materiels/new")
+    public String newMateriel() { return "materiel-form"; }
+
+    @GetMapping("/materiels/edit/{id}")
+    public String editMateriel() { return "materiel-form"; }
 }

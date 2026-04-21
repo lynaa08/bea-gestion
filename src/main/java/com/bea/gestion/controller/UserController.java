@@ -7,6 +7,7 @@ import com.bea.gestion.service.UserService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.security.access.prepost.PreAuthorize; 
 
 import java.util.List;
 
@@ -31,23 +32,27 @@ public class UserController {
     }
 
     @PostMapping
+    @PreAuthorize("hasAnyRole('ADMIN', 'CHEF_DEPARTEMENT')")
     public ResponseEntity<UserDTO> createUser(@RequestBody CreateUserRequest request) {
         return ResponseEntity.status(HttpStatus.CREATED).body(userService.createUser(request));
     }
 
     @PutMapping("/{id}")
+    @PreAuthorize("hasRole('CHEF_DEPARTEMENT')")
     public ResponseEntity<UserDTO> updateUser(@PathVariable Long id,
                                                @RequestBody CreateUserRequest request) {
         return ResponseEntity.ok(userService.updateUser(id, request));
     }
 
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasRole('CHEF_DEPARTEMENT')") 
     public ResponseEntity<Void> deleteUser(@PathVariable Long id) {
         userService.deleteUser(id);
         return ResponseEntity.noContent().build();
     }
 
     @PatchMapping("/{id}/role")
+    @PreAuthorize("hasRole('CHEF_DEPARTEMENT')")
     public ResponseEntity<UserDTO> updateRole(@PathVariable Long id, @RequestBody String role) {
         return ResponseEntity.ok(userService.updateUserRole(id, Role.valueOf(role.trim().replace("\"", ""))));
     }

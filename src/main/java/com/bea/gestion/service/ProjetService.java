@@ -58,13 +58,19 @@ public class ProjetService {
         projet.setDateCreation(request.getDateCreation() != null ? request.getDateCreation() : LocalDate.now());
         projet.setDateDebut(request.getDateDebut());
         projet.setDeadline(request.getDeadline());
-        projet.setStatut(request.getStatut() != null ? request.getStatut() : StatutProjet.EN_ATTENTE);
+        projet.setStatut(request.getStatut() != null ? request.getStatut() : StatutProjet.NON_COMMENCE);
         projet.setType(request.getType());
         projet.setPriorite(request.getPriorite());
 
         if (request.getChefProjetId() != null) {
             User chef = userRepository.findById(request.getChefProjetId()).orElse(null);
             projet.setChefProjet(chef);
+        }
+
+        // Handle membres
+        if (request.getMembresIds() != null && !request.getMembresIds().isEmpty()) {
+            List<User> membres = userRepository.findAllById(request.getMembresIds());
+            projet.setMembres(membres);
         }
 
         Projet saved = projetRepository.save(projet);
@@ -91,6 +97,12 @@ public class ProjetService {
         if (request.getChefProjetId() != null) {
             User chef = userRepository.findById(request.getChefProjetId()).orElse(null);
             projet.setChefProjet(chef);
+        }
+
+        // Handle membres
+        if (request.getMembresIds() != null) {
+            List<User> membres = userRepository.findAllById(request.getMembresIds());
+            projet.setMembres(membres);
         }
 
         Projet saved = projetRepository.save(projet);

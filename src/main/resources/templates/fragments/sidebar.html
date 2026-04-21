@@ -1,0 +1,354 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org">
+  <body>
+    <div th:fragment="sidebar" class="sidebar" id="mainSidebar">
+      <!-- Profile -->
+      <div class="sidebar-profile">
+        <div class="avatar-ring">
+          <svg viewBox="0 0 36 36" fill="none">
+            <circle cx="18" cy="13" r="7" fill="rgba(255,255,255,0.9)" />
+            <path
+              d="M4 32c0-7.7 6.3-14 14-14s14 6.3 14 14"
+              fill="rgba(255,255,255,0.9)" />
+          </svg>
+        </div>
+        <div class="sidebar-name"></div>
+        <div class="sidebar-role"></div>
+      </div>
+
+      <!-- Scrollable nav area -->
+      <div class="sidebar-nav">
+        <!-- Navigation -->
+        <div class="nav-section-label">Navigation</div>
+        <div
+          class="nav-item"
+          id="nav-dashboard"
+          onclick="window.location.href = '/dashboard'">
+          <div class="nav-icon">
+            <svg viewBox="0 0 24 24" fill="none">
+              <rect
+                x="3"
+                y="3"
+                width="7"
+                height="7"
+                rx="1.5"
+                stroke="rgba(255,255,255,0.7)"
+                stroke-width="1.5" />
+              <rect
+                x="14"
+                y="3"
+                width="7"
+                height="7"
+                rx="1.5"
+                stroke="rgba(255,255,255,0.7)"
+                stroke-width="1.5" />
+              <rect
+                x="3"
+                y="14"
+                width="7"
+                height="7"
+                rx="1.5"
+                stroke="rgba(255,255,255,0.7)"
+                stroke-width="1.5" />
+              <rect
+                x="14"
+                y="14"
+                width="7"
+                height="7"
+                rx="1.5"
+                stroke="rgba(255,255,255,0.7)"
+                stroke-width="1.5" />
+            </svg>
+          </div>
+          <span class="nav-label">Dashboard</span>
+        </div>
+
+        <!-- Projets -->
+        <div class="nav-section-label">Projets</div>
+        <div
+          class="nav-item"
+          id="nav-projets-list"
+          onclick="window.location.href = '/projets-list'">
+          <div class="nav-icon">
+            <svg viewBox="0 0 24 24" fill="none">
+              <rect
+                x="3"
+                y="5"
+                width="18"
+                height="16"
+                rx="2"
+                stroke="rgba(255,255,255,0.7)"
+                stroke-width="1.5"
+                fill="none" />
+              <path
+                d="M8 3v4M16 3v4M3 11h18"
+                stroke="rgba(255,255,255,0.7)"
+                stroke-width="1.5"
+                stroke-linecap="round" />
+            </svg>
+          </div>
+          <span class="nav-label">Tous les projets</span>
+        </div>
+
+        <div
+          class="nav-item"
+          id="nav-projets-new"
+          onclick="window.location.href = '/projets/new'">
+          <div class="nav-icon">
+            <svg viewBox="0 0 24 24" fill="none">
+              <rect
+                x="3"
+                y="5"
+                width="18"
+                height="16"
+                rx="2"
+                stroke="rgba(255,255,255,0.7)"
+                stroke-width="1.5"
+                fill="none" />
+              <path
+                d="M12 11v6M9 14h6M8 3v4M16 3v4M3 11h18"
+                stroke="rgba(255,255,255,0.7)"
+                stroke-width="1.5"
+                stroke-linecap="round" />
+            </svg>
+          </div>
+          <span class="nav-label">Créer un Projet</span>
+        </div>
+
+        <div
+          class="nav-item"
+          id="nav-remarques"
+          onclick="window.location.href = '/remarques'">
+          <div class="nav-icon">
+            <svg viewBox="0 0 24 24" fill="none">
+              <path
+                d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"
+                stroke="rgba(255,255,255,0.7)"
+                stroke-width="1.5"
+                fill="none" />
+            </svg>
+          </div>
+          <span class="nav-label">Remarques</span>
+        </div>
+
+        <!-- Matériels -->
+        <div class="nav-section-label" style="margin-top: 8px">Matériels</div>
+        <div
+          class="nav-item"
+          id="nav-materiels"
+          onclick="window.location.href = '/materiels-list'">
+          <div class="nav-icon">
+            <svg viewBox="0 0 24 24" fill="none">
+              <rect
+                x="2"
+                y="7"
+                width="20"
+                height="14"
+                rx="2"
+                stroke="rgba(255,255,255,0.7)"
+                stroke-width="1.5"
+                fill="none" />
+              <path
+                d="M16 7V5a2 2 0 00-2-2h-4a2 2 0 00-2 2v2"
+                stroke="rgba(255,255,255,0.7)"
+                stroke-width="1.5"
+                stroke-linecap="round" />
+              <path
+                d="M12 11v4M10 13h4"
+                stroke="rgba(255,255,255,0.7)"
+                stroke-width="1.5"
+                stroke-linecap="round" />
+            </svg>
+          </div>
+          <span class="nav-label">Tous les matériels</span>
+        </div>
+
+        <div
+          class="nav-item"
+          id="nav-materiels-new"
+          onclick="window.location.href = '/materiels/new'">
+          <div class="nav-icon">
+            <svg viewBox="0 0 24 24" fill="none">
+              <rect
+                x="2"
+                y="7"
+                width="20"
+                height="14"
+                rx="2"
+                stroke="rgba(255,255,255,0.7)"
+                stroke-width="1.5"
+                fill="none" />
+              <path
+                d="M16 7V5a2 2 0 00-2-2h-4a2 2 0 00-2 2v2"
+                stroke="rgba(255,255,255,0.7)"
+                stroke-width="1.5"
+                stroke-linecap="round" />
+              <path
+                d="M18 14v4M16 16h4"
+                stroke="rgba(255,255,255,0.7)"
+                stroke-width="1.5"
+                stroke-linecap="round" />
+            </svg>
+          </div>
+          <span class="nav-label">Créer Matériel</span>
+        </div>
+
+        <!-- Administration -->
+        <div class="nav-section-label" style="margin-top: 8px">
+          Administration
+        </div>
+        <div
+          class="nav-item"
+          id="nav-users"
+          onclick="window.location.href = '/users-list'">
+          <div class="nav-icon">
+            <svg viewBox="0 0 24 24" fill="none">
+              <circle
+                cx="12"
+                cy="8"
+                r="4"
+                stroke="rgba(255,255,255,0.7)"
+                stroke-width="1.5" />
+              <path
+                d="M4 20c0-4 3.6-7 8-7s8 3 8 7"
+                stroke="rgba(255,255,255,0.7)"
+                stroke-width="1.5"
+                stroke-linecap="round" />
+            </svg>
+          </div>
+          <span class="nav-label">Utilisateurs</span>
+        </div>
+
+        <div
+          class="nav-item"
+          id="nav-users-new"
+          onclick="window.location.href = '/users/new'">
+          <div class="nav-icon">
+            <svg viewBox="0 0 24 24" fill="none">
+              <circle
+                cx="10"
+                cy="8"
+                r="4"
+                stroke="rgba(255,255,255,0.7)"
+                stroke-width="1.5" />
+              <path
+                d="M4 20c0-3.5 2.7-6 6-6"
+                stroke="rgba(255,255,255,0.7)"
+                stroke-width="1.5"
+                stroke-linecap="round" />
+              <path
+                d="M18 14v6M15 17h6"
+                stroke="rgba(255,255,255,0.7)"
+                stroke-width="1.5"
+                stroke-linecap="round" />
+            </svg>
+          </div>
+          <span class="nav-label">Créer Utilisateur</span>
+        </div>
+
+        <!-- Agenda -->
+        <div class="nav-section-label" style="margin-top: 8px">Agenda</div>
+        <div
+          class="nav-item"
+          id="nav-agenda"
+          onclick="window.location.href = '/agenda'">
+          <div class="nav-icon">
+            <svg viewBox="0 0 24 24" fill="none">
+              <rect
+                x="3"
+                y="4"
+                width="18"
+                height="18"
+                rx="2"
+                stroke="rgba(255,255,255,0.7)"
+                stroke-width="1.5"
+                fill="none" />
+              <path
+                d="M3 10h18M8 2v4M16 2v4"
+                stroke="rgba(255,255,255,0.7)"
+                stroke-width="1.5"
+                stroke-linecap="round" />
+              <path
+                d="M8 14h1M12 14h1M16 14h1M8 18h1M12 18h1"
+                stroke="rgba(255,255,255,0.7)"
+                stroke-width="1.5"
+                stroke-linecap="round" />
+            </svg>
+          </div>
+          <span class="nav-label">Agenda</span>
+        </div>
+
+        <!-- Outils -->
+        <div class="nav-section-label" style="margin-top: 8px">Outils</div>
+        <div
+          class="nav-item"
+          id="nav-problemes"
+          onclick="window.location.href = '/problemes'">
+          <div class="nav-icon">
+            <svg viewBox="0 0 24 24" fill="none">
+              <circle
+                cx="12"
+                cy="12"
+                r="10"
+                stroke="rgba(255,255,255,0.7)"
+                stroke-width="1.5" />
+              <path
+                d="M12 8v4M12 16h.01"
+                stroke="rgba(255,255,255,0.7)"
+                stroke-width="1.8"
+                stroke-linecap="round" />
+            </svg>
+          </div>
+          <span class="nav-label">Problèmes</span>
+        </div>
+      </div>
+
+      <!-- Logout — toujours visible en bas -->
+      <div class="sidebar-bottom">
+        <button class="logout-btn" onclick="logout()">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none">
+            <path
+              d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4M16 17l5-5-5-5M21 12H9"
+              stroke="currentColor"
+              stroke-width="1.8"
+              stroke-linecap="round"
+              stroke-linejoin="round" />
+          </svg>
+          <span class="logout-label">Déconnexion</span>
+        </button>
+      </div>
+    </div>
+
+    <script>
+      (function () {
+        var path = window.location.pathname;
+        var map = {
+          "/dashboard": "nav-dashboard",
+          "/projets-list": "nav-projets-list",
+          "/projets/new": "nav-projets-new",
+          "/projets/edit": "nav-projets-list",
+          "/remarques": "nav-remarques",
+          "/materiels-list": "nav-materiels",
+          "/materiels/new": "nav-materiels-new",
+          "/materiels/edit": "nav-materiels",
+          "/users-list": "nav-users",
+          "/users/new": "nav-users-new",
+          "/users/edit": "nav-users",
+          "/agenda": "nav-agenda",
+          "/problemes": "nav-problemes",
+        };
+        var activeId = null;
+        for (var route in map) {
+          if (path.startsWith(route)) {
+            activeId = map[route];
+            break;
+          }
+        }
+        if (activeId) {
+          var el = document.getElementById(activeId);
+          if (el) el.classList.add("active");
+        }
+      })();
+    </script>
+  </body>
+</html>

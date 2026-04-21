@@ -1,6 +1,5 @@
 // ── SIDEBAR BADGE LOADER ──────────────────────────────────────────────────
-// Add this function to your auth.js (or call it from every page's JS).
-// It loads project counts and updates the sidebar badges on ALL pages.
+// Chargé automatiquement. Met à jour badges sidebar + point topbar remarques.
 
 async function loadSidebarBadges() {
   try {
@@ -10,27 +9,44 @@ async function loadSidebarBadges() {
     if (!resp.ok) return;
     const stats = await resp.json();
 
-    const b1 = document.getElementById("badge-encours");
-    const b2 = document.getElementById("badge-attente");
-    const b3 = document.getElementById("badge-termine");
-
-    if (b1) b1.textContent = stats.EN_COURS || 0;
-    if (b2) b2.textContent = stats.EN_ATTENTE || 0;
-    if (b3) b3.textContent = stats.TERMINE || 0;
-  } catch (e) {
-    // Silently fail — badges will stay at 0
-  }
+    const b = (id, val) => {
+      const el = document.getElementById(id);
+      if (el) {
+        el.textContent = val || 0;
+        el.style.display = (val || 0) > 0 ? "flex" : "none";
+      }
+    };
+    b("badge-encours", stats.EN_COURS);
+    b("badge-cloture", stats.CLOTURE);
+    b("badge-noncommence", stats.NON_COMMENCE);
+    b("badge-pasvisibilite", stats.PAS_DE_VISIBILITE);
+  } catch (e) {}
 }
 
-// ── HOW TO USE ────────────────────────────────────────────────────────────
-// In each page's JS (projets.js, users.js, agenda.js, etc.), call:
-//
-//   document.addEventListener('DOMContentLoaded', () => {
-//     if (!checkAuth()) return;
-//     loadUserInfo();
-//     loadSidebarBadges();   // ← add this line
-//     // ... rest of page init
-//   });
-//
-// Alternatively, add the call inside your existing loadUserInfo() function
-// in auth.js so it runs automatically on every page.
+async function loadRemarquesBadge() {
+  // Only update the topbar dot (badge in sidebar has been removed)
+  try {
+    const projRes = await fetch("/api/projets/all", {
+      headers: getAuthHeaders(),
+    });
+    if (!projRes.ok) return;
+    const projets = await projRes.json();
+    let total = 0;
+    await Promise.all(
+      projets.map(async (p) => {
+        try {
+          const r = await fetch(`/api/projets/${p.id}/remarques`, {
+            headers: getAuthHeaders(),
+          });
+          if (r.ok) {
+            const list = await r.json();
+            total += list.length;
+          }
+        } catch (e) {}
+      }),
+    );
+    // Only update topbar dot
+    const dot = document.getElementById("remarqueDot");
+    if (dot) dot.style.display = total > 0 ? "block" : "none";
+  } catch (e) {}
+}

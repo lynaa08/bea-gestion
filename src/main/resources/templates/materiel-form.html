@@ -1,0 +1,390 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Matériel - BEA</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}" />
+    <style>
+      .field {
+        margin-bottom: 14px;
+      }
+      .field-label {
+        font-size: 11px;
+        font-weight: 600;
+        color: #4a6080;
+        margin-bottom: 5px;
+        display: block;
+        text-transform: uppercase;
+        letter-spacing: 0.04em;
+      }
+      .field-input,
+      .field-select {
+        width: 100%;
+        padding: 9px 12px;
+        border: 1.5px solid #d8e6f2;
+        border-radius: 8px;
+        font-size: 13px;
+        color: #1a2d5a;
+        outline: none;
+        transition: border-color 0.15s;
+        background: #fff;
+        box-sizing: border-box;
+      }
+      .field-input:focus,
+      .field-select:focus {
+        border-color: #5bb8e8;
+      }
+      .form-grid2 {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 16px;
+      }
+      .form-actions {
+        display: flex;
+        justify-content: flex-end;
+        gap: 10px;
+        margin-top: 20px;
+        padding-top: 14px;
+        border-top: 1px solid #eef2f8;
+      }
+      .btn-cancel {
+        padding: 9px 18px;
+        background: #f5f5f5;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        cursor: pointer;
+        font-size: 13px;
+      }
+      .btn-submit {
+        padding: 9px 22px;
+        background: #0d2b6e;
+        color: #fff;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+        font-size: 13px;
+        font-weight: 600;
+      }
+      .btn-submit:hover {
+        background: #1a3f8f;
+      }
+      .section-label {
+        font-size: 10px;
+        font-weight: 700;
+        color: #5bb8e8;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        margin: 16px 0 10px;
+      }
+      .msg {
+        padding: 9px;
+        border-radius: 8px;
+        font-size: 12px;
+        margin-bottom: 12px;
+      }
+      .err {
+        background: #fee;
+        color: #c00;
+      }
+      .suc {
+        background: #efe;
+        color: #0a0;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="app-shell">
+      <div class="topbar">
+        <div class="topbar-brand">
+          <img th:src="@{/images/logo_sidebar.svg}" 
+               alt="Logo BEA" 
+               style="height: 40px; width: auto;" />
+        </div>
+
+        <div class="topbar-right">
+          <div
+            class="notif-btn"
+            id="remarqueBtnTopbar"
+            title="Remarques"
+            style="cursor: pointer; margin-right: 2px">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none">
+              <path
+                d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"
+                stroke="#4A6A9E"
+                stroke-width="1.8"
+                fill="none" />
+            </svg>
+            <div class="notif-dot" id="remarqueDot" style="display: none"></div>
+          </div>
+          <div class="notif-btn" id="notifBellBtn">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none">
+              <path
+                d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9M13.73 21a2 2 0 01-3.46 0"
+                stroke="#4A6A9E"
+                stroke-width="1.8"
+                stroke-linecap="round" />
+            </svg>
+            <div class="notif-dot"></div>
+          </div>
+          <div class="user-chip">
+            <div class="user-chip-avatar"></div>
+            <div class="user-chip-info">
+              <div class="user-chip-name"></div>
+              <div class="user-chip-role"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="body">
+        <div th:replace="~{fragments/sidebar :: sidebar}"></div>
+
+        <div class="main">
+          <div class="form-card">
+            <div class="page-heading">
+              <div class="page-title" id="pageTitle">Nouveau matériel</div>
+            </div>
+
+            <div id="msgArea"></div>
+            <input type="hidden" id="materielId" />
+
+            <div class="section-label"> Informations générales</div>
+            <div class="form-grid2">
+              <div class="field">
+                <label class="field-label">Nom du matériel *</label>
+                <input
+                  type="text"
+                  class="field-input"
+                  id="nom"
+                  placeholder="Ex: Ordinateur portable Dell"
+                  required />
+              </div>
+              <div class="field">
+                <label class="field-label">Marque</label>
+                <input
+                  type="text"
+                  class="field-input"
+                  id="marque"
+                  placeholder="Ex: Dell, HP, Cisco..." />
+              </div>
+            </div>
+
+            <div class="form-grid2">
+              <div class="field">
+                <label class="field-label">Bureau</label>
+                <input
+                  type="text"
+                  class="field-input"
+                  id="bureau"
+                  placeholder="Ex: Bureau 203, Direction informatique..." />
+              </div>
+              <div class="field">
+                <label class="field-label">Service</label>
+                <input
+                  type="text"
+                  class="field-input"
+                  id="service"
+                  placeholder="Ex: Service des systèmes, Service RH..." />
+              </div>
+            </div>
+            <div class="form-grid2">
+              <div class="field">
+                <label class="field-label">Statut *</label>
+                <select class="field-select" id="statut" required>
+                  <option value="">-- Sélectionner --</option>
+                  <option value="NEUF">Neuf</option>
+                  <option value="BON_ETAT">Bon état</option>
+                  <option value="USAGE">Usagé</option>
+                  <option value="EN_PANNE">En panne</option>
+                </select>
+              </div>
+              <div class="field">
+                <label class="field-label">Quantité</label>
+                <input
+                  type="number"
+                  class="field-input"
+                  id="quantite"
+                  min="1"
+                  placeholder="1" />
+              </div>
+            </div>
+
+            <div class="form-grid2">
+              <div class="field">
+                <label class="field-label">Quantité</label>
+                <input
+                  type="number"
+                  class="field-input"
+                  id="quantite"
+                  min="1"
+                  placeholder="1" />
+              </div>
+              <div class="field">
+                <label class="field-label">Date d'acquisition</label>
+                <input type="date" class="field-input" id="dateAcquisition" />
+              </div>
+            </div>
+
+            <div class="section-label"> Affectation</div>
+            <div class="form-grid2">
+              <div class="field">
+                <label class="field-label">Projet associé</label>
+                <select class="field-select" id="projetId">
+                  <option value="">-- Aucun projet --</option>
+                </select>
+              </div>
+              <div class="field">
+                <label class="field-label">Responsable</label>
+                <select class="field-select" id="responsableId">
+                  <option value="">-- Aucun responsable --</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="section-label"> Description</div>
+            <div class="field">
+              <textarea
+                class="field-input"
+                id="description"
+                rows="3"
+                placeholder="Description du matériel..."></textarea>
+            </div>
+
+            <div class="form-actions">
+              <button
+                type="button"
+                class="btn-cancel"
+                onclick="window.location.href = '/materiels-list'">
+                Annuler
+              </button>
+              <button type="button" class="btn-submit" onclick="saveMateriel()">
+                ✓ Valider
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script th:src="@{/js/sidebar-badge-loader.js}"></script>
+    <script th:src="@{/js/auth.js}"></script>
+    <script>
+      async function loadSelects() {
+        try {
+          const [pRes, uRes] = await Promise.all([
+            fetch("/api/projets/all", { headers: getAuthHeaders() }),
+            fetch("/api/users", { headers: getAuthHeaders() }),
+          ]);
+          const projets = pRes.ok ? await pRes.json() : [];
+          const users = uRes.ok ? await uRes.json() : [];
+
+          const pSel = document.getElementById("projetId");
+          projets.forEach((p) => {
+            const opt = document.createElement("option");
+            opt.value = p.id;
+            opt.textContent = p.nom;
+            pSel.appendChild(opt);
+          });
+
+          const uSel = document.getElementById("responsableId");
+          users.forEach((u) => {
+            const opt = document.createElement("option");
+            opt.value = u.id;
+            opt.textContent = `${u.matricule} — ${u.prenom} ${u.nom}`;
+            uSel.appendChild(opt);
+          });
+        } catch (e) {}
+      }
+
+      async function loadForEdit() {
+        const parts = window.location.pathname.split("/");
+        const idx = parts.indexOf("edit");
+        if (idx === -1) return;
+        const id = parts[idx + 1];
+        if (!id) return;
+
+        try {
+          const res = await fetch(`/api/materiels/${id}`, {
+            headers: getAuthHeaders(),
+          });
+          if (!res.ok) return;
+          const m = await res.json();
+          document.getElementById("materielId").value = m.id;
+          document.getElementById("nom").value = m.nom || "";
+          document.getElementById("marque").value = m.marque || "";
+          document.getElementById("bureau").value = m.bureau || "";
+          document.getElementById("service").value = m.service || "";
+          document.getElementById("statut").value = m.statut || "";
+          document.getElementById("quantite").value = m.quantite || "";
+          document.getElementById("dateAcquisition").value =
+            m.dateAcquisition || "";
+          document.getElementById("description").value = m.description || "";
+          if (m.projetId)
+            document.getElementById("projetId").value = m.projetId;
+          if (m.responsableId)
+            document.getElementById("responsableId").value = m.responsableId;
+          document.getElementById("pageTitle").textContent =
+            "Modifier : " + m.nom;
+        } catch (e) {}
+      }
+
+      async function saveMateriel() {
+        const id = document.getElementById("materielId").value;
+        const nom = document.getElementById("nom").value.trim();
+        const statut = document.getElementById("statut").value;
+        if (!nom) {
+          showMsg("Le nom est obligatoire", "err");
+          return;
+        }
+        if (!statut) {
+          showMsg("Le statut est obligatoire", "err");
+          return;
+        }
+
+        const body = {
+          nom,
+          reference: document.getElementById("marque").value || null,
+          bureau: document.getElementById("bureau").value || null,
+          service: document.getElementById("service").value || null,
+          statut,
+          quantite: parseInt(document.getElementById("quantite").value) || 1,
+          dateAcquisition:
+            document.getElementById("dateAcquisition").value || null,
+          description: document.getElementById("description").value || null,
+          projetId: document.getElementById("projetId").value || null,
+          responsableId: document.getElementById("responsableId").value || null,
+        };
+
+        try {
+          const url = id ? `/api/materiels/${id}` : "/api/materiels";
+          const method = id ? "PUT" : "POST";
+          const res = await fetch(url, {
+            method,
+            headers: getAuthHeaders(),
+            body: JSON.stringify(body),
+          });
+          if (res.ok) {
+            showMsg("Matériel sauvegardé !", "suc");
+            setTimeout(() => (window.location.href = "/materiels-list"), 900);
+          } else {
+            const err = await res.json().catch(() => ({}));
+            showMsg("Erreur : " + (err.message || res.status), "err");
+          }
+        } catch (e) {
+          showMsg("Erreur réseau", "err");
+        }
+      }
+
+      function showMsg(msg, type) {
+        document.getElementById("msgArea").innerHTML =
+          `<div class="msg ${type}">${msg}</div>`;
+      }
+
+      document.addEventListener("DOMContentLoaded", async () => {
+        await loadSelects();
+        await loadForEdit();
+      });
+    </script>
+  </body>
+</html>

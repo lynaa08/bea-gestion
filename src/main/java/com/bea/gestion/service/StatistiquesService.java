@@ -24,10 +24,11 @@ public class StatistiquesService {
 
     public Map<String, Long> getProjetStats() {
         Map<String, Long> stats = new HashMap<>();
-        stats.put("EN_COURS",   projetRepository.countByStatut(StatutProjet.EN_COURS));
-        stats.put("EN_ATTENTE", projetRepository.countByStatut(StatutProjet.EN_ATTENTE));
-        stats.put("TERMINE",    projetRepository.countByStatut(StatutProjet.TERMINE));
-        stats.put("TOTAL",      projetRepository.count());
+        stats.put("EN_COURS",          projetRepository.countByStatut(StatutProjet.EN_COURS));
+        stats.put("NON_COMMENCE",      projetRepository.countByStatut(StatutProjet.NON_COMMENCE));
+        stats.put("CLOTURE",           projetRepository.countByStatut(StatutProjet.CLOTURE));
+        stats.put("PAS_DE_VISIBILITE", projetRepository.countByStatut(StatutProjet.PAS_DE_VISIBILITE));
+        stats.put("TOTAL",             projetRepository.count());
         return stats;
     }
 
@@ -37,10 +38,11 @@ public class StatistiquesService {
         for (TypeProjet type : TypeProjet.values()) {
             List<ProjetDTO> sub = all.stream().filter(p -> p.getType() == type).collect(Collectors.toList());
             Map<String, Long> m = new HashMap<>();
-            m.put("TOTAL",      (long) sub.size());
-            m.put("EN_COURS",   sub.stream().filter(p -> p.getStatut() == StatutProjet.EN_COURS).count());
-            m.put("EN_ATTENTE", sub.stream().filter(p -> p.getStatut() == StatutProjet.EN_ATTENTE).count());
-            m.put("TERMINE",    sub.stream().filter(p -> p.getStatut() == StatutProjet.TERMINE).count());
+            m.put("TOTAL",             (long) sub.size());
+            m.put("EN_COURS",          sub.stream().filter(p -> p.getStatut() == StatutProjet.EN_COURS).count());
+            m.put("CLOTURE",           sub.stream().filter(p -> p.getStatut() == StatutProjet.CLOTURE).count());
+            m.put("NON_COMMENCE",      sub.stream().filter(p -> p.getStatut() == StatutProjet.NON_COMMENCE).count());
+            m.put("PAS_DE_VISIBILITE", sub.stream().filter(p -> p.getStatut() == StatutProjet.PAS_DE_VISIBILITE).count());
             stats.put(type.getValue(), m);
         }
         return stats;

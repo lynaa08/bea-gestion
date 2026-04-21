@@ -14,6 +14,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 
 @Configuration
 @EnableWebSecurity
+@org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity
 public class SecurityConfig {
 
     private final JwtFilter jwtFilter;
@@ -38,7 +39,8 @@ public class SecurityConfig {
                     "/", "/login", "/dashboard",
                     "/projets-list", "/projets/new", "/projets/edit/**",
                     "/users-list", "/users/new", "/users/edit/**",
-                    "/agenda", "/problemes",
+                    "/agenda", "/problemes", "/remarques",
+                    "/materiels-list", "/materiels/new", "/materiels/edit/**",
                     "/css/**", "/js/**", "/images/**",
                     "/error"
                 ).permitAll()
