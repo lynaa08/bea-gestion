@@ -157,38 +157,11 @@
       <!-- TOPBAR -->
       <div class="topbar">
         <div class="topbar-brand">
-          <div class="topbar-logo">
-            <svg viewBox="0 0 32 32" fill="none">
-              <circle cx="16" cy="16" r="13" fill="#0D2B6E" />
-              <ellipse
-                cx="16"
-                cy="16"
-                rx="5"
-                ry="13"
-                stroke="#5BB8E8"
-                stroke-width="1.4"
-                fill="none" />
-              <line
-                x1="3"
-                y1="16"
-                x2="29"
-                y2="16"
-                stroke="#5BB8E8"
-                stroke-width="1.4" />
-              <circle
-                cx="16"
-                cy="16"
-                r="13"
-                stroke="#5BB8E8"
-                stroke-width="1.4"
-                fill="none" />
-            </svg>
-          </div>
-          <div class="brand-text">
-            <div class="brand-name">Banque Extérieure d'Algérie</div>
-            <div class="brand-sub">Système de gestion de projets</div>
-          </div>
+          <img th:src="@{/images/logo_sidebar.svg}" 
+               alt="Logo BEA" 
+               style="height: 40px; width: auto;" />
         </div>
+        
         <div class="topbar-right">
           <!-- Icône Remarques (notification-style) -->
           <div
@@ -256,7 +229,7 @@
               class="rq-search"
               type="text"
               id="searchInput"
-              placeholder="🔍 Rechercher par projet ou auteur..."
+              placeholder=" Rechercher par projet ou auteur..."
               oninput="filterRemarques()" />
             <span id="totalBadge" style="color: #8a9fbf; font-size: 12px"
               >Chargement...</span
@@ -347,7 +320,7 @@
 
         if (!data || data.length === 0) {
           container.innerHTML =
-            '<div class="rq-empty">💬 Aucune remarque trouvée</div>';
+            '<div class="rq-empty">Aucune remarque trouvée</div>';
           return;
         }
 
