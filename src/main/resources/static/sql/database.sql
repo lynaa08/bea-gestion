@@ -1,179 +1,100 @@
--- ============================================================
--- BEA Gestion Projets — Schéma SQLite complet
--- Fichier : create_database.sql
--- Usage   : sqlite3 gestion.db < create_database.sql
--- ============================================================
+-- ============================================================================
+-- SCRIPT DE MIGRATION BDD - BEA GESTION PROJETS
+-- ============================================================================
+-- Ce script crée les nouvelles tables et modifie les tables existantes
+-- Exécuter dans l'ordre !
+-- ============================================================================
 
-PRAGMA journal_mode = WAL;
-PRAGMA synchronous = NORMAL;
-PRAGMA busy_timeout = 30000;
-PRAGMA foreign_keys = ON;
-
--- ── Sequences (remplace GenerationType.AUTO / SEQUENCE de Hibernate) ─────────
-CREATE TABLE IF NOT EXISTS hibernate_sequence (
-    next_val INTEGER NOT NULL DEFAULT 1
-);
-INSERT OR IGNORE INTO hibernate_sequence VALUES (1);
-
-CREATE TABLE IF NOT EXISTS users_seq (
-    next_val INTEGER NOT NULL DEFAULT 1
-);
-INSERT OR IGNORE INTO users_seq VALUES (1);
-
-CREATE TABLE IF NOT EXISTS projets_seq (
-    next_val INTEGER NOT NULL DEFAULT 1
-);
-INSERT OR IGNORE INTO projets_seq VALUES (1);
-
-CREATE TABLE IF NOT EXISTS notifications_seq (
-    next_val INTEGER NOT NULL DEFAULT 1
-);
-INSERT OR IGNORE INTO notifications_seq VALUES (1);
-
-CREATE TABLE IF NOT EXISTS problemes_seq (
-    next_val INTEGER NOT NULL DEFAULT 1
-);
-INSERT OR IGNORE INTO problemes_seq VALUES (1);
-
-CREATE TABLE IF NOT EXISTS remarques_seq (
-    next_val INTEGER NOT NULL DEFAULT 1
-);
-INSERT OR IGNORE INTO remarques_seq VALUES (1);
-
-CREATE TABLE IF NOT EXISTS materiels_seq (
-    next_val INTEGER NOT NULL DEFAULT 1
-);
-INSERT OR IGNORE INTO materiels_seq VALUES (1);
-
--- ── Table : users ────────────────────────────────────────────────────────────
-CREATE TABLE IF NOT EXISTS users (
-    id        INTEGER PRIMARY KEY,
-    matricule TEXT    NOT NULL UNIQUE,
-    nom       TEXT    NOT NULL,
-    prenom    TEXT    NOT NULL,
-    email     TEXT    UNIQUE,
-    password  TEXT    NOT NULL,
-    role      TEXT    NOT NULL CHECK(role IN (
-                'ADMIN','DIRECTEUR','CHEF_DEPARTEMENT',
-                'INGENIEUR_ETUDE_PMO','DEVELOPPEUR')),
-    telephone TEXT
-);
-
--- ── Table : projets ──────────────────────────────────────────────────────────
-CREATE TABLE IF NOT EXISTS projets (
-    id              INTEGER PRIMARY KEY,
-    nom             TEXT    NOT NULL,
-    description     TEXT,
-    date_creation   TEXT,
-    date_debut      TEXT,
-    deadline        TEXT,
-    statut          TEXT    CHECK(statut IN (
-                        'EN_COURS','NON_COMMENCE',
-                        'CLOTURE','PAS_DE_VISIBILITE')),
-    type            TEXT    CHECK(type IN ('INTERNE','EXTERNE')),
-    priorite        TEXT    CHECK(priorite IN ('Haute','Moyenne','Basse')),
-    chef_projet_id  INTEGER REFERENCES users(id) ON DELETE SET NULL
-);
-
--- ── Table : notifications ────────────────────────────────────────────────────
-CREATE TABLE IF NOT EXISTS notifications (
-    id            INTEGER PRIMARY KEY,
-    titre         TEXT,
-    message       TEXT,
-    type          TEXT,
-    lue           INTEGER NOT NULL DEFAULT 0,
-    user_id       INTEGER REFERENCES users(id) ON DELETE CASCADE,
-    date_creation TEXT,
-    projet_id     INTEGER,
-    projet_nom    TEXT
-);
-
--- ── Table : problemes ────────────────────────────────────────────────────────
-CREATE TABLE IF NOT EXISTS problemes (
-    id               INTEGER PRIMARY KEY,
-    titre            TEXT    NOT NULL,
-    description      TEXT,
-    priorite         TEXT    CHECK(priorite IN ('CRITIQUE','HAUTE','MOYENNE','BASSE')),
-    statut           TEXT    DEFAULT 'OUVERT'
-                            CHECK(statut IN ('OUVERT','EN_COURS','RESOLU','FERME')),
-    declarant_id     INTEGER REFERENCES users(id) ON DELETE SET NULL,
-    projet_id        INTEGER REFERENCES projets(id) ON DELETE SET NULL,
-    date_creation    TEXT,
-    date_resolution  TEXT,
-    commentaire_pmo  TEXT
-);
-
--- ── Table : remarques ────────────────────────────────────────────────────────
-CREATE TABLE IF NOT EXISTS remarques (
-    id            INTEGER PRIMARY KEY,
-    contenu       TEXT    NOT NULL,
-    auteur_id     INTEGER REFERENCES users(id) ON DELETE SET NULL,
-    projet_id     INTEGER REFERENCES projets(id) ON DELETE CASCADE,
-    date_creation TEXT
-);
-
--- ── Table : materiels ────────────────────────────────────────────────────────
+-- ============================================================================
+-- 1. CRÉATION TABLE MATERIELS
+-- ============================================================================
 CREATE TABLE IF NOT EXISTS materiels (
-    id               INTEGER PRIMARY KEY,
-    nom              TEXT    NOT NULL,
-    reference        TEXT,
-    description      TEXT,
-    etat             TEXT    CHECK(etat IN ('NEUF','BON_ETAT','USAGE','EN_PANNE')),
-    quantite         INTEGER,
-    categorie        TEXT,
-    date_acquisition TEXT,
-    projet_id        INTEGER REFERENCES projets(id) ON DELETE SET NULL,
-    responsable_id   INTEGER REFERENCES users(id) ON DELETE SET NULL
-);
+    id BIGINT PRIMARY KEY AUTO_INCREMENT,
+    nom VARCHAR(255) NOT NULL,
+    reference VARCHAR(255) COMMENT 'Référence ou marque du matériel',
+    bureau VARCHAR(255),
+    service VARCHAR(255),
+    etat VARCHAR(50) COMMENT 'NEUF, BON_ETAT, USAGE, EN_PANNE',
+    statut VARCHAR(50) COMMENT 'DISPONIBLE, EN_UTILISATION, EN_REPARATION, HORS_SERVICE',
+    quantite INT DEFAULT 1,
+    date_acquisition DATE,
+    description VARCHAR(1000),
+    projet_id BIGINT,
+    CONSTRAINT fk_materiel_projet FOREIGN KEY (projet_id) REFERENCES projets(id) ON DELETE SET NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
--- ── Index pour les requêtes fréquentes ──────────────────────────────────────
-CREATE INDEX IF NOT EXISTS idx_notifications_user    ON notifications(user_id);
-CREATE INDEX IF NOT EXISTS idx_notifications_lue     ON notifications(user_id, lue);
-CREATE INDEX IF NOT EXISTS idx_problemes_declarant   ON problemes(declarant_id);
-CREATE INDEX IF NOT EXISTS idx_remarques_projet      ON remarques(projet_id);
-CREATE INDEX IF NOT EXISTS idx_projets_chef          ON projets(chef_projet_id);
-CREATE INDEX IF NOT EXISTS idx_materiels_projet      ON materiels(projet_id);
-CREATE INDEX IF NOT EXISTS idx_materiels_responsable ON materiels(responsable_id);
-CREATE INDEX IF NOT EXISTS idx_materiels_etat        ON materiels(etat);
+-- ============================================================================
+-- 2. CRÉATION TABLE PROJET_MEMBRES (Many-to-Many)
+-- ============================================================================
+CREATE TABLE IF NOT EXISTS projet_membres (
+    projet_id BIGINT NOT NULL,
+    user_id BIGINT NOT NULL,
+    PRIMARY KEY (projet_id, user_id),
+    CONSTRAINT fk_pm_projet FOREIGN KEY (projet_id) REFERENCES projets(id) ON DELETE CASCADE,
+    CONSTRAINT fk_pm_user FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
--- ── Données initiales (comptes de démo) ──────────────────────────────────────
--- Mot de passe hashé BCrypt de "admin123"
-INSERT OR IGNORE INTO users (id, matricule, nom, prenom, email, password, role)
-VALUES (1, 'ADM001', 'System', 'Admin', 'admin@bea.dz',
-        '$2a$10$N9qo8uLOickgx2ZMRZoMyeIjZAgcfl7p92ldGxad68LJZdL17lOzu', 'ADMIN');
+-- ============================================================================
+-- 3. MIGRATION DES STATUTS DE PROJETS (OPTIONNEL SI DONNÉES EXISTANTES)
+-- ============================================================================
+-- Si vous avez déjà des projets avec les anciens statuts, migrez-les :
 
--- Mot de passe hashé BCrypt de "dir123"
-INSERT OR IGNORE INTO users (id, matricule, nom, prenom, email, password, role)
-VALUES (2, 'DIR001', 'BEA', 'Directeur', 'directeur@bea.dz',
-        '$2a$10$VFkw96xyPVUvEMmfUWL9dujS3nVKGtHHG5pNHN8zXFBizh2kLnUUq', 'DIRECTEUR');
+-- Option 1 : Mapper les anciens vers les nouveaux
+UPDATE projets SET statut = 'EN_COURS' WHERE statut = 'EN_ATTENTE';
+UPDATE projets SET statut = 'CLOTURE' WHERE statut = 'TERMINE';
+-- Les projets "EN_COURS" restent "EN_COURS"
 
--- Mot de passe hashé BCrypt de "cdep123"
-INSERT OR IGNORE INTO users (id, matricule, nom, prenom, email, password, role)
-VALUES (3, 'CDEP001', 'Département', 'Chef', 'chefdep@bea.dz',
-        '$2a$10$HL0s0I8Ssc.XSH7UhNXPruVOPi5SJa1UD9b9FPWCMYWrgqzQJpEHO', 'CHEF_DEPARTEMENT');
+-- Option 2 : Mettre tous les projets non terminés en "NON_COMMENCE"
+-- UPDATE projets SET statut = 'NON_COMMENCE' WHERE statut NOT IN ('EN_COURS', 'CLOTURE');
 
--- Mot de passe hashé BCrypt de "pmo123"
-INSERT OR IGNORE INTO users (id, matricule, nom, prenom, email, password, role)
-VALUES (4, 'PMO001', 'Étude', 'Ingénieur', 'pmo@bea.dz',
-        '$2a$10$wE6XtDMV5yOIRQOT/aXlFOBdlxPP/fVfkTWfHoXKNa25KXZyC6R5i', 'INGENIEUR_ETUDE_PMO');
+-- ============================================================================
+-- 4. VÉRIFICATIONS
+-- ============================================================================
+-- Vérifier que les tables ont été créées
+SHOW TABLES LIKE '%materiel%';
+SHOW TABLES LIKE '%projet_membres%';
 
--- Mot de passe hashé BCrypt de "dev123"
-INSERT OR IGNORE INTO users (id, matricule, nom, prenom, email, password, role)
-VALUES (5, 'DEV001', 'BEA', 'Développeur', 'dev@bea.dz',
-        '$2a$10$eAqMQxz0eYBfO5kbBDgZ8eTfLzrm.rj8ew.W3nGBaJDPkmk0kFHEi', 'DEVELOPPEUR');
+-- Vérifier la structure
+DESCRIBE materiels;
+DESCRIBE projet_membres;
 
--- ── Données de démo : matériels ───────────────────────────────────────────────
-INSERT OR IGNORE INTO materiels (id, nom, reference, description, etat, quantite, categorie, date_acquisition, projet_id, responsable_id)
-VALUES
-    (1, 'Serveur Dell PowerEdge', 'SRV-DELL-001', 'Serveur principal de production', 'BON_ETAT', 1, 'Informatique', '2024-01-15', NULL, 1),
-    (2, 'Switch Cisco 24 ports',  'NET-CSC-024',  'Switch réseau salle serveurs',      'NEUF',     2, 'Réseau',       '2024-03-01', NULL, 1),
-    (3, 'Laptop HP EliteBook',    'LAP-HP-015',   'Poste de travail développeur',      'BON_ETAT', 5, 'Informatique', '2023-09-10', NULL, 5);
+-- Compter les projets par statut
+SELECT statut, COUNT(*) as nb 
+FROM projets 
+GROUP BY statut;
 
--- ── Mise à jour des séquences après les inserts manuels ─────────────────────
-UPDATE users_seq       SET next_val = 6;
-UPDATE materiels_seq   SET next_val = 4;
-UPDATE hibernate_sequence SET next_val = 100;
+-- ============================================================================
+-- 5. INDEX RECOMMANDÉS (Performances)
+-- ============================================================================
+CREATE INDEX idx_materiel_projet ON materiels(projet_id);
+CREATE INDEX idx_materiel_etat ON materiels(etat);
+CREATE INDEX idx_materiel_statut ON materiels(statut);
+CREATE INDEX idx_projet_statut ON projets(statut);
 
-SELECT '✅ Base de données créée avec succès !' AS message;
-SELECT '   Tables : users, projets, notifications, problemes, remarques, materiels' AS tables;
-SELECT '   Comptes : ADM001/admin123  DIR001/dir123  CDEP001/cdep123  PMO001/pmo123  DEV001/dev123' AS comptes;
+-- ============================================================================
+-- 6. DONNÉES DE TEST (OPTIONNEL)
+-- ============================================================================
+-- Insérer quelques matériels de test
+INSERT INTO materiels (nom, reference, bureau, service, etat, statut, quantite, date_acquisition, description, projet_id)
+VALUES 
+  ('Ordinateur portable Dell', 'Dell Latitude 5520', 'Bureau 203', 'Service Informatique', 'NEUF', 'DISPONIBLE', 1, '2024-01-15', 'PC portable pour développement', NULL),
+  ('Imprimante HP', 'HP LaserJet Pro M404dn', 'Bureau 105', 'Service Administratif', 'BON_ETAT', 'EN_UTILISATION', 1, '2023-06-20', 'Imprimante laser noir et blanc', NULL),
+  ('Routeur Cisco', 'Cisco RV340', 'Salle serveur', 'Service Réseau', 'BON_ETAT', 'EN_UTILISATION', 2, '2023-03-10', 'Routeur VPN dual WAN', NULL);
+
+-- Vérifier l'insertion
+SELECT * FROM materiels;
+
+-- ============================================================================
+-- 7. ROLLBACK (EN CAS DE PROBLÈME)
+-- ============================================================================
+-- Si vous devez annuler les modifications :
+-- DROP TABLE IF EXISTS projet_membres;
+-- DROP TABLE IF EXISTS materiels;
+-- 
+-- Restaurer les anciens statuts :
+-- UPDATE projets SET statut = 'EN_ATTENTE' WHERE statut = 'NON_COMMENCE';
+-- UPDATE projets SET statut = 'TERMINE' WHERE statut = 'CLOTURE';
+
+-- ============================================================================
+-- FIN DU SCRIPT
+-- ============================================================================

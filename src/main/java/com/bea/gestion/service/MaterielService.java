@@ -62,12 +62,14 @@ public class MaterielService {
 
     private void fillFromRequest(Materiel m, CreateMaterielRequest req) {
         m.setNom(req.getNom());
-        m.setReference(req.getReference());
+        m.setMarque(req.getMarque());
+        m.setBureau(req.getBureau());
+        m.setService(req.getService());
         m.setDescription(req.getDescription());
-        m.setEtat(req.getEtat());
+        m.setStatut(req.getStatut());
         m.setQuantite(req.getQuantite());
-        m.setCategorie(req.getCategorie());
         m.setDateAcquisition(req.getDateAcquisition());
+        m.setEtat(req.getEtat());
 
         if (req.getProjetId() != null) {
             Projet p = projetRepository.findById(req.getProjetId()).orElse(null);
@@ -75,11 +77,7 @@ public class MaterielService {
         } else {
             m.setProjet(null);
         }
-        if (req.getResponsableId() != null) {
-            User u = userRepository.findById(req.getResponsableId()).orElse(null);
-            m.setResponsable(u);
-        } else {
-            m.setResponsable(null);
+      
         }
     }
-}
+

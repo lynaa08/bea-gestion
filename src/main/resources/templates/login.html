@@ -3,367 +3,478 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" type="image/png" href="/favicon.png" />
     <title>Connexion - BEA Gestion Projets</title>
     <style>
+      /* =====================================================
+      LOGIN.CSS — Banque Extérieure d'Algérie
+      Glassmorphism + background image
+      Classes originales conservées à 100%
+      ===================================================== */
+
       * {
         margin: 0;
         padding: 0;
         box-sizing: border-box;
       }
+
       body {
         font-family:
           -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-        background: #f0f4fa;
         min-height: 100vh;
         display: flex;
-        align-items: center;
-        justify-content: center;
+        align-items: stretch;
+        overflow: hidden;
         position: fixed;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
+        inset: 0;
       }
+
+      /* ══════════════════════════════════════
+      PAGE ENTIÈRE = image de fond
+      ══════════════════════════════════════ */
       .login-page {
         display: flex;
         width: 100%;
-        height: 100%;
         min-height: 100vh;
+        position: relative;
+
+        background-image: url(@{/images/login_bg_bea.jpg});
+        background-size: cover;
+        background-position: center;
+        background-repeat: no-repeat;
       }
+
+      /* Overlay sombre global */
+      .login-page::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background: rgba(5, 18, 50, 0.52);
+        z-index: 0;
+      }
+
+      /* ══════════════════════════════════════
+      PANNEAU GAUCHE — transparent, logo + slogan
+      ══════════════════════════════════════ */
       .left-panel {
         flex: 1;
-        background: #0d2b6e;
+        background: transparent !important; /* écrase l'ancien #0d2b6e */
         display: flex;
         flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        padding: 48px 40px;
+        align-items: flex-start;
+        justify-content: flex-end;
+        padding: 0 0 56px 60px;
         position: relative;
-        overflow: hidden;
+        z-index: 1;
+        overflow: visible;
       }
-      .left-panel::before {
-        content: "";
-        position: absolute;
-        width: 320px;
-        height: 320px;
-        border-radius: 50%;
-        border: 40px solid rgba(91, 184, 232, 0.07);
-        top: -80px;
-        left: -80px;
-      }
+
+      /* Supprime les pseudo-éléments cercles de l'ancien design */
+      .left-panel::before,
       .left-panel::after {
-        content: "";
-        position: absolute;
-        width: 240px;
-        height: 240px;
-        border-radius: 50%;
-        border: 30px solid rgba(91, 184, 232, 0.05);
-        bottom: -60px;
-        right: -60px;
+        display: none;
       }
+
+      /* Container logo + texte en bas à gauche */
       .logo-wrap {
-        width: 110px;
-        height: 110px;
-        border-radius: 50%;
-        background: rgba(255, 255, 255, 0.07);
-        border: 2px solid rgba(91, 184, 232, 0.3);
+        width: auto;
+        height: auto;
+        border-radius: 0;
+        background: transparent;
+        border: none;
         display: flex;
         align-items: center;
-        justify-content: center;
-        margin-bottom: 28px;
+        justify-content: flex-start;
+        margin-bottom: 20px;
         position: relative;
         z-index: 1;
       }
+
+      /* Le SVG globe devient le logo BEA */
+      .logo-wrap svg {
+        filter: drop-shadow(0 4px 16px rgba(0, 0, 0, 0.5));
+      }
+
+      /* Nom arabe de la banque */
       .bank-name-ar {
-        font-size: 18px;
-        color: rgba(255, 255, 255, 0.9);
-        font-weight: 600;
+        font-size: 22px;
+        color: #ffffff !important;
+        font-weight: 700;
         margin-bottom: 6px;
         position: relative;
         z-index: 1;
-        text-align: center;
+        text-align: left;
         direction: rtl;
+        text-shadow: 0 2px 16px rgba(0, 0, 0, 0.5);
       }
+
+      /* Nom français de la banque */
       .bank-name-fr {
-        font-size: 13px;
-        color: rgba(255, 255, 255, 0.5);
-        text-align: center;
+        font-size: 14px;
+        color: rgba(255, 255, 255, 0.65) !important;
+        text-align: left;
         position: relative;
         z-index: 1;
+        letter-spacing: 0.3px;
       }
+
+      /* Séparateur — remplacé par un trait lumineux discret */
       .divider {
-        width: 48px;
+        width: 60px;
         height: 2px;
-        background: rgba(91, 184, 232, 0.4);
+        background: rgba(91, 184, 232, 0.6);
         border-radius: 2px;
-        margin: 24px auto;
+        margin: 18px 0;
         position: relative;
         z-index: 1;
       }
+
+      /* Tagline */
       .tagline {
-        font-size: 12px;
-        color: rgba(255, 255, 255, 0.35);
-        text-align: center;
+        font-size: 13px;
+        color: rgba(255, 255, 255, 0.45);
+        text-align: left;
         line-height: 1.6;
         position: relative;
         z-index: 1;
-        max-width: 200px;
+        max-width: 260px;
       }
+
+      /* Slogan principal visible (décommenté dans le HTML via tagline) */
+      .bank-name-ar + .divider + .tagline,
+      .tagline {
+        font-size: 28px;
+        font-weight: 700;
+        color: #ffffff;
+        line-height: 1.25;
+        letter-spacing: -0.3px;
+        text-shadow: 0 2px 16px rgba(0, 0, 0, 0.5);
+        max-width: 420px;
+      }
+
+      /* ══════════════════════════════════════
+      PANNEAU DROIT — GLASSMORPHISM
+      ══════════════════════════════════════ */
       .right-panel {
-        width: 480px;
-        background: #f5f8fd;
+        width: 440px;
+        min-height: 100vh;
+        background: rgba(
+          255,
+          255,
+          255,
+          0.08
+        ) !important; /* glass transparent */
+        backdrop-filter: blur(18px);
+        -webkit-backdrop-filter: blur(18px);
+        border-left: 1px solid rgba(255, 255, 255, 0.12);
+        box-shadow: -8px 0 40px rgba(0, 0, 0, 0.25);
         display: flex;
         flex-direction: column;
         align-items: center;
         justify-content: center;
         padding: 48px 44px;
+        position: relative;
+        z-index: 1;
         overflow-y: auto;
+
+        animation: slideIn 0.5s ease forwards;
       }
+
+      @keyframes slideIn {
+        from {
+          opacity: 0;
+          transform: translateX(30px);
+        }
+        to {
+          opacity: 1;
+          transform: translateX(0);
+        }
+      }
+
+      /* ── Badge "Accès sécurisé" ── */
       .login-badge {
         display: inline-flex;
         align-items: center;
-        gap: 6px;
-        background: #eef4ff;
-        border: 0.5px solid #c8d8f0;
+        gap: 7px;
+        background: rgba(91, 184, 232, 0.12) !important;
+        border: 1px solid rgba(91, 184, 232, 0.35) !important;
         border-radius: 20px;
-        padding: 4px 14px;
+        padding: 5px 16px;
         font-size: 11px;
-        font-weight: 500;
-        color: #3a6ab8;
+        font-weight: 600;
+        color: #7ecff0 !important;
+        letter-spacing: 0.5px;
         margin-bottom: 28px;
+        text-transform: uppercase;
       }
+
       .login-badge-dot {
         width: 6px;
         height: 6px;
         border-radius: 50%;
         background: #5bb8e8;
+        box-shadow: 0 0 6px #5bb8e8;
+        animation: blink 2s infinite;
       }
+
+      @keyframes blink {
+        0%,
+        100% {
+          opacity: 1;
+        }
+        50% {
+          opacity: 0.3;
+        }
+      }
+
+      /* ── Titre ── */
       .login-title {
-        font-size: 30px;
+        font-size: 28px;
         font-weight: 700;
-        color: #0d2b6e;
+        color: #ffffff !important;
         margin-bottom: 6px;
         text-align: center;
+        letter-spacing: -0.3px;
       }
+
+      /* ── Sous-titre ── */
       .login-subtitle {
         font-size: 13px;
-        color: #8a9fbf;
+        color: rgba(255, 255, 255, 0.5) !important;
         margin-bottom: 36px;
         text-align: center;
+        line-height: 1.55;
       }
-      .form-group {
-        width: 100%;
-        margin-bottom: 18px;
-      }
+
+      /* ── Labels ── */
       .form-label {
         display: flex;
         align-items: center;
         gap: 6px;
-        font-size: 12px;
+        font-size: 11px;
         font-weight: 600;
-        color: #4a6080;
+        color: rgba(255, 255, 255, 0.55) !important;
         margin-bottom: 7px;
         text-transform: uppercase;
-        letter-spacing: 0.06em;
+        letter-spacing: 0.08em;
       }
-      .input-wrap {
-        position: relative;
-      }
-      .input-icon {
-        position: absolute;
-        left: 14px;
-        top: 50%;
-        transform: translateY(-50%);
-        pointer-events: none;
-      }
+
+      /* ── Inputs ── */
       .form-input {
         width: 100%;
-        height: 46px;
-        padding: 0 14px 0 42px;
-        background: #fff;
-        border: 1.5px solid #d8e6f2;
+        height: 48px;
+        padding: 0 14px 0 44px;
+        background: rgba(255, 255, 255, 0.08) !important;
+        border: 1.5px solid rgba(255, 255, 255, 0.15) !important;
         border-radius: 10px;
         font-size: 14px;
-        color: #1a2d5a;
+        color: #ffffff !important;
         outline: none;
-        transition: border-color 0.15s;
+        transition:
+          border-color 0.2s,
+          box-shadow 0.2s,
+          background 0.2s;
       }
-      .form-input:focus {
-        border-color: #5bb8e8;
-      }
+
       .form-input::placeholder {
-        color: #b0bdd0;
+        color: rgba(255, 255, 255, 0.3) !important;
       }
+
+      .form-input:focus {
+        border-color: #5bb8e8 !important;
+        background: rgba(255, 255, 255, 0.12) !important;
+        box-shadow: 0 0 0 3px rgba(91, 184, 232, 0.2);
+      }
+
+      /* Icônes dans les inputs */
+      .input-icon svg path,
+      .input-icon svg circle,
+      .input-icon svg rect {
+        stroke: rgba(255, 255, 255, 0.5);
+      }
+
+      /* Icône œil */
       .show-pwd {
-        position: absolute;
-        right: 14px;
-        top: 50%;
-        transform: translateY(-50%);
-        cursor: pointer;
         opacity: 0.4;
+        transition: opacity 0.2s;
       }
+      .show-pwd:hover {
+        opacity: 0.85;
+      }
+
+      /* ── Bouton Connexion ── */
       .btn-login {
         width: 100%;
-        height: 48px;
-        background: #0d2b6e;
-        color: #fff;
-        border: none;
+        height: 50px;
+        background: linear-gradient(
+          135deg,
+          #1a4ba8 0%,
+          #5bb8e8 100%
+        ) !important;
+        color: #fff !important;
+        border: none !important;
         border-radius: 10px;
-        font-size: 14px;
-        font-weight: 600;
-        letter-spacing: 0.06em;
+        font-size: 13px;
+        font-weight: 700;
+        letter-spacing: 0.1em;
         cursor: pointer;
         display: flex;
         align-items: center;
         justify-content: center;
-        gap: 8px;
-        transition: background 0.15s;
+        gap: 9px;
+        transition: all 0.2s;
         margin-top: 10px;
+        box-shadow: 0 4px 20px rgba(91, 184, 232, 0.3);
+        text-transform: uppercase;
       }
+
       .btn-login:hover {
-        background: #1a3f8f;
+        background: linear-gradient(
+          135deg,
+          #5bb8e8 0%,
+          #1a4ba8 100%
+        ) !important;
+        box-shadow: 0 6px 28px rgba(91, 184, 232, 0.45);
+        transform: translateY(-1px);
       }
+
+      .btn-login:active {
+        transform: translateY(0);
+      }
+
+      /* ── Séparateur footer ── */
       .login-footer {
         margin-top: 28px;
         display: flex;
         align-items: center;
-        gap: 8px;
+        gap: 10px;
         width: 100%;
       }
+
       .footer-line {
         flex: 1;
-        height: 0.5px;
-        background: #d8e6f2;
+        height: 1px;
+        background: rgba(255, 255, 255, 0.12);
       }
+
       .footer-text {
         font-size: 11px;
-        color: #b0bdd0;
+        color: rgba(255, 255, 255, 0.3);
         white-space: nowrap;
+        text-transform: uppercase;
+        letter-spacing: 0.06em;
       }
+
+      /* ── Note sécurité ── */
       .security-note {
         margin-top: 20px;
         display: flex;
         align-items: center;
-        gap: 6px;
-        background: #eef4ff;
+        gap: 8px;
+        background: rgba(91, 184, 232, 0.07) !important;
+        border: 1px solid rgba(91, 184, 232, 0.2);
         border-radius: 8px;
-        padding: 8px 12px;
+        padding: 10px 14px;
         width: 100%;
       }
+
       .security-note span {
         font-size: 10px;
-        color: #5a78aa;
-        line-height: 1.4;
+        color: rgba(255, 255, 255, 0.4) !important;
+        line-height: 1.5;
       }
-      .error-message {
-        background: #fee;
-        color: #c00;
-        padding: 10px;
-        border-radius: 8px;
-        margin-bottom: 15px;
-        font-size: 12px;
-        text-align: center;
-        border: 1px solid #fcc;
-        width: 100%;
-      }
-      .success-message {
-        background: #efe;
-        color: #0a0;
-        padding: 10px;
-        border-radius: 8px;
-        margin-bottom: 15px;
-        font-size: 12px;
-        text-align: center;
-        border: 1px solid #cfc;
-        width: 100%;
-      }
+
+      /* ── Info box (comptes démo) ── */
       .info-box {
-        background: #e8f4ff;
-        border: 1px solid #5bb8e8;
+        background: rgba(91, 184, 232, 0.08) !important;
+        border: 1px solid rgba(91, 184, 232, 0.25) !important;
         border-radius: 8px;
         padding: 12px;
         margin-top: 20px;
         width: 100%;
       }
+
       .info-box-title {
-        font-weight: bold;
-        color: #0d2b6e;
+        font-weight: 700;
+        color: rgba(255, 255, 255, 0.8) !important;
         margin-bottom: 8px;
         font-size: 12px;
       }
+
       .info-box-content {
-        color: #4a6080;
+        color: rgba(255, 255, 255, 0.5) !important;
         line-height: 1.6;
         font-size: 11px;
       }
+
       .info-box-content strong {
-        color: #0d2b6e;
+        color: rgba(255, 255, 255, 0.8) !important;
       }
+
+      /* ── Messages erreur / succès ── */
+      .error-message {
+        background: rgba(255, 60, 60, 0.15);
+        color: #ff9999;
+        padding: 10px 14px;
+        border-radius: 8px;
+        margin-bottom: 16px;
+        font-size: 12px;
+        text-align: center;
+        border: 1px solid rgba(255, 60, 60, 0.3);
+        width: 100%;
+        animation: shake 0.3s ease;
+      }
+
+      @keyframes shake {
+        0%,
+        100% {
+          transform: translateX(0);
+        }
+        25% {
+          transform: translateX(-6px);
+        }
+        75% {
+          transform: translateX(6px);
+        }
+      }
+
+      .success-message {
+        background: rgba(0, 200, 100, 0.12);
+        color: #7fffb2;
+        padding: 10px 14px;
+        border-radius: 8px;
+        margin-bottom: 16px;
+        font-size: 12px;
+        text-align: center;
+        border: 1px solid rgba(0, 200, 100, 0.25);
+        width: 100%;
+      }
+
+      /* ══════════════════════════════════════
+      RESPONSIVE mobile
+      ══════════════════════════════════════ */
       @media (max-width: 768px) {
-        .login-page {
-          flex-direction: column;
+        .left-panel {
+          display: none;
         }
         .right-panel {
-          width: 100%;
+          width: 100% !important;
+          border-left: none;
+          background: rgba(5, 18, 50, 0.75) !important;
         }
       }
     </style>
   </head>
   <body>
-    <div class="login-page">
+    <div
+      class="login-page"
+      th:style="'background-image: url(/images/login_bg_bea.jpg)'"
+    >
       <div class="left-panel">
-        <div class="logo-wrap">
-          <svg viewBox="0 0 80 80" fill="none" width="72" height="72">
-            <circle cx="40" cy="40" r="36" fill="#1A4BA8" />
-            <circle
-              cx="40"
-              cy="40"
-              r="36"
-              stroke="#5BB8E8"
-              stroke-width="2"
-              fill="none" />
-            <ellipse
-              cx="40"
-              cy="40"
-              rx="14"
-              ry="36"
-              stroke="#5BB8E8"
-              stroke-width="1.5"
-              fill="none" />
-            <line
-              x1="4"
-              y1="40"
-              x2="76"
-              y2="40"
-              stroke="#5BB8E8"
-              stroke-width="1.5" />
-            <ellipse
-              cx="40"
-              cy="40"
-              rx="36"
-              ry="14"
-              stroke="#5BB8E8"
-              stroke-width="1"
-              fill="none" />
-            <path
-              d="M18 32 Q40 24 62 32"
-              stroke="white"
-              stroke-width="2.5"
-              stroke-linecap="round"
-              fill="none" />
-            <path
-              d="M56 28l6 4-5 4"
-              stroke="white"
-              stroke-width="2"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              fill="none" />
-          </svg>
-        </div>
-        <div class="bank-name-ar">بنـك الجـزائـر الخـارجـي</div>
-        <div class="bank-name-fr">Banque Extérieure d'Algérie</div>
+        <div class="logo-wrap"></div>
+
         <div class="divider"></div>
-        <div class="tagline">Portail de gestion interne des projets</div>
+        <div class="tagline">Une Banque à la hauteur de vos aspirations</div>
       </div>
 
       <div class="right-panel">
@@ -388,12 +499,14 @@
                     cy="8"
                     r="4"
                     stroke="#B0BDD0"
-                    stroke-width="1.5" />
+                    stroke-width="1.5"
+                  />
                   <path
                     d="M4 20c0-4 3.6-7 8-7s8 3 8 7"
                     stroke="#B0BDD0"
                     stroke-width="1.5"
-                    stroke-linecap="round" />
+                    stroke-linecap="round"
+                  />
                 </svg>
               </div>
               <input
@@ -401,7 +514,8 @@
                 type="text"
                 id="matricule"
                 placeholder="Ex: ADM001"
-                required />
+                required
+              />
             </div>
           </div>
 
@@ -417,12 +531,14 @@
                     height="11"
                     rx="2"
                     stroke="#B0BDD0"
-                    stroke-width="1.5" />
+                    stroke-width="1.5"
+                  />
                   <path
                     d="M7 11V7a5 5 0 0110 0v4"
                     stroke="#B0BDD0"
                     stroke-width="1.5"
-                    stroke-linecap="round" />
+                    stroke-linecap="round"
+                  />
                 </svg>
               </div>
               <input
@@ -430,19 +546,22 @@
                 type="password"
                 id="password"
                 placeholder="••••••••••"
-                required />
+                required
+              />
               <div class="show-pwd" onclick="togglePassword()">
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
                   <path
                     d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"
                     stroke="#8A9FBF"
-                    stroke-width="1.5" />
+                    stroke-width="1.5"
+                  />
                   <circle
                     cx="12"
                     cy="12"
                     r="3"
                     stroke="#8A9FBF"
-                    stroke-width="1.5" />
+                    stroke-width="1.5"
+                  />
                 </svg>
               </div>
             </div>
@@ -455,7 +574,8 @@
                 stroke="white"
                 stroke-width="2"
                 stroke-linecap="round"
-                stroke-linejoin="round" />
+                stroke-linejoin="round"
+              />
             </svg>
             SE CONNECTER
           </button>
@@ -467,30 +587,21 @@
           <div class="footer-line"></div>
         </div>
 
-        <div class="info-box">
-          <div class="info-box-title">🔑 Comptes de démonstration</div>
-          <div class="info-box-content">
-            <strong>Admin:</strong> ADM001 / admin123<br />
-            <strong>Directeur:</strong> DIR001 / dir123<br />
-            <strong>Chef Département:</strong> CDEP001 / cdep123<br />
-            <strong>PMO:</strong> PMO001 / pmo123<br />
-            <strong>Développeur:</strong> DEV001 / dev123
-          </div>
-        </div>
-
         <div class="security-note" style="margin-top: 12px">
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none">
             <path
               d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"
               stroke="#5A78AA"
               stroke-width="1.5"
-              fill="none" />
+              fill="none"
+            />
             <path
               d="M9 12l2 2 4-4"
               stroke="#5A78AA"
               stroke-width="1.5"
               stroke-linecap="round"
-              stroke-linejoin="round" />
+              stroke-linejoin="round"
+            />
           </svg>
           <span
             >Vos données sont protégées. Ne partagez jamais vos

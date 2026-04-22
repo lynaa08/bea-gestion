@@ -14,6 +14,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 
 @Configuration
 @EnableWebSecurity
+@org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity
 public class SecurityConfig {
 
     private final JwtFilter jwtFilter;
@@ -30,25 +31,24 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
-            .csrf(csrf -> csrf.disable())
-            .cors(cors -> cors.disable())
-            .authorizeHttpRequests(auth -> auth
-                // HTML pages - always accessible (auth handled client-side via JWT)
-                .requestMatchers(
-                    "/", "/login", "/dashboard",
-                    "/projets-list", "/projets/new", "/projets/edit/**",
-                    "/users-list", "/users/new", "/users/edit/**",
-                    "/agenda", "/problemes", "/remarques",
-                    "/materiels-list", "/materiels/new", "/materiels/edit/**",
-                    "/css/**", "/js/**", "/images/**",
-                    "/error"
-                ).permitAll()
-                // Auth endpoint - public
-                .requestMatchers("/api/auth/**").permitAll()
-                // All other API calls require JWT
-                .anyRequest().authenticated()
-            )
-            .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
+                .csrf(csrf -> csrf.disable())
+                .cors(cors -> cors.disable())
+                .authorizeHttpRequests(auth -> auth
+                        // HTML pages - always accessible (auth handled client-side via JWT)
+                        .requestMatchers(
+                                "/", "/login", "/dashboard",
+                                "/projets-list", "/projets/new", "/projets/edit/**",
+                                "/users-list", "/users/new", "/users/edit/**",
+                                "/agenda", "/problemes", "/remarques",
+                                "/materiels-list", "/materiels/new", "/materiels/edit/**",
+                                "/css/**", "/js/**", "/images/**", "favicon.png",
+                                "/error")
+                        .permitAll()
+                        // Auth endpoint - public
+                        .requestMatchers("/api/auth/**").permitAll()
+                        // All other API calls require JWT
+                        .anyRequest().authenticated())
+                .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
         return http.build();
     }
 

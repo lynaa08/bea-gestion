@@ -10,6 +10,6 @@ import java.util.List;
 @Repository
 public interface MaterielRepository extends JpaRepository<Materiel, Long> {
     List<Materiel> findByProjet(Projet projet);
-    List<Materiel> findByEtat(EtatMateriel etat);
-    long countByEtat(EtatMateriel etat);
+    List<Materiel> findByStatut(EtatMateriel statut);
+    long countByStatut(EtatMateriel statut);
 }
