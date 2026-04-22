@@ -3,6 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" type="image/png" href="/favicon.png" />
     <title>Formulaire projet - BEA</title>
     <link rel="stylesheet" th:href="@{/css/style.css}" />
     <style>
@@ -317,7 +318,8 @@
             class="notif-btn"
             id="remarqueBtnTopbar"
             title="Remarques"
-            style="cursor: pointer; margin-right: 2px">
+            style="cursor: pointer; margin-right: 2px"
+          >
             <svg width="15" height="15" viewBox="0 0 24 24" fill="none">
               <path
                 d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"
@@ -325,12 +327,14 @@
                 stroke-width="1.8"
                 stroke-linecap="round"
                 stroke-linejoin="round"
-                fill="none" />
+                fill="none"
+              />
             </svg>
             <div
               class="notif-dot remarque-dot"
               id="remarqueDot"
-              style="display: none; background: #0d2b6e"></div>
+              style="display: none; background: #0d2b6e"
+            ></div>
           </div>
           <div class="notif-btn" style="position: relative; cursor: pointer">
             <svg width="15" height="15" viewBox="0 0 24 24" fill="none">
@@ -338,7 +342,8 @@
                 d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9M13.73 21a2 2 0 01-3.46 0"
                 stroke="#4A6A9E"
                 stroke-width="1.8"
-                stroke-linecap="round" />
+                stroke-linecap="round"
+              />
             </svg>
           </div>
           <div class="user-chip">
@@ -369,12 +374,14 @@
                       rx="2"
                       stroke="#0D2B6E"
                       stroke-width="2"
-                      fill="none" />
+                      fill="none"
+                    />
                     <path
                       d="M8 3v4M16 3v4M3 11h18"
                       stroke="#0D2B6E"
                       stroke-width="2"
-                      stroke-linecap="round" />
+                      stroke-linecap="round"
+                    />
                   </svg>
                 </div>
                 <div class="page-title" id="pageTitle">Créer un projet</div>
@@ -395,7 +402,8 @@
                     class="field-input"
                     id="nom"
                     required
-                    placeholder="Entrez le nom du projet" />
+                    placeholder="Entrez le nom du projet"
+                  />
                 </div>
 
                 <div class="section-label"> Chef de projet</div>
@@ -412,7 +420,8 @@
                       font-size: 10px;
                       margin-top: 3px;
                       display: block;
-                    ">
+                    "
+                  >
                     Sélectionnez le responsable du projet
                   </small>
                 </div>
@@ -430,12 +439,14 @@
                         id="membresSearch"
                         placeholder="Rechercher un membre par matricule ou nom..."
                         oninput="filterMembresDropdown()"
-                        onfocus="showMembresDropdown()" />
+                        onfocus="showMembresDropdown()"
+                      />
                     </div>
                     <div
                       class="multi-select-dropdown"
                       id="membresDropdown"
-                      style="display: none"></div>
+                      style="display: none"
+                    ></div>
                   </div>
                   <small
                     style="
@@ -443,7 +454,8 @@
                       font-size: 10px;
                       margin-top: 3px;
                       display: block;
-                    ">
+                    "
+                  >
                     Cliquez pour sélectionner plusieurs membres
                   </small>
                 </div>
@@ -506,14 +518,16 @@
                     class="field-input"
                     id="description"
                     rows="4"
-                    placeholder="Décrivez le projet..."></textarea>
+                    placeholder="Décrivez le projet..."
+                  ></textarea>
                 </div>
 
                 <div class="form-actions">
                   <button
                     type="button"
                     class="btn-cancel"
-                    onclick="window.location.href = '/projets-list'">
+                    onclick="window.location.href = '/projets-list'"
+                  >
                     Annuler
                   </button>
                   <button type="submit" class="btn-submit">✓ Valider</button>
@@ -525,14 +539,16 @@
             <div
               class="remarques-panel"
               id="remarquesPanel"
-              style="display: none">
+              style="display: none"
+            >
               <div class="rq-header">
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none">
                   <path
                     d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"
                     stroke="#5BB8E8"
                     stroke-width="1.8"
-                    fill="none" />
+                    fill="none"
+                  />
                 </svg>
                 <div class="rq-header-title">Remarques — Chef Département</div>
               </div>
@@ -543,7 +559,8 @@
                 <textarea
                   class="rq-textarea"
                   id="rqText"
-                  placeholder="Votre remarque sur ce projet..."></textarea>
+                  placeholder="Votre remarque sur ce projet..."
+                ></textarea>
                 <button class="rq-btn" onclick="submitRemarque()">
                   Envoyer la remarque
                 </button>

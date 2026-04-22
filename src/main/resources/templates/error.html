@@ -3,6 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" type="image/png" href="/favicon.png" />
     <title>Erreur - BEA Gestion Projets</title>
     <link rel="stylesheet" th:href="@{/css/style.css}" />
     <style>
@@ -93,7 +94,8 @@
             viewBox="0 0 24 24"
             fill="none"
             stroke="#E05A2B"
-            stroke-width="2">
+            stroke-width="2"
+          >
             <circle cx="12" cy="12" r="10" />
             <line x1="12" y1="8" x2="12" y2="12" />
             <circle cx="12" cy="16" r="0.5" fill="#E05A2B" stroke="none" />
@@ -105,7 +107,8 @@
         </div>
         <div
           class="error-description"
-          th:text="${message} ?: 'Désolé, la page que vous recherchez n\'existe pas ou a été déplacée.'">
+          th:text="${message} ?: 'Désolé, la page que vous recherchez n\'existe pas ou a été déplacée.'"
+        >
           Désolé, la page que vous recherchez n'existe pas ou a été déplacée.
         </div>
         <div class="error-actions">

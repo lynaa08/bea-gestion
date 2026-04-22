@@ -5,13 +5,13 @@ public enum EtatMateriel {
     BON_ETAT("Bon état"),
     USAGE("Usagé"),
     EN_PANNE("En panne");
-
+    
     private final String value;
-
+    
     EtatMateriel(String value) {
         this.value = value;
     }
-
+    
     public String getValue() {
         return value;
     }

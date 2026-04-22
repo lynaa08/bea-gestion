@@ -174,8 +174,13 @@ async function handleNotifClick(notifId, projetId) {
       headers: getAuthHeaders(),
     });
   } catch (e) {}
+
   closeNotifPanel();
-  if (projetId) window.location.href = "/projets-list";
+
+  // 👉 redirection vers le projet concerné
+  if (projetId) {
+    window.location.href = `/projets/edit/${projetId}`;
+  }
 }
 
 async function markAllRead() {

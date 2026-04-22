@@ -1,77 +1,90 @@
 package com.bea.gestion.entity;
 
-import com.bea.gestion.enums.EtatMateriel;
 import jakarta.persistence.*;
 import java.time.LocalDate;
+
+import com.bea.gestion.enums.EtatMateriel;
+import com.bea.gestion.enums.StatutMateriel;
 
 @Entity
 @Table(name = "materiels")
 public class Materiel {
-
+    
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
+    
     @Column(nullable = false)
     private String nom;
-
-    private String marque;
-
+    
+    private String reference;  // Anciennement "marque"
+    
+    @Column(name = "bureau")  // ← FIX pour setBureau
+    private String bureau;
+    
+    @Column(name = "service")
+    private String service;
+    
+    @Enumerated(EnumType.STRING)
+    @Column(name = "etat")
+    private EtatMateriel etat;  // NEUF, BON_ETAT, USAGE, EN_PANNE
+    
+    @Enumerated(EnumType.STRING)
+    @Column(name = "statut")
+    private StatutMateriel statut;  // DISPONIBLE, EN_UTILISATION, EN_REPARATION, HORS_SERVICE
+    
+    private Integer quantite;
+    
+    private LocalDate dateAcquisition;
+    
     @Column(length = 1000)
     private String description;
-
-    @Enumerated(EnumType.STRING)
-    private EtatMateriel statut;
-
-    private Integer quantite;
-
-    private String bureau;
-    private String service;
-
-    private LocalDate dateAcquisition;
-
+    
     @ManyToOne
     @JoinColumn(name = "projet_id")
     private Projet projet;
+    
+    // ENLEVÉ : @ManyToOne responsable
 
-    @ManyToOne
-    @JoinColumn(name = "responsable_id")
-    private User responsable;
-
-    // Getters & Setters
+    // Getters and Setters
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
-
+    
     public String getNom() { return nom; }
     public void setNom(String nom) { this.nom = nom; }
-
-    public String getMarque() { return marque; }
-    public void setMarque(String marque) { this.marque = marque; }
-
-    public String getDescription() { return description; }
-    public void setDescription(String description) { this.description = description; }
-
-    public EtatMateriel getStatut() { return statut; }
-    public void setStatut(EtatMateriel statut) { this.statut = statut; }
-
-    public Integer getQuantite() { return quantite; }
-    public void setQuantite(Integer quantite) { this.quantite = quantite; }
-
+    
+    public String getReference() { return reference; }
+    public void setReference(String reference) { this.reference = reference; }
+    
     public String getBureau() { return bureau; }
     public void setBureau(String bureau) { this.bureau = bureau; }
+    
     public String getService() { return service; }
     public void setService(String service) { this.service = service; }
-
+    
+    public EtatMateriel getEtat() { return etat; }
+    public void setEtat(EtatMateriel etat) { this.etat = etat; }
+    
+    public StatutMateriel getStatut() { return statut; }
+    public void setStatut(StatutMateriel statut) { this.statut = statut; }
+    
+    public Integer getQuantite() { return quantite; }
+    public void setQuantite(Integer quantite) { this.quantite = quantite; }
+    
     public LocalDate getDateAcquisition() { return dateAcquisition; }
     public void setDateAcquisition(LocalDate dateAcquisition) { this.dateAcquisition = dateAcquisition; }
-
+    
+    public String getDescription() { return description; }
+    public void setDescription(String description) { this.description = description; }
+    
     public Projet getProjet() { return projet; }
     public void setProjet(Projet projet) { this.projet = projet; }
-
-    public User getResponsable() { return responsable; }
-    public void setResponsable(User responsable) { this.responsable = responsable; }
-    public String getCategorie() {
+    public String getMarque() {
         // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'getCategorie'");
+        throw new UnsupportedOperationException("Unimplemented method 'getMarque'");
+    }
+    public void setMarque(String marque) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'setMarque'");
     }
 }

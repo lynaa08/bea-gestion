@@ -69,6 +69,7 @@ public class MaterielService {
         m.setStatut(req.getStatut());
         m.setQuantite(req.getQuantite());
         m.setDateAcquisition(req.getDateAcquisition());
+        m.setEtat(req.getEtat());
 
         if (req.getProjetId() != null) {
             Projet p = projetRepository.findById(req.getProjetId()).orElse(null);
@@ -76,11 +77,7 @@ public class MaterielService {
         } else {
             m.setProjet(null);
         }
-        if (req.getResponsableId() != null) {
-            User u = userRepository.findById(req.getResponsableId()).orElse(null);
-            m.setResponsable(u);
-        } else {
-            m.setResponsable(null);
+      
         }
     }
-}
+
