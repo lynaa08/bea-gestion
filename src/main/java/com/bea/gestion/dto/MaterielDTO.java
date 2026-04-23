@@ -11,14 +11,14 @@ public class MaterielDTO {
     private String marque;
     private String description;
     private Integer quantite;
-    private String categorie;
     private LocalDate dateAcquisition;
     private Long projetId;
     private String projetNom;
 
     private EtatMateriel etat;
 private StatutMateriel statut;
-
+    private String bureau;
+    private String service;
 
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
@@ -34,8 +34,6 @@ private StatutMateriel statut;
     public void setStatut(StatutMateriel statut) { this.statut = statut; }
     public Integer getQuantite() { return quantite; }
     public void setQuantite(Integer quantite) { this.quantite = quantite; }
-    public String getCategorie() { return categorie; }
-    public void setCategorie(String categorie) { this.categorie = categorie; }
     public LocalDate getDateAcquisition() { return dateAcquisition; }
     public void setDateAcquisition(LocalDate dateAcquisition) { this.dateAcquisition = dateAcquisition; }
     public Long getProjetId() { return projetId; }
@@ -43,12 +41,9 @@ private StatutMateriel statut;
     public String getProjetNom() { return projetNom; }
     public void setProjetNom(String projetNom) { this.projetNom = projetNom; }
 
-    public void setBureau(String bureau) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'setBureau'");
-    }
-    public void setService(String service) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'setService'");
-    }
+    public String getBureau() { return bureau; }
+    public void setBureau(String bureau) { this.bureau = bureau; }
+    
+    public String getService() { return service; }
+    public void setService(String service) { this.service = service; }
 }

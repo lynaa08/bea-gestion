@@ -1,0 +1,4754 @@
+{
+  "projectName" : "gestion",
+  "systemMetrics" : {
+    "quality" : {
+      "lowRisk" : {
+        "value" : 67.79661016949152,
+        "noc" : 40
+      },
+      "mediumRisk" : {
+        "value" : 28.8135593220339,
+        "noc" : 17
+      },
+      "highRisk" : {
+        "value" : 3.389830508474576,
+        "noc" : 2
+      }
+    },
+    "NOC" : 59.0,
+    "AHF" : 0.8844221105527639,
+    "NOI" : 6.0,
+    "MHF" : 0.025906735751295318,
+    "TLOC" : 2511.0
+  },
+  "inheritance" : {
+    "com.bea.gestion.entity.Probleme" : {
+      "type" : "CLASS",
+      "list" : [ ]
+    },
+    "com.bea.gestion.controller.MaterielController" : {
+      "type" : "CLASS",
+      "list" : [ ]
+    },
+    "com.bea.gestion.config.AsyncConfig" : {
+      "type" : "CLASS",
+      "list" : [ ]
+    },
+    "com.bea.gestion.controller.ViewController" : {
+      "type" : "CLASS",
+      "list" : [ ]
+    },
+    "com.bea.gestion.dto.CreateUserRequest" : {
+      "type" : "CLASS",
+      "list" : [ ]
+    },
+    "com.bea.gestion.entity.User" : {
+      "type" : "CLASS",
+      "list" : [ {
+        "name" : "org.springframework.security.core.userdetails.UserDetails",
+        "type" : "implements"
+      } ]
+    },
+    "com.bea.gestion.config.CorsConfig" : {
+      "type" : "CLASS",
+      "list" : [ {
+        "name" : "org.springframework.web.servlet.config.annotation.WebMvcConfigurer",
+        "type" : "implements"
+      } ]
+    },
+    "com.bea.gestion.GestionApplicationTests" : {
+      "type" : "CLASS",
+      "list" : [ ]
+    },
+    "com.bea.gestion.entity.Notification" : {
+      "type" : "CLASS",
+      "list" : [ ]
+    },
+    "com.bea.gestion.controller.ProjetController" : {
+      "type" : "CLASS",
+      "list" : [ ]
+    },
+    "com.bea.gestion.enums.StatutProjet" : {
+      "type" : "ENUM",
+      "list" : [ ]
+    },
+    "com.bea.gestion.repository.NotificationRepository" : {
+      "type" : "INTERFACE",
+      "list" : [ {
+        "name" : "org.springframework.data.jpa.repository.JpaRepository",
+        "type" : "extends"
+      } ]
+    },
+    "com.bea.gestion.repository.ProjetRepository" : {
+      "type" : "INTERFACE",
+      "list" : [ {
+        "name" : "org.springframework.data.jpa.repository.JpaRepository",
+        "type" : "extends"
+      } ]
+    },
+    "com.bea.gestion.config.OpenApiConfig" : {
+      "type" : "CLASS",
+      "list" : [ ]
+    },
+    "com.bea.gestion.config..springframework.security.config.annotation.method.configuration.EnableMethodSecurity" : {
+      "type" : "CLASS",
+      "list" : [ ]
+    },
+    "com.bea.gestion.service.ProjetService" : {
+      "type" : "CLASS",
+      "list" : [ ]
+    },
+    "com.bea.gestion.security.JwtFilter" : {
+      "type" : "CLASS",
+      "list" : [ {
+        "name" : "org.springframework.web.filter.OncePerRequestFilter",
+        "type" : "extends"
+      } ]
+    },
+    "com.bea.gestion.dto.LoginRequest" : {
+      "type" : "CLASS",
+      "list" : [ ]
+    },
+    "com.bea.gestion.controller.TestController" : {
+      "type" : "CLASS",
+      "list" : [ ]
+    },
+    "com.bea.gestion.controller.UserController" : {
+      "type" : "CLASS",
+      "list" : [ ]
+    },
+    "com.bea.gestion.dto.CreateMaterielRequest" : {
+      "type" : "CLASS",
+      "list" : [ ]
+    },
+    "com.bea.gestion.enums.StatutMateriel" : {
+      "type" : "ENUM",
+      "list" : [ ]
+    },
+    "com.bea.gestion.service.UserService" : {
+      "type" : "CLASS",
+      "list" : [ ]
+    },
+    "com.bea.gestion.mapper.MaterielMapper" : {
+      "type" : "CLASS",
+      "list" : [ ]
+    },
+    "com.bea.gestion.repository.MaterielRepository" : {
+      "type" : "INTERFACE",
+      "list" : [ {
+        "name" : "org.springframework.data.jpa.repository.JpaRepository",
+        "type" : "extends"
+      } ]
+    },
+    "com.bea.gestion.service.AuthService" : {
+      "type" : "CLASS",
+      "list" : [ ]
+    },
+    "com.bea.gestion.config.DataInitializer" : {
+      "type" : "CLASS",
+      "list" : [ {
+        "name" : "org.springframework.boot.CommandLineRunner",
+        "type" : "implements"
+      } ]
+    },
+    "com.bea.gestion.exception.GlobalExceptionHandler" : {
+      "type" : "CLASS",
+      "list" : [ ]
+    },
+    "com.bea.gestion.exception.ResourceNotFoundException" : {
+      "type" : "CLASS",
+      "list" : [ {
+        "name" : "java.lang.RuntimeException",
+        "type" : "extends"
+      } ]
+    },
+    "com.bea.gestion.controller.ProblemeController" : {
+      "type" : "CLASS",
+      "list" : [ ]
+    },
+    "com.bea.gestion.repository.ProblemeRepository" : {
+      "type" : "INTERFACE",
+      "list" : [ {
+        "name" : "org.springframework.data.jpa.repository.JpaRepository",
+        "type" : "extends"
+      } ]
+    },
+    "com.bea.gestion.entity.Projet" : {
+      "type" : "CLASS",
+      "list" : [ ]
+    },
+    "com.bea.gestion.GestionApplication" : {
+      "type" : "CLASS",
+      "list" : [ ]
+    },
+    "com.bea.gestion.security.CustomUserDetailsService" : {
+      "type" : "CLASS",
+      "list" : [ {
+        "name" : "org.springframework.security.core.userdetails.UserDetailsService",
+        "type" : "implements"
+      } ]
+    },
+    "com.bea.gestion.dto.UserDTO" : {
+      "type" : "CLASS",
+      "list" : [ ]
+    },
+    "com.bea.gestion.repository.UserRepository" : {
+      "type" : "INTERFACE",
+      "list" : [ {
+        "name" : "org.springframework.data.jpa.repository.JpaRepository",
+        "type" : "extends"
+      } ]
+    },
+    "com.bea.gestion.security.JwtUtil" : {
+      "type" : "CLASS",
+      "list" : [ ]
+    },
+    "com.bea.gestion.entity.Remarque" : {
+      "type" : "CLASS",
+      "list" : [ ]
+    },
+    "com.bea.gestion.controller.RemarqueController" : {
+      "type" : "CLASS",
+      "list" : [ ]
+    },
+    "com.bea.gestion.entity.Materiel" : {
+      "type" : "CLASS",
+      "list" : [ ]
+    },
+    "com.bea.gestion.service.ProblemeService" : {
+      "type" : "CLASS",
+      "list" : [ ]
+    },
+    "com.bea.gestion.service.MaterielService" : {
+      "type" : "CLASS",
+      "list" : [ ]
+    },
+    "com.bea.gestion.controller.NotificationController" : {
+      "type" : "CLASS",
+      "list" : [ ]
+    },
+    "com.bea.gestion.dto.CreateProjetRequest" : {
+      "type" : "CLASS",
+      "list" : [ ]
+    },
+    "com.bea.gestion.controller.AuthController" : {
+      "type" : "CLASS",
+      "list" : [ ]
+    },
+    "com.bea.gestion.service.EmailService" : {
+      "type" : "CLASS",
+      "list" : [ ]
+    },
+    "com.bea.gestion.service.RemarqueService" : {
+      "type" : "CLASS",
+      "list" : [ ]
+    },
+    "com.bea.gestion.controller.SetupController" : {
+      "type" : "CLASS",
+      "list" : [ ]
+    },
+    "com.bea.gestion.entity.Role" : {
+      "type" : "ENUM",
+      "list" : [ ]
+    },
+    "com.bea.gestion.controller.DashboardController" : {
+      "type" : "CLASS",
+      "list" : [ ]
+    },
+    "com.bea.gestion.enums.EtatMateriel" : {
+      "type" : "ENUM",
+      "list" : [ ]
+    },
+    "com.bea.gestion.service.StatistiquesService" : {
+      "type" : "CLASS",
+      "list" : [ ]
+    },
+    "com.bea.gestion.dto.ProjetDTO" : {
+      "type" : "CLASS",
+      "list" : [ ]
+    },
+    "com.bea.gestion.dto.MaterielDTO" : {
+      "type" : "CLASS",
+      "list" : [ ]
+    },
+    "com.bea.gestion.dto.LoginResponse" : {
+      "type" : "CLASS",
+      "list" : [ ]
+    },
+    "com.bea.gestion.mapper.ProjetMapper" : {
+      "type" : "CLASS",
+      "list" : [ ]
+    },
+    "com.bea.gestion.mapper.UserMapper" : {
+      "type" : "CLASS",
+      "list" : [ ]
+    },
+    "com.bea.gestion.enums.TypeProjet" : {
+      "type" : "ENUM",
+      "list" : [ ]
+    },
+    "com.bea.gestion.repository.RemarqueRepository" : {
+      "type" : "INTERFACE",
+      "list" : [ {
+        "name" : "org.springframework.data.jpa.repository.JpaRepository",
+        "type" : "extends"
+      } ]
+    }
+  },
+  "classes" : {
+    "com.bea.gestion.entity.Probleme" : {
+      "name" : "Probleme",
+      "type" : "CLASS",
+      "bugProbability" : 0.49376699485616127,
+      "dependencies" : {
+        "getDateCreation" : [ {
+          "with" : "@dateCreation",
+          "amount" : 1
+        } ],
+        "getPriorite" : [ {
+          "with" : "@priorite",
+          "amount" : 1
+        } ],
+        "setDateCreation" : [ {
+          "with" : "@dateCreation",
+          "amount" : 1
+        } ],
+        "setPriorite" : [ {
+          "with" : "@priorite",
+          "amount" : 1
+        } ],
+        "getId" : [ {
+          "with" : "@id",
+          "amount" : 1
+        } ],
+        "setDescription" : [ {
+          "with" : "@description",
+          "amount" : 1
+        } ],
+        "setProjet" : [ {
+          "with" : "@projet",
+          "amount" : 1
+        } ],
+        "getTitre" : [ {
+          "with" : "@titre",
+          "amount" : 1
+        } ],
+        "getDescription" : [ {
+          "with" : "@description",
+          "amount" : 1
+        } ],
+        "getStatut" : [ {
+          "with" : "@statut",
+          "amount" : 1
+        } ],
+        "setTitre" : [ {
+          "with" : "@titre",
+          "amount" : 1
+        } ],
+        "setStatut" : [ {
+          "with" : "@statut",
+          "amount" : 1
+        } ],
+        "getProjet" : [ {
+          "with" : "@projet",
+          "amount" : 1
+        } ],
+        "setCommentairePmo" : [ {
+          "with" : "@commentairePmo",
+          "amount" : 1
+        } ],
+        "getDeclarant" : [ {
+          "with" : "@declarant",
+          "amount" : 1
+        } ],
+        "getCommentairePmo" : [ {
+          "with" : "@commentairePmo",
+          "amount" : 1
+        } ],
+        "setId" : [ {
+          "with" : "@id",
+          "amount" : 1
+        } ],
+        "setDeclarant" : [ {
+          "with" : "@declarant",
+          "amount" : 1
+        } ],
+        "getDateResolution" : [ {
+          "with" : "@dateResolution",
+          "amount" : 1
+        } ],
+        "setDateResolution" : [ {
+          "with" : "@dateResolution",
+          "amount" : 1
+        } ]
+      },
+      "metrics" : {
+        "NOC" : 0.0,
+        "TLOC" : 86.0,
+        "RSM" : 0.0,
+        "CBO" : 0.0,
+        "MPC" : 0.0,
+        "NOM" : 20.0,
+        "RFC" : 10.0,
+        "ED" : 0.0,
+        "PF" : 0.0,
+        "MIT" : 0.0,
+        "LCOM4" : 10.0,
+        "NOA" : 10.0,
+        "NOP" : 0.5,
+        "NOLM" : 0.0,
+        "DAM" : 1.0,
+        "DIT" : 0.0,
+        "SIX" : 0.0,
+        "LCC" : 0.06896551724137931,
+        "NORM" : 0.0,
+        "CF" : 0.0,
+        "DAC" : 2.0
+      },
+      "package" : "com.bea.gestion.entity",
+      "implements" : [ ]
+    },
+    "com.bea.gestion.controller.MaterielController" : {
+      "name" : "MaterielController",
+      "type" : "CLASS",
+      "bugProbability" : 0.17405240268912137,
+      "dependencies" : {
+        "getAll" : [ {
+          "with" : "MaterielService",
+          "amount" : 1
+        }, {
+          "with" : "ResponseEntity",
+          "amount" : 1
+        }, {
+          "with" : "@materielService",
+          "amount" : 1
+        } ],
+        "MaterielController" : [ {
+          "with" : "@materielService",
+          "amount" : 1
+        } ],
+        "getById" : [ {
+          "with" : "ResponseEntity",
+          "amount" : 1
+        }, {
+          "with" : "MaterielService",
+          "amount" : 1
+        }, {
+          "with" : "@materielService",
+          "amount" : 1
+        } ],
+        "update" : [ {
+          "with" : "MaterielService",
+          "amount" : 1
+        }, {
+          "with" : "ResponseEntity",
+          "amount" : 1
+        }, {
+          "with" : "@materielService",
+          "amount" : 1
+        } ],
+        "create" : [ {
+          "with" : "MaterielService",
+          "amount" : 1
+        }, {
+          "with" : "ResponseEntity",
+          "amount" : 1
+        }, {
+          "with" : "@materielService",
+          "amount" : 1
+        } ],
+        "delete" : [ {
+          "with" : "ResponseEntity",
+          "amount" : 1
+        }, {
+          "with" : "MaterielService",
+          "amount" : 1
+        }, {
+          "with" : "@materielService",
+          "amount" : 1
+        } ]
+      },
+      "metrics" : {
+        "NOC" : 0.0,
+        "TLOC" : 31.0,
+        "RSM" : 0.0,
+        "CBO" : 2.0,
+        "MPC" : 10.0,
+        "NOM" : 6.0,
+        "RFC" : 11.0,
+        "ED" : 0.0,
+        "PF" : 0.0,
+        "MIT" : 0.0,
+        "LCOM4" : 1.0,
+        "NOA" : 1.0,
+        "NOP" : 1.0,
+        "NOLM" : 0.0,
+        "DAM" : 1.0,
+        "DIT" : 0.0,
+        "SIX" : 0.0,
+        "LCC" : 1.0,
+        "NORM" : 0.0,
+        "CF" : 0.017241379310344827,
+        "DAC" : 1.0
+      },
+      "package" : "com.bea.gestion.controller",
+      "implements" : [ ]
+    },
+    "com.bea.gestion.config.AsyncConfig" : {
+      "name" : "AsyncConfig",
+      "type" : "CLASS",
+      "bugProbability" : 0.09296453053476039,
+      "dependencies" : { },
+      "metrics" : {
+        "NOC" : 0.0,
+        "TLOC" : 5.0,
+        "RSM" : 0.0,
+        "CBO" : 0.0,
+        "MPC" : 0.0,
+        "NOM" : 0.0,
+        "RFC" : 0.0,
+        "ED" : 0.0,
+        "PF" : 0.0,
+        "MIT" : 0.0,
+        "LCOM4" : 0.0,
+        "NOA" : 0.0,
+        "NOP" : 0.0,
+        "NOLM" : 0.0,
+        "DAM" : 0.0,
+        "DIT" : 0.0,
+        "SIX" : 0.0,
+        "LCC" : 0.0,
+        "NORM" : 0.0,
+        "CF" : 0.0,
+        "DAC" : 0.0
+      },
+      "package" : "com.bea.gestion.config",
+      "implements" : [ ]
+    },
+    "com.bea.gestion.controller.ViewController" : {
+      "name" : "ViewController",
+      "type" : "CLASS",
+      "bugProbability" : 0.10452395148066507,
+      "dependencies" : {
+        "usersList" : [ ],
+        "remarques" : [ ],
+        "editUser" : [ ],
+        "problemes" : [ ],
+        "materielsList" : [ ],
+        "login" : [ ],
+        "agenda" : [ ],
+        "newProjet" : [ ],
+        "projetsList" : [ ],
+        "home" : [ ],
+        "editMateriel" : [ ],
+        "newUser" : [ ],
+        "editProjet" : [ ],
+        "newMateriel" : [ ],
+        "dashboard" : [ ]
+      },
+      "metrics" : {
+        "NOC" : 0.0,
+        "TLOC" : 50.0,
+        "RSM" : 0.0,
+        "CBO" : 0.0,
+        "MPC" : 0.0,
+        "NOM" : 15.0,
+        "RFC" : 0.0,
+        "ED" : 0.0,
+        "PF" : 0.0,
+        "MIT" : 0.0,
+        "LCOM4" : 15.0,
+        "NOA" : 0.0,
+        "NOP" : 0.0,
+        "NOLM" : 0.0,
+        "DAM" : 0.0,
+        "DIT" : 0.0,
+        "SIX" : 0.0,
+        "LCC" : 0.0,
+        "NORM" : 0.0,
+        "CF" : 0.0,
+        "DAC" : 0.0
+      },
+      "package" : "com.bea.gestion.controller",
+      "implements" : [ ]
+    },
+    "com.bea.gestion.dto.CreateUserRequest" : {
+      "name" : "CreateUserRequest",
+      "type" : "CLASS",
+      "bugProbability" : 0.34923916674015076,
+      "dependencies" : {
+        "setPassword" : [ {
+          "with" : "@password",
+          "amount" : 1
+        } ],
+        "setMatricule" : [ {
+          "with" : "@matricule",
+          "amount" : 1
+        } ],
+        "getRole" : [ {
+          "with" : "@role",
+          "amount" : 1
+        } ],
+        "setNom" : [ {
+          "with" : "@nom",
+          "amount" : 1
+        } ],
+        "setPrenom" : [ {
+          "with" : "@prenom",
+          "amount" : 1
+        } ],
+        "setTelephone" : [ {
+          "with" : "@telephone",
+          "amount" : 1
+        } ],
+        "getPassword" : [ {
+          "with" : "@password",
+          "amount" : 1
+        } ],
+        "getTelephone" : [ {
+          "with" : "@telephone",
+          "amount" : 1
+        } ],
+        "getPrenom" : [ {
+          "with" : "@prenom",
+          "amount" : 1
+        } ],
+        "setEmail" : [ {
+          "with" : "@email",
+          "amount" : 1
+        } ],
+        "setRole" : [ {
+          "with" : "@role",
+          "amount" : 1
+        } ],
+        "getMatricule" : [ {
+          "with" : "@matricule",
+          "amount" : 1
+        } ],
+        "getEmail" : [ {
+          "with" : "@email",
+          "amount" : 1
+        } ],
+        "getNom" : [ {
+          "with" : "@nom",
+          "amount" : 1
+        } ]
+      },
+      "metrics" : {
+        "NOC" : 0.0,
+        "TLOC" : 60.0,
+        "RSM" : 0.0,
+        "CBO" : 0.0,
+        "MPC" : 0.0,
+        "NOM" : 14.0,
+        "RFC" : 7.0,
+        "ED" : 0.0,
+        "PF" : 0.0,
+        "MIT" : 0.0,
+        "LCOM4" : 7.0,
+        "NOA" : 7.0,
+        "NOP" : 0.5,
+        "NOLM" : 0.0,
+        "DAM" : 1.0,
+        "DIT" : 0.0,
+        "SIX" : 0.0,
+        "LCC" : 0.1,
+        "NORM" : 0.0,
+        "CF" : 0.0,
+        "DAC" : 1.0
+      },
+      "package" : "com.bea.gestion.dto",
+      "implements" : [ ]
+    },
+    "com.bea.gestion.entity.User" : {
+      "name" : "User",
+      "type" : "CLASS",
+      "bugProbability" : 0.4904482690427535,
+      "dependencies" : {
+        "setPassword" : [ {
+          "with" : "@password",
+          "amount" : 1
+        } ],
+        "setNom" : [ {
+          "with" : "@nom",
+          "amount" : 1
+        } ],
+        "getRole" : [ {
+          "with" : "@role",
+          "amount" : 1
+        } ],
+        "setMatricule" : [ {
+          "with" : "@matricule",
+          "amount" : 1
+        } ],
+        "getId" : [ {
+          "with" : "@id",
+          "amount" : 1
+        } ],
+        "setPrenom" : [ {
+          "with" : "@prenom",
+          "amount" : 1
+        } ],
+        "isAccountNonLocked" : [ ],
+        "setTelephone" : [ {
+          "with" : "@telephone",
+          "amount" : 1
+        } ],
+        "getAuthorities" : [ {
+          "with" : "List",
+          "amount" : 1
+        }, {
+          "with" : "SimpleGrantedAuthority",
+          "amount" : 1
+        }, {
+          "with" : "Role",
+          "amount" : 1
+        }, {
+          "with" : "@role",
+          "amount" : 1
+        } ],
+        "getUsername" : [ {
+          "with" : "@matricule",
+          "amount" : 1
+        } ],
+        "getPassword" : [ {
+          "with" : "@password",
+          "amount" : 1
+        } ],
+        "getTelephone" : [ {
+          "with" : "@telephone",
+          "amount" : 1
+        } ],
+        "setEmail" : [ {
+          "with" : "@email",
+          "amount" : 1
+        } ],
+        "getPrenom" : [ {
+          "with" : "@prenom",
+          "amount" : 1
+        } ],
+        "isCredentialsNonExpired" : [ ],
+        "isAccountNonExpired" : [ ],
+        "isEnabled" : [ ],
+        "setRole" : [ {
+          "with" : "@role",
+          "amount" : 1
+        } ],
+        "getMatricule" : [ {
+          "with" : "@matricule",
+          "amount" : 1
+        } ],
+        "setId" : [ {
+          "with" : "@id",
+          "amount" : 1
+        } ],
+        "getEmail" : [ {
+          "with" : "@email",
+          "amount" : 1
+        } ],
+        "getNom" : [ {
+          "with" : "@nom",
+          "amount" : 1
+        } ]
+      },
+      "metrics" : {
+        "NOC" : 0.0,
+        "TLOC" : 91.0,
+        "RSM" : 0.0,
+        "CBO" : 3.0,
+        "MPC" : 3.0,
+        "NOM" : 22.0,
+        "RFC" : 11.0,
+        "ED" : 0.0,
+        "PF" : 0.0,
+        "MIT" : 0.0,
+        "LCOM4" : 12.0,
+        "NOA" : 8.0,
+        "NOP" : 0.36363636363636365,
+        "NOLM" : 0.0,
+        "DAM" : 1.0,
+        "DIT" : 0.0,
+        "SIX" : 0.0,
+        "LCC" : 0.06896551724137931,
+        "NORM" : 0.0,
+        "CF" : 0.017241379310344827,
+        "DAC" : 1.0
+      },
+      "package" : "com.bea.gestion.entity",
+      "implements" : [ "org.springframework.security.core.userdetails.UserDetails" ]
+    },
+    "com.bea.gestion.config.CorsConfig" : {
+      "name" : "CorsConfig",
+      "type" : "CLASS",
+      "bugProbability" : 0.08094691328963255,
+      "dependencies" : {
+        "addCorsMappings" : [ {
+          "with" : "CorsRegistry",
+          "amount" : 1
+        } ]
+      },
+      "metrics" : {
+        "NOC" : 0.0,
+        "TLOC" : 9.0,
+        "RSM" : 0.0,
+        "CBO" : 1.0,
+        "MPC" : 1.0,
+        "NOM" : 1.0,
+        "RFC" : 6.0,
+        "ED" : 0.0,
+        "PF" : 0.0,
+        "MIT" : 0.0,
+        "LCOM4" : 1.0,
+        "NOA" : 0.0,
+        "NOP" : 1.0,
+        "NOLM" : 0.0,
+        "DAM" : 0.0,
+        "DIT" : 0.0,
+        "SIX" : 0.0,
+        "LCC" : 1.0,
+        "NORM" : 0.0,
+        "CF" : 0.0,
+        "DAC" : 0.0
+      },
+      "package" : "com.bea.gestion.config",
+      "implements" : [ "org.springframework.web.servlet.config.annotation.WebMvcConfigurer" ]
+    },
+    "com.bea.gestion.GestionApplicationTests" : {
+      "name" : "GestionApplicationTests",
+      "type" : "CLASS",
+      "bugProbability" : 0.046398344348040244,
+      "dependencies" : {
+        "contextLoads" : [ ]
+      },
+      "metrics" : {
+        "NOC" : 0.0,
+        "TLOC" : 7.0,
+        "RSM" : 0.0,
+        "CBO" : 0.0,
+        "MPC" : 0.0,
+        "NOM" : 1.0,
+        "RFC" : 0.0,
+        "ED" : 0.0,
+        "PF" : 0.0,
+        "MIT" : 0.0,
+        "LCOM4" : 1.0,
+        "NOA" : 0.0,
+        "NOP" : 0.0,
+        "NOLM" : 0.0,
+        "DAM" : 0.0,
+        "DIT" : 0.0,
+        "SIX" : 0.0,
+        "LCC" : 1.0,
+        "NORM" : 0.0,
+        "CF" : 0.0,
+        "DAC" : 0.0
+      },
+      "package" : "com.bea.gestion",
+      "implements" : [ ]
+    },
+    "com.bea.gestion.entity.Notification" : {
+      "name" : "Notification",
+      "type" : "CLASS",
+      "bugProbability" : 0.4335348367810894,
+      "dependencies" : {
+        "getDateCreation" : [ {
+          "with" : "@dateCreation",
+          "amount" : 1
+        } ],
+        "setProjetId" : [ {
+          "with" : "@projetId",
+          "amount" : 1
+        } ],
+        "setDateCreation" : [ {
+          "with" : "@dateCreation",
+          "amount" : 1
+        } ],
+        "getUser" : [ {
+          "with" : "@user",
+          "amount" : 1
+        } ],
+        "getMessage" : [ {
+          "with" : "@message",
+          "amount" : 1
+        } ],
+        "getId" : [ {
+          "with" : "@id",
+          "amount" : 1
+        } ],
+        "setProjetNom" : [ {
+          "with" : "@projetNom",
+          "amount" : 1
+        } ],
+        "setMessage" : [ {
+          "with" : "@message",
+          "amount" : 1
+        } ],
+        "setType" : [ {
+          "with" : "@type",
+          "amount" : 1
+        } ],
+        "getTitre" : [ {
+          "with" : "@titre",
+          "amount" : 1
+        } ],
+        "getProjetId" : [ {
+          "with" : "@projetId",
+          "amount" : 1
+        } ],
+        "isLue" : [ {
+          "with" : "@lue",
+          "amount" : 1
+        } ],
+        "setTitre" : [ {
+          "with" : "@titre",
+          "amount" : 1
+        } ],
+        "getProjetNom" : [ {
+          "with" : "@projetNom",
+          "amount" : 1
+        } ],
+        "getType" : [ {
+          "with" : "@type",
+          "amount" : 1
+        } ],
+        "setLue" : [ {
+          "with" : "@lue",
+          "amount" : 1
+        } ],
+        "setId" : [ {
+          "with" : "@id",
+          "amount" : 1
+        } ],
+        "setUser" : [ {
+          "with" : "@user",
+          "amount" : 1
+        } ]
+      },
+      "metrics" : {
+        "NOC" : 0.0,
+        "TLOC" : 78.0,
+        "RSM" : 0.0,
+        "CBO" : 0.0,
+        "MPC" : 0.0,
+        "NOM" : 18.0,
+        "RFC" : 9.0,
+        "ED" : 0.0,
+        "PF" : 0.0,
+        "MIT" : 0.0,
+        "LCOM4" : 9.0,
+        "NOA" : 9.0,
+        "NOP" : 0.5,
+        "NOLM" : 0.0,
+        "DAM" : 1.0,
+        "DIT" : 0.0,
+        "SIX" : 0.0,
+        "LCC" : 0.07692307692307693,
+        "NORM" : 0.0,
+        "CF" : 0.0,
+        "DAC" : 1.0
+      },
+      "package" : "com.bea.gestion.entity",
+      "implements" : [ ]
+    },
+    "com.bea.gestion.controller.ProjetController" : {
+      "name" : "ProjetController",
+      "type" : "CLASS",
+      "bugProbability" : 0.2583426701467857,
+      "dependencies" : {
+        "getAllProjetsList" : [ {
+          "with" : "ResponseEntity",
+          "amount" : 1
+        }, {
+          "with" : "ProjetService",
+          "amount" : 1
+        }, {
+          "with" : "@projetService",
+          "amount" : 1
+        } ],
+        "ProjetController" : [ {
+          "with" : "@projetService",
+          "amount" : 1
+        } ],
+        "getAllProjets" : [ {
+          "with" : "ResponseEntity",
+          "amount" : 1
+        }, {
+          "with" : "ProjetService",
+          "amount" : 1
+        }, {
+          "with" : "@projetService",
+          "amount" : 1
+        } ],
+        "updateProjetStatut" : [ {
+          "with" : "ProjetService",
+          "amount" : 1
+        }, {
+          "with" : "ResponseEntity",
+          "amount" : 1
+        }, {
+          "with" : "@projetService",
+          "amount" : 1
+        } ],
+        "getProjetById" : [ {
+          "with" : "ProjetService",
+          "amount" : 1
+        }, {
+          "with" : "ResponseEntity",
+          "amount" : 1
+        }, {
+          "with" : "@projetService",
+          "amount" : 1
+        } ],
+        "updateProjet" : [ {
+          "with" : "ResponseEntity",
+          "amount" : 1
+        }, {
+          "with" : "ProjetService",
+          "amount" : 1
+        }, {
+          "with" : "@projetService",
+          "amount" : 1
+        } ]
+      },
+      "metrics" : {
+        "NOC" : 0.0,
+        "TLOC" : 38.0,
+        "RSM" : 0.0,
+        "CBO" : 2.0,
+        "MPC" : 10.0,
+        "NOM" : 6.0,
+        "RFC" : 7.0,
+        "ED" : 0.0,
+        "PF" : 0.0,
+        "MIT" : 0.0,
+        "LCOM4" : 1.0,
+        "NOA" : 1.0,
+        "NOP" : 2.0,
+        "NOLM" : 0.0,
+        "DAM" : 1.0,
+        "DIT" : 0.0,
+        "SIX" : 0.0,
+        "LCC" : 1.0,
+        "NORM" : 0.0,
+        "CF" : 0.017241379310344827,
+        "DAC" : 1.0
+      },
+      "package" : "com.bea.gestion.controller",
+      "implements" : [ ]
+    },
+    "com.bea.gestion.enums.StatutProjet" : {
+      "name" : "StatutProjet",
+      "type" : "ENUM",
+      "bugProbability" : 0.13930262880493738,
+      "dependencies" : {
+        "getValue" : [ {
+          "with" : "@value",
+          "amount" : 1
+        } ],
+        "StatutProjet" : [ {
+          "with" : "@value",
+          "amount" : 1
+        } ]
+      },
+      "metrics" : {
+        "NOC" : 0.0,
+        "TLOC" : 12.0,
+        "RSM" : 4.0,
+        "CBO" : 0.0,
+        "MPC" : 0.0,
+        "NOM" : 2.0,
+        "RFC" : 1.0,
+        "ED" : 0.0,
+        "PF" : 0.0,
+        "MIT" : 0.0,
+        "LCOM4" : 5.0,
+        "NOA" : 5.0,
+        "NOP" : 0.5,
+        "NOLM" : 0.0,
+        "DAM" : 0.0,
+        "DIT" : 0.0,
+        "SIX" : 0.0,
+        "LCC" : 0.14285714285714285,
+        "NORM" : 0.0,
+        "CF" : 0.0,
+        "DAC" : 1.0
+      },
+      "package" : "com.bea.gestion.enums",
+      "implements" : [ ]
+    },
+    "com.bea.gestion.repository.NotificationRepository" : {
+      "name" : "NotificationRepository",
+      "type" : "INTERFACE",
+      "bugProbability" : 0.1370386868417529,
+      "dependencies" : {
+        "markAllAsRead" : [ ],
+        "findByUserOrderByDateCreationDesc" : [ ],
+        "countByUserAndLueFalse" : [ ]
+      },
+      "metrics" : {
+        "NOC" : 0.0,
+        "TLOC" : 15.0,
+        "RSM" : 0.0,
+        "CBO" : 0.0,
+        "MPC" : 0.0,
+        "NOM" : 3.0,
+        "RFC" : 0.0,
+        "ED" : 0.0,
+        "PF" : 0.0,
+        "MIT" : 0.0,
+        "LCOM4" : 3.0,
+        "NOA" : 0.0,
+        "NOP" : 1.0,
+        "NOLM" : 0.0,
+        "DAM" : 0.0,
+        "DIT" : 1.0,
+        "SIX" : 0.0,
+        "LCC" : 0.0,
+        "NORM" : 0.0,
+        "CF" : 0.0,
+        "DAC" : 0.0
+      },
+      "package" : "com.bea.gestion.repository",
+      "extends" : "org.springframework.data.jpa.repository.JpaRepository",
+      "implements" : [ ]
+    },
+    "com.bea.gestion.repository.ProjetRepository" : {
+      "name" : "ProjetRepository",
+      "type" : "INTERFACE",
+      "bugProbability" : 0.15546389882068046,
+      "dependencies" : {
+        "findTop5ByOrderByDateCreationDesc" : [ ],
+        "countByStatut" : [ ],
+        "LOWER" : [ ]
+      },
+      "metrics" : {
+        "NOC" : 0.0,
+        "TLOC" : 29.0,
+        "RSM" : 0.0,
+        "CBO" : 1.0,
+        "MPC" : 0.0,
+        "NOM" : 3.0,
+        "RFC" : 2.0,
+        "ED" : 0.0,
+        "PF" : 0.0,
+        "MIT" : 0.0,
+        "LCOM4" : 4.0,
+        "NOA" : 4.0,
+        "NOP" : 0.6666666666666666,
+        "NOLM" : 0.0,
+        "DAM" : 0.0,
+        "DIT" : 1.0,
+        "SIX" : 0.0,
+        "LCC" : 0.0,
+        "NORM" : 0.0,
+        "CF" : 0.0,
+        "DAC" : 0.0
+      },
+      "package" : "com.bea.gestion.repository",
+      "extends" : "org.springframework.data.jpa.repository.JpaRepository",
+      "implements" : [ ]
+    },
+    "com.bea.gestion.config.OpenApiConfig" : {
+      "name" : "OpenApiConfig",
+      "type" : "CLASS",
+      "bugProbability" : 0.07118053106584399,
+      "dependencies" : {
+        "customOpenAPI" : [ {
+          "with" : "Info",
+          "amount" : 1
+        }, {
+          "with" : "OpenAPI",
+          "amount" : 1
+        }, {
+          "with" : "SecurityRequirement",
+          "amount" : 1
+        }, {
+          "with" : "Components",
+          "amount" : 1
+        }, {
+          "with" : "SecurityScheme",
+          "amount" : 1
+        } ]
+      },
+      "metrics" : {
+        "NOC" : 0.0,
+        "TLOC" : 13.0,
+        "RSM" : 0.0,
+        "CBO" : 5.0,
+        "MPC" : 5.0,
+        "NOM" : 1.0,
+        "RFC" : 16.0,
+        "ED" : 0.0,
+        "PF" : 0.0,
+        "MIT" : 0.0,
+        "LCOM4" : 1.0,
+        "NOA" : 0.0,
+        "NOP" : 0.0,
+        "NOLM" : 0.0,
+        "DAM" : 0.0,
+        "DIT" : 0.0,
+        "SIX" : 0.0,
+        "LCC" : 1.0,
+        "NORM" : 0.0,
+        "CF" : 0.0,
+        "DAC" : 0.0
+      },
+      "package" : "com.bea.gestion.config",
+      "implements" : [ ]
+    },
+    "com.bea.gestion.config..springframework.security.config.annotation.method.configuration.EnableMethodSecurity" : {
+      "name" : ".springframework.security.config.annotation.method.configuration.EnableMethodSecurity",
+      "type" : "CLASS",
+      "bugProbability" : 0.23767182619852745,
+      "dependencies" : {
+        "passwordEncoder" : [ {
+          "with" : "BCryptPasswordEncoder",
+          "amount" : 1
+        } ],
+        "authenticationManager" : [ {
+          "with" : "AuthenticationConfiguration",
+          "amount" : 1
+        } ],
+        "filterChain" : [ {
+          "with" : "HttpSecurity",
+          "amount" : 1
+        } ]
+      },
+      "metrics" : {
+        "NOC" : 0.0,
+        "TLOC" : 29.0,
+        "RSM" : 0.0,
+        "CBO" : 5.0,
+        "MPC" : 3.0,
+        "NOM" : 3.0,
+        "RFC" : 5.0,
+        "ED" : 0.0,
+        "PF" : 0.0,
+        "MIT" : 0.0,
+        "LCOM4" : 4.0,
+        "NOA" : 1.0,
+        "NOP" : 0.6666666666666666,
+        "NOLM" : 0.0,
+        "DAM" : 1.0,
+        "DIT" : 0.0,
+        "SIX" : 0.0,
+        "LCC" : 0.0,
+        "NORM" : 0.0,
+        "CF" : 0.0,
+        "DAC" : 1.0
+      },
+      "package" : "com.bea.gestion.config",
+      "implements" : [ ]
+    },
+    "com.bea.gestion.service.ProjetService" : {
+      "name" : "ProjetService",
+      "type" : "CLASS",
+      "bugProbability" : 0.5230273933530518,
+      "dependencies" : {
+        "deleteProjet" : [ {
+          "with" : "ProjetRepository",
+          "amount" : 1
+        }, {
+          "with" : "@projetRepository",
+          "amount" : 1
+        } ],
+        "getAllProjetsList" : [ {
+          "with" : "ProjetRepository",
+          "amount" : 1
+        }, {
+          "with" : "ProjetMapper",
+          "amount" : 1
+        }, {
+          "with" : "Collectors",
+          "amount" : 1
+        }, {
+          "with" : "@projetMapper",
+          "amount" : 1
+        }, {
+          "with" : "@projetRepository",
+          "amount" : 1
+        } ],
+        "createProjet" : [ {
+          "with" : "CreateProjetRequest",
+          "amount" : 15
+        }, {
+          "with" : "UserRepository",
+          "amount" : 2
+        }, {
+          "with" : "Projet",
+          "amount" : 11
+        }, {
+          "with" : "ProjetMapper",
+          "amount" : 1
+        }, {
+          "with" : "ProjetRepository",
+          "amount" : 1
+        }, {
+          "with" : "LocalDate",
+          "amount" : 1
+        }, {
+          "with" : "NotificationService",
+          "amount" : 1
+        }, {
+          "with" : "@projetMapper",
+          "amount" : 1
+        }, {
+          "with" : "@projetRepository",
+          "amount" : 1
+        }, {
+          "with" : "@notificationService",
+          "amount" : 1
+        }, {
+          "with" : "@userRepository",
+          "amount" : 1
+        } ],
+        "getAllProjets" : [ {
+          "with" : "ProjetMapper",
+          "amount" : 1
+        }, {
+          "with" : "ProjetRepository",
+          "amount" : 1
+        }, {
+          "with" : "@projetMapper",
+          "amount" : 1
+        }, {
+          "with" : "@projetRepository",
+          "amount" : 1
+        } ],
+        "updateProjetStatut" : [ {
+          "with" : "ProjetRepository",
+          "amount" : 2
+        }, {
+          "with" : "NotificationService",
+          "amount" : 1
+        }, {
+          "with" : "ProjetMapper",
+          "amount" : 1
+        }, {
+          "with" : "ResourceNotFoundException",
+          "amount" : 1
+        }, {
+          "with" : "Projet",
+          "amount" : 2
+        }, {
+          "with" : "@projetMapper",
+          "amount" : 1
+        }, {
+          "with" : "@projetRepository",
+          "amount" : 1
+        }, {
+          "with" : "@notificationService",
+          "amount" : 1
+        } ],
+        "getProjetById" : [ {
+          "with" : "ProjetMapper",
+          "amount" : 1
+        }, {
+          "with" : "ProjetRepository",
+          "amount" : 1
+        }, {
+          "with" : "ResourceNotFoundException",
+          "amount" : 1
+        }, {
+          "with" : "@projetMapper",
+          "amount" : 1
+        }, {
+          "with" : "@projetRepository",
+          "amount" : 1
+        } ],
+        "updateProjet" : [ {
+          "with" : "CreateProjetRequest",
+          "amount" : 11
+        }, {
+          "with" : "Projet",
+          "amount" : 9
+        }, {
+          "with" : "ProjetRepository",
+          "amount" : 2
+        }, {
+          "with" : "UserRepository",
+          "amount" : 2
+        }, {
+          "with" : "ResourceNotFoundException",
+          "amount" : 1
+        }, {
+          "with" : "ProjetMapper",
+          "amount" : 1
+        }, {
+          "with" : "@projetMapper",
+          "amount" : 1
+        }, {
+          "with" : "@projetRepository",
+          "amount" : 1
+        }, {
+          "with" : "@userRepository",
+          "amount" : 1
+        } ],
+        "ProjetService" : [ {
+          "with" : "@projetMapper",
+          "amount" : 1
+        }, {
+          "with" : "@projetRepository",
+          "amount" : 1
+        }, {
+          "with" : "@notificationService",
+          "amount" : 1
+        }, {
+          "with" : "@userRepository",
+          "amount" : 1
+        } ]
+      },
+      "metrics" : {
+        "NOC" : 0.0,
+        "TLOC" : 108.0,
+        "RSM" : 0.0,
+        "CBO" : 9.0,
+        "MPC" : 74.0,
+        "NOM" : 8.0,
+        "RFC" : 43.0,
+        "ED" : 0.0,
+        "PF" : 0.0,
+        "MIT" : 0.0,
+        "LCOM4" : 1.0,
+        "NOA" : 4.0,
+        "NOP" : 2.125,
+        "NOLM" : 0.0,
+        "DAM" : 1.0,
+        "DIT" : 0.0,
+        "SIX" : 0.0,
+        "LCC" : 1.0,
+        "NORM" : 0.0,
+        "CF" : 0.10344827586206896,
+        "DAC" : 3.0
+      },
+      "package" : "com.bea.gestion.service",
+      "implements" : [ ]
+    },
+    "com.bea.gestion.security.JwtFilter" : {
+      "name" : "JwtFilter",
+      "type" : "CLASS",
+      "bugProbability" : 0.24406818076559544,
+      "dependencies" : {
+        "doFilterInternal" : [ {
+          "with" : "SecurityContextHolder",
+          "amount" : 2
+        }, {
+          "with" : "WebAuthenticationDetailsSource",
+          "amount" : 1
+        }, {
+          "with" : "FilterChain",
+          "amount" : 3
+        }, {
+          "with" : "UsernamePasswordAuthenticationToken",
+          "amount" : 2
+        }, {
+          "with" : "String",
+          "amount" : 2
+        }, {
+          "with" : "UNKNOWN",
+          "amount" : 2
+        }, {
+          "with" : "io.jsonwebtoken.ExpiredJwtException",
+          "amount" : 1
+        }, {
+          "with" : "Exception",
+          "amount" : 1
+        }, {
+          "with" : "JwtUtil",
+          "amount" : 2
+        }, {
+          "with" : "UserDetails",
+          "amount" : 1
+        }, {
+          "with" : "this.userDetailsService",
+          "amount" : 1
+        }, {
+          "with" : "HttpServletRequest",
+          "amount" : 1
+        }, {
+          "with" : "@jwtUtil",
+          "amount" : 1
+        }, {
+          "with" : "@userDetailsService",
+          "amount" : 1
+        } ],
+        "JwtFilter" : [ {
+          "with" : "@jwtUtil",
+          "amount" : 1
+        }, {
+          "with" : "@userDetailsService",
+          "amount" : 1
+        } ]
+      },
+      "metrics" : {
+        "NOC" : 0.0,
+        "TLOC" : 59.0,
+        "RSM" : 0.0,
+        "CBO" : 11.0,
+        "MPC" : 19.0,
+        "NOM" : 2.0,
+        "RFC" : 19.0,
+        "ED" : 2.0,
+        "PF" : 0.0,
+        "MIT" : 0.0,
+        "LCOM4" : 1.0,
+        "NOA" : 2.0,
+        "NOP" : 2.5,
+        "NOLM" : 0.0,
+        "DAM" : 1.0,
+        "DIT" : 1.0,
+        "SIX" : 0.0,
+        "LCC" : 1.0,
+        "NORM" : 0.0,
+        "CF" : 0.017241379310344827,
+        "DAC" : 2.0
+      },
+      "package" : "com.bea.gestion.security",
+      "extends" : "org.springframework.web.filter.OncePerRequestFilter",
+      "implements" : [ ]
+    },
+    "com.bea.gestion.dto.LoginRequest" : {
+      "name" : "LoginRequest",
+      "type" : "CLASS",
+      "bugProbability" : 0.1467775735639022,
+      "dependencies" : {
+        "setPassword" : [ {
+          "with" : "@password",
+          "amount" : 1
+        } ],
+        "getPassword" : [ {
+          "with" : "@password",
+          "amount" : 1
+        } ],
+        "setMatricule" : [ {
+          "with" : "@matricule",
+          "amount" : 1
+        } ],
+        "getMatricule" : [ {
+          "with" : "@matricule",
+          "amount" : 1
+        } ]
+      },
+      "metrics" : {
+        "NOC" : 0.0,
+        "TLOC" : 19.0,
+        "RSM" : 0.0,
+        "CBO" : 0.0,
+        "MPC" : 0.0,
+        "NOM" : 4.0,
+        "RFC" : 2.0,
+        "ED" : 0.0,
+        "PF" : 0.0,
+        "MIT" : 0.0,
+        "LCOM4" : 2.0,
+        "NOA" : 2.0,
+        "NOP" : 0.5,
+        "NOLM" : 0.0,
+        "DAM" : 1.0,
+        "DIT" : 0.0,
+        "SIX" : 0.0,
+        "LCC" : 0.4,
+        "NORM" : 0.0,
+        "CF" : 0.0,
+        "DAC" : 0.0
+      },
+      "package" : "com.bea.gestion.dto",
+      "implements" : [ ]
+    },
+    "com.bea.gestion.controller.TestController" : {
+      "name" : "TestController",
+      "type" : "CLASS",
+      "bugProbability" : 0.23780164295385242,
+      "dependencies" : {
+        "ping" : [ {
+          "with" : "ResponseEntity",
+          "amount" : 1
+        }, {
+          "with" : "Map",
+          "amount" : 1
+        } ],
+        "TestController" : [ {
+          "with" : "@notificationService",
+          "amount" : 1
+        }, {
+          "with" : "@userRepository",
+          "amount" : 1
+        } ],
+        "testNotif" : [ {
+          "with" : "ResponseEntity",
+          "amount" : 3
+        }, {
+          "with" : "Map",
+          "amount" : 3
+        }, {
+          "with" : "UserRepository",
+          "amount" : 1
+        }, {
+          "with" : "User",
+          "amount" : 3
+        }, {
+          "with" : "Authentication",
+          "amount" : 1
+        }, {
+          "with" : "NotificationService",
+          "amount" : 1
+        }, {
+          "with" : "@notificationService",
+          "amount" : 1
+        }, {
+          "with" : "@userRepository",
+          "amount" : 1
+        } ]
+      },
+      "metrics" : {
+        "NOC" : 0.0,
+        "TLOC" : 29.0,
+        "RSM" : 0.0,
+        "CBO" : 6.0,
+        "MPC" : 14.0,
+        "NOM" : 3.0,
+        "RFC" : 13.0,
+        "ED" : 0.0,
+        "PF" : 0.0,
+        "MIT" : 0.0,
+        "LCOM4" : 2.0,
+        "NOA" : 2.0,
+        "NOP" : 1.0,
+        "NOLM" : 0.0,
+        "DAM" : 1.0,
+        "DIT" : 0.0,
+        "SIX" : 0.0,
+        "LCC" : 0.6,
+        "NORM" : 0.0,
+        "CF" : 0.034482758620689655,
+        "DAC" : 1.0
+      },
+      "package" : "com.bea.gestion.controller",
+      "implements" : [ ]
+    },
+    "com.bea.gestion.controller.UserController" : {
+      "name" : "UserController",
+      "type" : "CLASS",
+      "bugProbability" : 0.20157737803392206,
+      "dependencies" : {
+        "getAllUsers" : [ {
+          "with" : "UserService",
+          "amount" : 1
+        }, {
+          "with" : "ResponseEntity",
+          "amount" : 1
+        }, {
+          "with" : "@userService",
+          "amount" : 1
+        } ],
+        "getUserById" : [ {
+          "with" : "ResponseEntity",
+          "amount" : 1
+        }, {
+          "with" : "UserService",
+          "amount" : 1
+        }, {
+          "with" : "@userService",
+          "amount" : 1
+        } ],
+        "updateRole" : [ {
+          "with" : "String",
+          "amount" : 1
+        }, {
+          "with" : "ResponseEntity",
+          "amount" : 1
+        }, {
+          "with" : "UserService",
+          "amount" : 1
+        }, {
+          "with" : "Role",
+          "amount" : 1
+        }, {
+          "with" : "@userService",
+          "amount" : 1
+        } ],
+        "updateUser" : [ {
+          "with" : "UserService",
+          "amount" : 1
+        }, {
+          "with" : "ResponseEntity",
+          "amount" : 1
+        }, {
+          "with" : "@userService",
+          "amount" : 1
+        } ],
+        "UserController" : [ {
+          "with" : "@userService",
+          "amount" : 1
+        } ]
+      },
+      "metrics" : {
+        "NOC" : 0.0,
+        "TLOC" : 29.0,
+        "RSM" : 0.0,
+        "CBO" : 4.0,
+        "MPC" : 10.0,
+        "NOM" : 5.0,
+        "RFC" : 9.0,
+        "ED" : 0.0,
+        "PF" : 0.0,
+        "MIT" : 0.0,
+        "LCOM4" : 1.0,
+        "NOA" : 1.0,
+        "NOP" : 1.2,
+        "NOLM" : 0.0,
+        "DAM" : 1.0,
+        "DIT" : 0.0,
+        "SIX" : 0.0,
+        "LCC" : 1.0,
+        "NORM" : 0.0,
+        "CF" : 0.034482758620689655,
+        "DAC" : 1.0
+      },
+      "package" : "com.bea.gestion.controller",
+      "implements" : [ ]
+    },
+    "com.bea.gestion.dto.CreateMaterielRequest" : {
+      "name" : "CreateMaterielRequest",
+      "type" : "CLASS",
+      "bugProbability" : 0.49376699485616127,
+      "dependencies" : {
+        "setProjetId" : [ {
+          "with" : "@projetId",
+          "amount" : 1
+        } ],
+        "setQuantite" : [ {
+          "with" : "@quantite",
+          "amount" : 1
+        } ],
+        "getEtat" : [ {
+          "with" : "@etat",
+          "amount" : 1
+        } ],
+        "setNom" : [ {
+          "with" : "@nom",
+          "amount" : 1
+        } ],
+        "getBureau" : [ {
+          "with" : "@bureau",
+          "amount" : 1
+        } ],
+        "setDescription" : [ {
+          "with" : "@description",
+          "amount" : 1
+        } ],
+        "getDescription" : [ {
+          "with" : "@description",
+          "amount" : 1
+        } ],
+        "getStatut" : [ {
+          "with" : "@statut",
+          "amount" : 1
+        } ],
+        "setEtat" : [ {
+          "with" : "@etat",
+          "amount" : 1
+        } ],
+        "getService" : [ {
+          "with" : "@service",
+          "amount" : 1
+        } ],
+        "getProjetId" : [ {
+          "with" : "@projetId",
+          "amount" : 1
+        } ],
+        "getQuantite" : [ {
+          "with" : "@quantite",
+          "amount" : 1
+        } ],
+        "setStatut" : [ {
+          "with" : "@statut",
+          "amount" : 1
+        } ],
+        "setDateAcquisition" : [ {
+          "with" : "@dateAcquisition",
+          "amount" : 1
+        } ],
+        "setService" : [ {
+          "with" : "@service",
+          "amount" : 1
+        } ],
+        "setBureau" : [ {
+          "with" : "@bureau",
+          "amount" : 1
+        } ],
+        "getMarque" : [ {
+          "with" : "@marque",
+          "amount" : 1
+        } ],
+        "setMarque" : [ {
+          "with" : "@marque",
+          "amount" : 1
+        } ],
+        "getNom" : [ {
+          "with" : "@nom",
+          "amount" : 1
+        } ],
+        "getDateAcquisition" : [ {
+          "with" : "@dateAcquisition",
+          "amount" : 1
+        } ]
+      },
+      "metrics" : {
+        "NOC" : 0.0,
+        "TLOC" : 86.0,
+        "RSM" : 0.0,
+        "CBO" : 0.0,
+        "MPC" : 0.0,
+        "NOM" : 20.0,
+        "RFC" : 10.0,
+        "ED" : 0.0,
+        "PF" : 0.0,
+        "MIT" : 0.0,
+        "LCOM4" : 10.0,
+        "NOA" : 10.0,
+        "NOP" : 0.5,
+        "NOLM" : 0.0,
+        "DAM" : 1.0,
+        "DIT" : 0.0,
+        "SIX" : 0.0,
+        "LCC" : 0.06896551724137931,
+        "NORM" : 0.0,
+        "CF" : 0.0,
+        "DAC" : 2.0
+      },
+      "package" : "com.bea.gestion.dto",
+      "implements" : [ ]
+    },
+    "com.bea.gestion.enums.StatutMateriel" : {
+      "name" : "StatutMateriel",
+      "type" : "ENUM",
+      "bugProbability" : 0.13930262880493738,
+      "dependencies" : {
+        "getValue" : [ {
+          "with" : "@value",
+          "amount" : 1
+        } ],
+        "StatutMateriel" : [ {
+          "with" : "@value",
+          "amount" : 1
+        } ]
+      },
+      "metrics" : {
+        "NOC" : 0.0,
+        "TLOC" : 12.0,
+        "RSM" : 4.0,
+        "CBO" : 0.0,
+        "MPC" : 0.0,
+        "NOM" : 2.0,
+        "RFC" : 1.0,
+        "ED" : 0.0,
+        "PF" : 0.0,
+        "MIT" : 0.0,
+        "LCOM4" : 5.0,
+        "NOA" : 5.0,
+        "NOP" : 0.5,
+        "NOLM" : 0.0,
+        "DAM" : 0.0,
+        "DIT" : 0.0,
+        "SIX" : 0.0,
+        "LCC" : 0.14285714285714285,
+        "NORM" : 0.0,
+        "CF" : 0.0,
+        "DAC" : 1.0
+      },
+      "package" : "com.bea.gestion.enums",
+      "implements" : [ ]
+    },
+    "com.bea.gestion.service.UserService" : {
+      "name" : "UserService",
+      "type" : "CLASS",
+      "bugProbability" : 0.5388159105306951,
+      "dependencies" : {
+        "updateUserRole" : [ {
+          "with" : "UserRepository",
+          "amount" : 2
+        }, {
+          "with" : "UserMapper",
+          "amount" : 1
+        }, {
+          "with" : "ResourceNotFoundException",
+          "amount" : 1
+        }, {
+          "with" : "User",
+          "amount" : 1
+        }, {
+          "with" : "@userMapper",
+          "amount" : 1
+        }, {
+          "with" : "@userRepository",
+          "amount" : 1
+        } ],
+        "getAllUsers" : [ {
+          "with" : "UserRepository",
+          "amount" : 1
+        }, {
+          "with" : "Collectors",
+          "amount" : 1
+        }, {
+          "with" : "UserMapper",
+          "amount" : 1
+        }, {
+          "with" : "@userMapper",
+          "amount" : 1
+        }, {
+          "with" : "@userRepository",
+          "amount" : 1
+        } ],
+        "getUserById" : [ {
+          "with" : "UserMapper",
+          "amount" : 1
+        }, {
+          "with" : "UserRepository",
+          "amount" : 1
+        }, {
+          "with" : "ResourceNotFoundException",
+          "amount" : 1
+        }, {
+          "with" : "@userMapper",
+          "amount" : 1
+        }, {
+          "with" : "@userRepository",
+          "amount" : 1
+        } ],
+        "UserService" : [ {
+          "with" : "@userMapper",
+          "amount" : 1
+        }, {
+          "with" : "@passwordEncoder",
+          "amount" : 1
+        }, {
+          "with" : "@notificationService",
+          "amount" : 1
+        }, {
+          "with" : "@userRepository",
+          "amount" : 1
+        } ],
+        "deleteUser" : [ {
+          "with" : "UserRepository",
+          "amount" : 1
+        }, {
+          "with" : "@userRepository",
+          "amount" : 1
+        } ],
+        "updateUser" : [ {
+          "with" : "CreateUserRequest",
+          "amount" : 9
+        }, {
+          "with" : "PasswordEncoder",
+          "amount" : 1
+        }, {
+          "with" : "UserMapper",
+          "amount" : 1
+        }, {
+          "with" : "User",
+          "amount" : 7
+        }, {
+          "with" : "UserRepository",
+          "amount" : 2
+        }, {
+          "with" : "ResourceNotFoundException",
+          "amount" : 1
+        }, {
+          "with" : "@passwordEncoder",
+          "amount" : 1
+        }, {
+          "with" : "@userMapper",
+          "amount" : 1
+        }, {
+          "with" : "@userRepository",
+          "amount" : 1
+        } ],
+        "findByMatricule" : [ {
+          "with" : "UserRepository",
+          "amount" : 1
+        }, {
+          "with" : "@userRepository",
+          "amount" : 1
+        } ],
+        "createUser" : [ {
+          "with" : "CreateUserRequest",
+          "amount" : 9
+        }, {
+          "with" : "RuntimeException",
+          "amount" : 1
+        }, {
+          "with" : "User",
+          "amount" : 8
+        }, {
+          "with" : "UserMapper",
+          "amount" : 1
+        }, {
+          "with" : "UserRepository",
+          "amount" : 2
+        }, {
+          "with" : "NotificationService",
+          "amount" : 1
+        }, {
+          "with" : "PasswordEncoder",
+          "amount" : 1
+        }, {
+          "with" : "@passwordEncoder",
+          "amount" : 1
+        }, {
+          "with" : "@userMapper",
+          "amount" : 1
+        }, {
+          "with" : "@notificationService",
+          "amount" : 1
+        }, {
+          "with" : "@userRepository",
+          "amount" : 1
+        } ]
+      },
+      "metrics" : {
+        "NOC" : 0.0,
+        "TLOC" : 82.0,
+        "RSM" : 0.0,
+        "CBO" : 9.0,
+        "MPC" : 57.0,
+        "NOM" : 8.0,
+        "RFC" : 37.0,
+        "ED" : -1.0,
+        "PF" : 0.0,
+        "MIT" : 0.0,
+        "LCOM4" : 1.0,
+        "NOA" : 4.0,
+        "NOP" : 1.5,
+        "NOLM" : 0.0,
+        "DAM" : 1.0,
+        "DIT" : 0.0,
+        "SIX" : 0.0,
+        "LCC" : 1.0,
+        "NORM" : 0.0,
+        "CF" : 0.08620689655172414,
+        "DAC" : 2.0
+      },
+      "package" : "com.bea.gestion.service",
+      "implements" : [ ]
+    },
+    "com.bea.gestion.mapper.MaterielMapper" : {
+      "name" : "MaterielMapper",
+      "type" : "CLASS",
+      "bugProbability" : 0.08534423620908405,
+      "dependencies" : {
+        "toDTO" : [ {
+          "with" : "Materiel",
+          "amount" : 13
+        }, {
+          "with" : "MaterielDTO",
+          "amount" : 13
+        } ]
+      },
+      "metrics" : {
+        "NOC" : 0.0,
+        "TLOC" : 26.0,
+        "RSM" : 0.0,
+        "CBO" : 2.0,
+        "MPC" : 26.0,
+        "NOM" : 1.0,
+        "RFC" : 24.0,
+        "ED" : 0.0,
+        "PF" : 0.0,
+        "MIT" : 0.0,
+        "LCOM4" : 1.0,
+        "NOA" : 0.0,
+        "NOP" : 1.0,
+        "NOLM" : 0.0,
+        "DAM" : 0.0,
+        "DIT" : 0.0,
+        "SIX" : 0.0,
+        "LCC" : 1.0,
+        "NORM" : 0.0,
+        "CF" : 0.034482758620689655,
+        "DAC" : 0.0
+      },
+      "package" : "com.bea.gestion.mapper",
+      "implements" : [ ]
+    },
+    "com.bea.gestion.repository.MaterielRepository" : {
+      "name" : "MaterielRepository",
+      "type" : "INTERFACE",
+      "bugProbability" : 0.1370386868417529,
+      "dependencies" : {
+        "findByProjet" : [ ],
+        "findByStatut" : [ ],
+        "countByStatut" : [ ]
+      },
+      "metrics" : {
+        "NOC" : 0.0,
+        "TLOC" : 12.0,
+        "RSM" : 0.0,
+        "CBO" : 0.0,
+        "MPC" : 0.0,
+        "NOM" : 3.0,
+        "RFC" : 0.0,
+        "ED" : 0.0,
+        "PF" : 0.0,
+        "MIT" : 0.0,
+        "LCOM4" : 3.0,
+        "NOA" : 0.0,
+        "NOP" : 1.0,
+        "NOLM" : 0.0,
+        "DAM" : 0.0,
+        "DIT" : 1.0,
+        "SIX" : 0.0,
+        "LCC" : 0.0,
+        "NORM" : 0.0,
+        "CF" : 0.0,
+        "DAC" : 0.0
+      },
+      "package" : "com.bea.gestion.repository",
+      "extends" : "org.springframework.data.jpa.repository.JpaRepository",
+      "implements" : [ ]
+    },
+    "com.bea.gestion.service.AuthService" : {
+      "name" : "AuthService",
+      "type" : "CLASS",
+      "bugProbability" : 0.3323754132249014,
+      "dependencies" : {
+        "AuthService" : [ {
+          "with" : "@authenticationManager",
+          "amount" : 1
+        }, {
+          "with" : "@jwtUtil",
+          "amount" : 1
+        }, {
+          "with" : "@userRepository",
+          "amount" : 1
+        } ],
+        "login" : [ {
+          "with" : "AuthenticationManager",
+          "amount" : 1
+        }, {
+          "with" : "UsernamePasswordAuthenticationToken",
+          "amount" : 1
+        }, {
+          "with" : "User",
+          "amount" : 8
+        }, {
+          "with" : "LoginRequest",
+          "amount" : 3
+        }, {
+          "with" : "JwtUtil",
+          "amount" : 1
+        }, {
+          "with" : "LoginResponse",
+          "amount" : 1
+        }, {
+          "with" : "UserRepository",
+          "amount" : 1
+        }, {
+          "with" : "UsernameNotFoundException",
+          "amount" : 1
+        }, {
+          "with" : "@authenticationManager",
+          "amount" : 1
+        }, {
+          "with" : "@jwtUtil",
+          "amount" : 1
+        }, {
+          "with" : "@userRepository",
+          "amount" : 1
+        } ]
+      },
+      "metrics" : {
+        "NOC" : 0.0,
+        "TLOC" : 31.0,
+        "RSM" : 0.0,
+        "CBO" : 8.0,
+        "MPC" : 17.0,
+        "NOM" : 2.0,
+        "RFC" : 18.0,
+        "ED" : 0.0,
+        "PF" : 0.0,
+        "MIT" : 0.0,
+        "LCOM4" : 1.0,
+        "NOA" : 3.0,
+        "NOP" : 2.0,
+        "NOLM" : 0.0,
+        "DAM" : 1.0,
+        "DIT" : 0.0,
+        "SIX" : 0.0,
+        "LCC" : 1.0,
+        "NORM" : 0.0,
+        "CF" : 0.08620689655172414,
+        "DAC" : 2.0
+      },
+      "package" : "com.bea.gestion.service",
+      "implements" : [ ]
+    },
+    "com.bea.gestion.config.DataInitializer" : {
+      "name" : "DataInitializer",
+      "type" : "CLASS",
+      "bugProbability" : 0.4154850152704953,
+      "dependencies" : {
+        "createUser" : [ {
+          "with" : "User",
+          "amount" : 7
+        }, {
+          "with" : "UserRepository",
+          "amount" : 2
+        }, {
+          "with" : "PasswordEncoder",
+          "amount" : 1
+        }, {
+          "with" : "@passwordEncoder",
+          "amount" : 1
+        }, {
+          "with" : "@userRepository",
+          "amount" : 1
+        } ],
+        "run" : [ {
+          "with" : "this.createUser",
+          "amount" : 5
+        }, {
+          "with" : "System",
+          "amount" : 6
+        } ],
+        "DataInitializer" : [ {
+          "with" : "@passwordEncoder",
+          "amount" : 1
+        }, {
+          "with" : "@userRepository",
+          "amount" : 1
+        } ]
+      },
+      "metrics" : {
+        "NOC" : 0.0,
+        "TLOC" : 43.0,
+        "RSM" : 0.0,
+        "CBO" : 4.0,
+        "MPC" : 21.0,
+        "NOM" : 3.0,
+        "RFC" : 14.0,
+        "ED" : 0.0,
+        "PF" : 0.0,
+        "MIT" : 0.0,
+        "LCOM4" : 2.0,
+        "NOA" : 2.0,
+        "NOP" : 3.0,
+        "NOLM" : 0.0,
+        "DAM" : 1.0,
+        "DIT" : 0.0,
+        "SIX" : 0.0,
+        "LCC" : 0.6,
+        "NORM" : 0.0,
+        "CF" : 0.034482758620689655,
+        "DAC" : 1.0
+      },
+      "package" : "com.bea.gestion.config",
+      "implements" : [ "org.springframework.boot.CommandLineRunner" ]
+    },
+    "com.bea.gestion.exception.GlobalExceptionHandler" : {
+      "name" : "GlobalExceptionHandler",
+      "type" : "CLASS",
+      "bugProbability" : 0.24577119039970097,
+      "dependencies" : {
+        "handleBadCredentials" : [ {
+          "with" : "HashMap",
+          "amount" : 1
+        }, {
+          "with" : "Map<String , Object > ",
+          "amount" : 3
+        }, {
+          "with" : "HttpStatus",
+          "amount" : 1
+        }, {
+          "with" : "LocalDateTime",
+          "amount" : 1
+        }, {
+          "with" : "ResponseEntity",
+          "amount" : 1
+        } ],
+        "handleGenericException" : [ {
+          "with" : "HashMap",
+          "amount" : 1
+        }, {
+          "with" : "Exception",
+          "amount" : 1
+        }, {
+          "with" : "Map<String , Object > ",
+          "amount" : 3
+        }, {
+          "with" : "HttpStatus",
+          "amount" : 1
+        }, {
+          "with" : "LocalDateTime",
+          "amount" : 1
+        }, {
+          "with" : "ResponseEntity",
+          "amount" : 1
+        } ],
+        "handleResourceNotFound" : [ {
+          "with" : "HashMap",
+          "amount" : 1
+        }, {
+          "with" : "HttpStatus",
+          "amount" : 1
+        }, {
+          "with" : "LocalDateTime",
+          "amount" : 1
+        }, {
+          "with" : "ResourceNotFoundException",
+          "amount" : 1
+        }, {
+          "with" : "Map<String , Object > ",
+          "amount" : 3
+        }, {
+          "with" : "ResponseEntity",
+          "amount" : 1
+        } ],
+        "handleAccessDenied" : [ {
+          "with" : "Map<String , Object > ",
+          "amount" : 3
+        }, {
+          "with" : "ResponseEntity",
+          "amount" : 1
+        }, {
+          "with" : "HashMap",
+          "amount" : 1
+        }, {
+          "with" : "LocalDateTime",
+          "amount" : 1
+        }, {
+          "with" : "HttpStatus",
+          "amount" : 1
+        } ]
+      },
+      "metrics" : {
+        "NOC" : 0.0,
+        "TLOC" : 44.0,
+        "RSM" : 0.0,
+        "CBO" : 7.0,
+        "MPC" : 30.0,
+        "NOM" : 4.0,
+        "RFC" : 7.0,
+        "ED" : 0.0,
+        "PF" : 0.0,
+        "MIT" : 0.0,
+        "LCOM4" : 4.0,
+        "NOA" : 0.0,
+        "NOP" : 1.0,
+        "NOLM" : 0.0,
+        "DAM" : 0.0,
+        "DIT" : 0.0,
+        "SIX" : 0.0,
+        "LCC" : 0.0,
+        "NORM" : 0.0,
+        "CF" : 0.017241379310344827,
+        "DAC" : 0.0
+      },
+      "package" : "com.bea.gestion.exception",
+      "implements" : [ ]
+    },
+    "com.bea.gestion.exception.ResourceNotFoundException" : {
+      "name" : "ResourceNotFoundException",
+      "type" : "CLASS",
+      "bugProbability" : 0.06842552707216198,
+      "dependencies" : {
+        "ResourceNotFoundException" : [ ]
+      },
+      "metrics" : {
+        "NOC" : 0.0,
+        "TLOC" : 6.0,
+        "RSM" : 0.0,
+        "CBO" : 0.0,
+        "MPC" : 0.0,
+        "NOM" : 1.0,
+        "RFC" : 0.0,
+        "ED" : 0.0,
+        "PF" : 0.0,
+        "MIT" : 0.0,
+        "LCOM4" : 1.0,
+        "NOA" : 0.0,
+        "NOP" : 1.0,
+        "NOLM" : 0.0,
+        "DAM" : 0.0,
+        "DIT" : 1.0,
+        "SIX" : 0.0,
+        "LCC" : 1.0,
+        "NORM" : 0.0,
+        "CF" : 0.0,
+        "DAC" : 0.0
+      },
+      "package" : "com.bea.gestion.exception",
+      "extends" : "java.lang.RuntimeException",
+      "implements" : [ ]
+    },
+    "com.bea.gestion.controller.ProblemeController" : {
+      "name" : "ProblemeController",
+      "type" : "CLASS",
+      "bugProbability" : 0.27650279050035786,
+      "dependencies" : {
+        "updateStatut" : [ {
+          "with" : "Map<String , String > ",
+          "amount" : 2
+        }, {
+          "with" : "ResponseEntity",
+          "amount" : 2
+        }, {
+          "with" : "Map",
+          "amount" : 1
+        }, {
+          "with" : "Exception",
+          "amount" : 1
+        }, {
+          "with" : "ProblemeService",
+          "amount" : 1
+        }, {
+          "with" : "this.toMap",
+          "amount" : 1
+        }, {
+          "with" : "@problemeService",
+          "amount" : 1
+        } ],
+        "declarer" : [ {
+          "with" : "ProblemeService",
+          "amount" : 1
+        }, {
+          "with" : "Authentication",
+          "amount" : 1
+        }, {
+          "with" : "ResponseEntity",
+          "amount" : 2
+        }, {
+          "with" : "Exception",
+          "amount" : 1
+        }, {
+          "with" : "Map",
+          "amount" : 1
+        }, {
+          "with" : "this.toMap",
+          "amount" : 1
+        }, {
+          "with" : "@problemeService",
+          "amount" : 1
+        } ],
+        "getAll" : [ {
+          "with" : "ResponseEntity",
+          "amount" : 1
+        }, {
+          "with" : "String",
+          "amount" : 1
+        }, {
+          "with" : "ProblemeService",
+          "amount" : 1
+        }, {
+          "with" : "Collectors",
+          "amount" : 1
+        }, {
+          "with" : "@problemeService",
+          "amount" : 1
+        } ],
+        "toMap" : [ {
+          "with" : "java.util.HashMap<String , Object > ",
+          "amount" : 10
+        }, {
+          "with" : "Probleme",
+          "amount" : 18
+        }, {
+          "with" : "Map",
+          "amount" : 2
+        }, {
+          "with" : "UNKNOWN",
+          "amount" : 1
+        } ],
+        "ProblemeController" : [ {
+          "with" : "@problemeService",
+          "amount" : 1
+        } ],
+        "getMine" : [ {
+          "with" : "ResponseEntity",
+          "amount" : 1
+        }, {
+          "with" : "ProblemeService",
+          "amount" : 1
+        }, {
+          "with" : "String",
+          "amount" : 1
+        }, {
+          "with" : "Authentication",
+          "amount" : 1
+        }, {
+          "with" : "Collectors",
+          "amount" : 1
+        }, {
+          "with" : "@problemeService",
+          "amount" : 1
+        } ]
+      },
+      "metrics" : {
+        "NOC" : 0.0,
+        "TLOC" : 63.0,
+        "RSM" : 0.0,
+        "CBO" : 11.0,
+        "MPC" : 55.0,
+        "NOM" : 6.0,
+        "RFC" : 33.0,
+        "ED" : 1.0,
+        "PF" : 0.0,
+        "MIT" : 0.0,
+        "LCOM4" : 2.0,
+        "NOA" : 1.0,
+        "NOP" : 1.1666666666666667,
+        "NOLM" : 0.0,
+        "DAM" : 1.0,
+        "DIT" : 0.0,
+        "SIX" : 0.0,
+        "LCC" : 0.7142857142857143,
+        "NORM" : 0.0,
+        "CF" : 0.034482758620689655,
+        "DAC" : 1.0
+      },
+      "package" : "com.bea.gestion.controller",
+      "implements" : [ ]
+    },
+    "com.bea.gestion.repository.ProblemeRepository" : {
+      "name" : "ProblemeRepository",
+      "type" : "INTERFACE",
+      "bugProbability" : 0.10909078408272055,
+      "dependencies" : {
+        "findByDeclarantOrderByDateCreationDesc" : [ ],
+        "findAllByOrderByDateCreationDesc" : [ ]
+      },
+      "metrics" : {
+        "NOC" : 0.0,
+        "TLOC" : 10.0,
+        "RSM" : 0.0,
+        "CBO" : 0.0,
+        "MPC" : 0.0,
+        "NOM" : 2.0,
+        "RFC" : 0.0,
+        "ED" : 0.0,
+        "PF" : 0.0,
+        "MIT" : 0.0,
+        "LCOM4" : 2.0,
+        "NOA" : 0.0,
+        "NOP" : 0.5,
+        "NOLM" : 0.0,
+        "DAM" : 0.0,
+        "DIT" : 1.0,
+        "SIX" : 0.0,
+        "LCC" : 0.0,
+        "NORM" : 0.0,
+        "CF" : 0.0,
+        "DAC" : 0.0
+      },
+      "package" : "com.bea.gestion.repository",
+      "extends" : "org.springframework.data.jpa.repository.JpaRepository",
+      "implements" : [ ]
+    },
+    "com.bea.gestion.entity.Projet" : {
+      "name" : "Projet",
+      "type" : "CLASS",
+      "bugProbability" : 0.5926781436955172,
+      "dependencies" : {
+        "getMembres" : [ {
+          "with" : "@membres",
+          "amount" : 1
+        } ],
+        "getDateCreation" : [ {
+          "with" : "@dateCreation",
+          "amount" : 1
+        } ],
+        "getPriorite" : [ {
+          "with" : "@priorite",
+          "amount" : 1
+        } ],
+        "setDateCreation" : [ {
+          "with" : "@dateCreation",
+          "amount" : 1
+        } ],
+        "setNom" : [ {
+          "with" : "@nom",
+          "amount" : 1
+        } ],
+        "getDateDebut" : [ {
+          "with" : "@dateDebut",
+          "amount" : 1
+        } ],
+        "setPriorite" : [ {
+          "with" : "@priorite",
+          "amount" : 1
+        } ],
+        "getId" : [ {
+          "with" : "@id",
+          "amount" : 1
+        } ],
+        "setDescription" : [ {
+          "with" : "@description",
+          "amount" : 1
+        } ],
+        "setType" : [ {
+          "with" : "@type",
+          "amount" : 1
+        } ],
+        "getStatut" : [ {
+          "with" : "@statut",
+          "amount" : 1
+        } ],
+        "getChefProjet" : [ {
+          "with" : "@chefProjet",
+          "amount" : 1
+        } ],
+        "getDescription" : [ {
+          "with" : "@description",
+          "amount" : 1
+        } ],
+        "setDeadline" : [ {
+          "with" : "@deadline",
+          "amount" : 1
+        } ],
+        "setStatut" : [ {
+          "with" : "@statut",
+          "amount" : 1
+        } ],
+        "getDeadline" : [ {
+          "with" : "@deadline",
+          "amount" : 1
+        } ],
+        "getType" : [ {
+          "with" : "@type",
+          "amount" : 1
+        } ],
+        "setDateDebut" : [ {
+          "with" : "@dateDebut",
+          "amount" : 1
+        } ],
+        "setId" : [ {
+          "with" : "@id",
+          "amount" : 1
+        } ],
+        "setMembres" : [ {
+          "with" : "@membres",
+          "amount" : 1
+        } ],
+        "setChefProjet" : [ {
+          "with" : "@chefProjet",
+          "amount" : 1
+        } ],
+        "getNom" : [ {
+          "with" : "@nom",
+          "amount" : 1
+        } ]
+      },
+      "metrics" : {
+        "NOC" : 0.0,
+        "TLOC" : 99.0,
+        "RSM" : 0.0,
+        "CBO" : 1.0,
+        "MPC" : 0.0,
+        "NOM" : 22.0,
+        "RFC" : 12.0,
+        "ED" : 0.0,
+        "PF" : 0.0,
+        "MIT" : 0.0,
+        "LCOM4" : 11.0,
+        "NOA" : 11.0,
+        "NOP" : 0.5,
+        "NOLM" : 0.0,
+        "DAM" : 1.0,
+        "DIT" : 0.0,
+        "SIX" : 0.0,
+        "LCC" : 0.0625,
+        "NORM" : 0.0,
+        "CF" : 0.0,
+        "DAC" : 4.0
+      },
+      "package" : "com.bea.gestion.entity",
+      "implements" : [ ]
+    },
+    "com.bea.gestion.GestionApplication" : {
+      "name" : "GestionApplication",
+      "type" : "CLASS",
+      "bugProbability" : 0.13993488270918752,
+      "dependencies" : {
+        "main" : [ {
+          "with" : "System",
+          "amount" : 4
+        }, {
+          "with" : "SpringApplication",
+          "amount" : 1
+        } ]
+      },
+      "metrics" : {
+        "NOC" : 0.0,
+        "TLOC" : 12.0,
+        "RSM" : 1.0,
+        "CBO" : 2.0,
+        "MPC" : 5.0,
+        "NOM" : 1.0,
+        "RFC" : 2.0,
+        "ED" : 0.0,
+        "PF" : 0.0,
+        "MIT" : 0.0,
+        "LCOM4" : 1.0,
+        "NOA" : 0.0,
+        "NOP" : 2.0,
+        "NOLM" : 0.0,
+        "DAM" : 0.0,
+        "DIT" : 0.0,
+        "SIX" : 0.0,
+        "LCC" : 1.0,
+        "NORM" : 0.0,
+        "CF" : 0.0,
+        "DAC" : 0.0
+      },
+      "package" : "com.bea.gestion",
+      "implements" : [ ]
+    },
+    "com.bea.gestion.security.CustomUserDetailsService" : {
+      "name" : "CustomUserDetailsService",
+      "type" : "CLASS",
+      "bugProbability" : 0.13045639991722258,
+      "dependencies" : {
+        "loadUserByUsername" : [ {
+          "with" : "UserRepository",
+          "amount" : 1
+        }, {
+          "with" : "UsernameNotFoundException",
+          "amount" : 1
+        }, {
+          "with" : "@userRepository",
+          "amount" : 1
+        } ],
+        "CustomUserDetailsService" : [ {
+          "with" : "@userRepository",
+          "amount" : 1
+        } ]
+      },
+      "metrics" : {
+        "NOC" : 0.0,
+        "TLOC" : 16.0,
+        "RSM" : 0.0,
+        "CBO" : 2.0,
+        "MPC" : 2.0,
+        "NOM" : 2.0,
+        "RFC" : 4.0,
+        "ED" : 0.0,
+        "PF" : 0.0,
+        "MIT" : 0.0,
+        "LCOM4" : 1.0,
+        "NOA" : 1.0,
+        "NOP" : 1.0,
+        "NOLM" : 0.0,
+        "DAM" : 1.0,
+        "DIT" : 0.0,
+        "SIX" : 0.0,
+        "LCC" : 1.0,
+        "NORM" : 0.0,
+        "CF" : 0.017241379310344827,
+        "DAC" : 1.0
+      },
+      "package" : "com.bea.gestion.security",
+      "implements" : [ "org.springframework.security.core.userdetails.UserDetailsService" ]
+    },
+    "com.bea.gestion.dto.UserDTO" : {
+      "name" : "UserDTO",
+      "type" : "CLASS",
+      "bugProbability" : 0.33400564136840993,
+      "dependencies" : {
+        "getRole" : [ {
+          "with" : "@role",
+          "amount" : 1
+        } ],
+        "setMatricule" : [ {
+          "with" : "@matricule",
+          "amount" : 1
+        } ],
+        "setNom" : [ {
+          "with" : "@nom",
+          "amount" : 1
+        } ],
+        "setPrenom" : [ {
+          "with" : "@prenom",
+          "amount" : 1
+        } ],
+        "getId" : [ {
+          "with" : "@id",
+          "amount" : 1
+        } ],
+        "setTelephone" : [ {
+          "with" : "@telephone",
+          "amount" : 1
+        } ],
+        "getTelephone" : [ {
+          "with" : "@telephone",
+          "amount" : 1
+        } ],
+        "setEmail" : [ {
+          "with" : "@email",
+          "amount" : 1
+        } ],
+        "getPrenom" : [ {
+          "with" : "@prenom",
+          "amount" : 1
+        } ],
+        "setRole" : [ {
+          "with" : "@role",
+          "amount" : 1
+        } ],
+        "getMatricule" : [ {
+          "with" : "@matricule",
+          "amount" : 1
+        } ],
+        "setId" : [ {
+          "with" : "@id",
+          "amount" : 1
+        } ],
+        "getEmail" : [ {
+          "with" : "@email",
+          "amount" : 1
+        } ],
+        "getNom" : [ {
+          "with" : "@nom",
+          "amount" : 1
+        } ]
+      },
+      "metrics" : {
+        "NOC" : 0.0,
+        "TLOC" : 59.0,
+        "RSM" : 0.0,
+        "CBO" : 0.0,
+        "MPC" : 0.0,
+        "NOM" : 14.0,
+        "RFC" : 7.0,
+        "ED" : 0.0,
+        "PF" : 0.0,
+        "MIT" : 0.0,
+        "LCOM4" : 7.0,
+        "NOA" : 7.0,
+        "NOP" : 0.5,
+        "NOLM" : 0.0,
+        "DAM" : 1.0,
+        "DIT" : 0.0,
+        "SIX" : 0.0,
+        "LCC" : 0.1,
+        "NORM" : 0.0,
+        "CF" : 0.0,
+        "DAC" : 0.0
+      },
+      "package" : "com.bea.gestion.dto",
+      "implements" : [ ]
+    },
+    "com.bea.gestion.repository.UserRepository" : {
+      "name" : "UserRepository",
+      "type" : "INTERFACE",
+      "bugProbability" : 0.1370386868417529,
+      "dependencies" : {
+        "existsByMatricule" : [ ],
+        "findByMatricule" : [ ],
+        "findByEmail" : [ ]
+      },
+      "metrics" : {
+        "NOC" : 0.0,
+        "TLOC" : 10.0,
+        "RSM" : 0.0,
+        "CBO" : 0.0,
+        "MPC" : 0.0,
+        "NOM" : 3.0,
+        "RFC" : 0.0,
+        "ED" : 0.0,
+        "PF" : 0.0,
+        "MIT" : 0.0,
+        "LCOM4" : 3.0,
+        "NOA" : 0.0,
+        "NOP" : 1.0,
+        "NOLM" : 0.0,
+        "DAM" : 0.0,
+        "DIT" : 1.0,
+        "SIX" : 0.0,
+        "LCC" : 0.0,
+        "NORM" : 0.0,
+        "CF" : 0.0,
+        "DAC" : 0.0
+      },
+      "package" : "com.bea.gestion.repository",
+      "extends" : "org.springframework.data.jpa.repository.JpaRepository",
+      "implements" : [ ]
+    },
+    "com.bea.gestion.security.JwtUtil" : {
+      "name" : "JwtUtil",
+      "type" : "CLASS",
+      "bugProbability" : 0.34040297646573126,
+      "dependencies" : {
+        "getSigningKey" : [ {
+          "with" : "Keys",
+          "amount" : 1
+        }, {
+          "with" : "String",
+          "amount" : 1
+        }, {
+          "with" : "@secret",
+          "amount" : 1
+        } ],
+        "extractClaim" : [ {
+          "with" : "this.extractAllClaims",
+          "amount" : 1
+        }, {
+          "with" : "Function<Claims , T > ",
+          "amount" : 1
+        } ],
+        "extractUsername" : [ {
+          "with" : "this.extractClaim",
+          "amount" : 1
+        }, {
+          "with" : "Claims",
+          "amount" : 1
+        } ],
+        "extractRole" : [ {
+          "with" : "this.extractClaim",
+          "amount" : 1
+        }, {
+          "with" : "LAMBDA$0",
+          "amount" : 1
+        } ],
+        "generateToken" : [ {
+          "with" : "HashMap",
+          "amount" : 1
+        }, {
+          "with" : "Map<String , Object > ",
+          "amount" : 1
+        }, {
+          "with" : "System",
+          "amount" : 1
+        }, {
+          "with" : "Date",
+          "amount" : 2
+        }, {
+          "with" : "this.getSigningKey",
+          "amount" : 1
+        }, {
+          "with" : "Jwts",
+          "amount" : 1
+        }, {
+          "with" : "@expiration",
+          "amount" : 1
+        } ],
+        "extractExpiration" : [ {
+          "with" : "Claims",
+          "amount" : 1
+        }, {
+          "with" : "this.extractClaim",
+          "amount" : 1
+        } ],
+        "extractAllClaims" : [ {
+          "with" : "Jwts",
+          "amount" : 1
+        }, {
+          "with" : "this.getSigningKey",
+          "amount" : 1
+        } ],
+        "isTokenExpired" : [ {
+          "with" : "Date",
+          "amount" : 1
+        }, {
+          "with" : "this.extractExpiration",
+          "amount" : 1
+        } ],
+        "validateToken" : [ {
+          "with" : "this.extractUsername",
+          "amount" : 1
+        }, {
+          "with" : "this.isTokenExpired",
+          "amount" : 1
+        }, {
+          "with" : "String",
+          "amount" : 1
+        }, {
+          "with" : "UserDetails",
+          "amount" : 1
+        } ]
+      },
+      "metrics" : {
+        "NOC" : 0.0,
+        "TLOC" : 58.0,
+        "RSM" : 0.0,
+        "CBO" : 11.0,
+        "MPC" : 25.0,
+        "NOM" : 9.0,
+        "RFC" : 29.0,
+        "ED" : 1.0,
+        "PF" : 0.0,
+        "MIT" : 0.0,
+        "LCOM4" : 9.0,
+        "NOA" : 2.0,
+        "NOP" : 1.2222222222222223,
+        "NOLM" : 0.0,
+        "DAM" : 1.0,
+        "DIT" : 0.0,
+        "SIX" : 0.0,
+        "LCC" : 0.03636363636363636,
+        "NORM" : 0.0,
+        "CF" : 0.0,
+        "DAC" : 0.0
+      },
+      "package" : "com.bea.gestion.security",
+      "implements" : [ ]
+    },
+    "com.bea.gestion.entity.Remarque" : {
+      "name" : "Remarque",
+      "type" : "CLASS",
+      "bugProbability" : 0.28404248938215515,
+      "dependencies" : {
+        "getContenu" : [ {
+          "with" : "@contenu",
+          "amount" : 1
+        } ],
+        "getDateCreation" : [ {
+          "with" : "@dateCreation",
+          "amount" : 1
+        } ],
+        "getProjet" : [ {
+          "with" : "@projet",
+          "amount" : 1
+        } ],
+        "setDateCreation" : [ {
+          "with" : "@dateCreation",
+          "amount" : 1
+        } ],
+        "setId" : [ {
+          "with" : "@id",
+          "amount" : 1
+        } ],
+        "getId" : [ {
+          "with" : "@id",
+          "amount" : 1
+        } ],
+        "setProjet" : [ {
+          "with" : "@projet",
+          "amount" : 1
+        } ],
+        "getAuteur" : [ {
+          "with" : "@auteur",
+          "amount" : 1
+        } ],
+        "setContenu" : [ {
+          "with" : "@contenu",
+          "amount" : 1
+        } ],
+        "setAuteur" : [ {
+          "with" : "@auteur",
+          "amount" : 1
+        } ]
+      },
+      "metrics" : {
+        "NOC" : 0.0,
+        "TLOC" : 45.0,
+        "RSM" : 0.0,
+        "CBO" : 0.0,
+        "MPC" : 0.0,
+        "NOM" : 10.0,
+        "RFC" : 5.0,
+        "ED" : 0.0,
+        "PF" : 0.0,
+        "MIT" : 0.0,
+        "LCOM4" : 5.0,
+        "NOA" : 5.0,
+        "NOP" : 0.5,
+        "NOLM" : 0.0,
+        "DAM" : 1.0,
+        "DIT" : 0.0,
+        "SIX" : 0.0,
+        "LCC" : 0.14285714285714285,
+        "NORM" : 0.0,
+        "CF" : 0.0,
+        "DAC" : 2.0
+      },
+      "package" : "com.bea.gestion.entity",
+      "implements" : [ ]
+    },
+    "com.bea.gestion.controller.RemarqueController" : {
+      "name" : "RemarqueController",
+      "type" : "CLASS",
+      "bugProbability" : 0.20733199089000354,
+      "dependencies" : {
+        "RemarqueController" : [ {
+          "with" : "@remarqueService",
+          "amount" : 1
+        } ],
+        "ajouter" : [ {
+          "with" : "ResponseEntity",
+          "amount" : 2
+        }, {
+          "with" : "Map",
+          "amount" : 2
+        }, {
+          "with" : "Remarque",
+          "amount" : 6
+        }, {
+          "with" : "Exception",
+          "amount" : 1
+        }, {
+          "with" : "Authentication",
+          "amount" : 1
+        }, {
+          "with" : "RemarqueService",
+          "amount" : 1
+        }, {
+          "with" : "Map<String , Object > ",
+          "amount" : 1
+        }, {
+          "with" : "@remarqueService",
+          "amount" : 1
+        } ],
+        "getByProjet" : [ {
+          "with" : "RemarqueService",
+          "amount" : 1
+        }, {
+          "with" : "ResponseEntity",
+          "amount" : 1
+        }, {
+          "with" : "@remarqueService",
+          "amount" : 1
+        } ],
+        "supprimer" : [ {
+          "with" : "RemarqueService",
+          "amount" : 1
+        }, {
+          "with" : "ResponseEntity",
+          "amount" : 1
+        }, {
+          "with" : "@remarqueService",
+          "amount" : 1
+        } ]
+      },
+      "metrics" : {
+        "NOC" : 0.0,
+        "TLOC" : 34.0,
+        "RSM" : 0.0,
+        "CBO" : 7.0,
+        "MPC" : 18.0,
+        "NOM" : 4.0,
+        "RFC" : 21.0,
+        "ED" : 1.0,
+        "PF" : 0.0,
+        "MIT" : 0.0,
+        "LCOM4" : 1.0,
+        "NOA" : 1.0,
+        "NOP" : 1.75,
+        "NOLM" : 0.0,
+        "DAM" : 1.0,
+        "DIT" : 0.0,
+        "SIX" : 0.0,
+        "LCC" : 1.0,
+        "NORM" : 0.0,
+        "CF" : 0.034482758620689655,
+        "DAC" : 1.0
+      },
+      "package" : "com.bea.gestion.controller",
+      "implements" : [ ]
+    },
+    "com.bea.gestion.entity.Materiel" : {
+      "name" : "Materiel",
+      "type" : "CLASS",
+      "bugProbability" : 0.5594901594382737,
+      "dependencies" : {
+        "setQuantite" : [ {
+          "with" : "@quantite",
+          "amount" : 1
+        } ],
+        "getEtat" : [ {
+          "with" : "@etat",
+          "amount" : 1
+        } ],
+        "setNom" : [ {
+          "with" : "@nom",
+          "amount" : 1
+        } ],
+        "getBureau" : [ {
+          "with" : "@bureau",
+          "amount" : 1
+        } ],
+        "getId" : [ {
+          "with" : "@id",
+          "amount" : 1
+        } ],
+        "setProjet" : [ {
+          "with" : "@projet",
+          "amount" : 1
+        } ],
+        "setDescription" : [ {
+          "with" : "@description",
+          "amount" : 1
+        } ],
+        "getDescription" : [ {
+          "with" : "@description",
+          "amount" : 1
+        } ],
+        "getStatut" : [ {
+          "with" : "@statut",
+          "amount" : 1
+        } ],
+        "setEtat" : [ {
+          "with" : "@etat",
+          "amount" : 1
+        } ],
+        "getService" : [ {
+          "with" : "@service",
+          "amount" : 1
+        } ],
+        "setStatut" : [ {
+          "with" : "@statut",
+          "amount" : 1
+        } ],
+        "getQuantite" : [ {
+          "with" : "@quantite",
+          "amount" : 1
+        } ],
+        "setBureau" : [ {
+          "with" : "@bureau",
+          "amount" : 1
+        } ],
+        "setService" : [ {
+          "with" : "@service",
+          "amount" : 1
+        } ],
+        "setDateAcquisition" : [ {
+          "with" : "@dateAcquisition",
+          "amount" : 1
+        } ],
+        "getProjet" : [ {
+          "with" : "@projet",
+          "amount" : 1
+        } ],
+        "setReference" : [ {
+          "with" : "@reference",
+          "amount" : 1
+        } ],
+        "setId" : [ {
+          "with" : "@id",
+          "amount" : 1
+        } ],
+        "getMarque" : [ ],
+        "setMarque" : [ ],
+        "getReference" : [ {
+          "with" : "@reference",
+          "amount" : 1
+        } ],
+        "getNom" : [ {
+          "with" : "@nom",
+          "amount" : 1
+        } ],
+        "getDateAcquisition" : [ {
+          "with" : "@dateAcquisition",
+          "amount" : 1
+        } ]
+      },
+      "metrics" : {
+        "NOC" : 0.0,
+        "TLOC" : 102.0,
+        "RSM" : 0.0,
+        "CBO" : 0.0,
+        "MPC" : 0.0,
+        "NOM" : 24.0,
+        "RFC" : 11.0,
+        "ED" : 0.0,
+        "PF" : 0.0,
+        "MIT" : 0.0,
+        "LCOM4" : 13.0,
+        "NOA" : 11.0,
+        "NOP" : 0.5,
+        "NOLM" : 0.0,
+        "DAM" : 1.0,
+        "DIT" : 0.0,
+        "SIX" : 0.0,
+        "LCC" : 0.05546218487394958,
+        "NORM" : 0.0,
+        "CF" : 0.0,
+        "DAC" : 3.0
+      },
+      "package" : "com.bea.gestion.entity",
+      "implements" : [ ]
+    },
+    "com.bea.gestion.service.ProblemeService" : {
+      "name" : "ProblemeService",
+      "type" : "CLASS",
+      "bugProbability" : 0.37260126673509597,
+      "dependencies" : {
+        "updateStatut" : [ {
+          "with" : "Probleme",
+          "amount" : 3
+        }, {
+          "with" : "String",
+          "amount" : 1
+        }, {
+          "with" : "ProblemeRepository",
+          "amount" : 2
+        }, {
+          "with" : "LocalDateTime",
+          "amount" : 1
+        }, {
+          "with" : "RuntimeException",
+          "amount" : 1
+        }, {
+          "with" : "@problemeRepository",
+          "amount" : 1
+        } ],
+        "declarer" : [ {
+          "with" : "UserRepository",
+          "amount" : 2
+        }, {
+          "with" : "Probleme",
+          "amount" : 13
+        }, {
+          "with" : "Exception",
+          "amount" : 1
+        }, {
+          "with" : "LAMBDA$0",
+          "amount" : 1
+        }, {
+          "with" : "System",
+          "amount" : 1
+        }, {
+          "with" : "RuntimeException",
+          "amount" : 1
+        }, {
+          "with" : "Map<String , Object > ",
+          "amount" : 4
+        }, {
+          "with" : "User",
+          "amount" : 2
+        }, {
+          "with" : "LocalDateTime",
+          "amount" : 1
+        }, {
+          "with" : "Long",
+          "amount" : 1
+        }, {
+          "with" : "ProblemeRepository",
+          "amount" : 1
+        }, {
+          "with" : "Object",
+          "amount" : 2
+        }, {
+          "with" : "NotificationService",
+          "amount" : 1
+        }, {
+          "with" : "ProjetRepository",
+          "amount" : 1
+        }, {
+          "with" : "@projetRepository",
+          "amount" : 1
+        }, {
+          "with" : "@notificationService",
+          "amount" : 1
+        }, {
+          "with" : "@userRepository",
+          "amount" : 1
+        }, {
+          "with" : "@problemeRepository",
+          "amount" : 1
+        } ],
+        "getAll" : [ {
+          "with" : "ProblemeRepository",
+          "amount" : 1
+        }, {
+          "with" : "@problemeRepository",
+          "amount" : 1
+        } ],
+        "getMine" : [ {
+          "with" : "RuntimeException",
+          "amount" : 1
+        }, {
+          "with" : "ProblemeRepository",
+          "amount" : 1
+        }, {
+          "with" : "UserRepository",
+          "amount" : 1
+        }, {
+          "with" : "@userRepository",
+          "amount" : 1
+        }, {
+          "with" : "@problemeRepository",
+          "amount" : 1
+        } ],
+        "ProblemeService" : [ {
+          "with" : "@projetRepository",
+          "amount" : 1
+        }, {
+          "with" : "@notificationService",
+          "amount" : 1
+        }, {
+          "with" : "@userRepository",
+          "amount" : 1
+        }, {
+          "with" : "@problemeRepository",
+          "amount" : 1
+        } ]
+      },
+      "metrics" : {
+        "NOC" : 0.0,
+        "TLOC" : 83.0,
+        "RSM" : 0.0,
+        "CBO" : 15.0,
+        "MPC" : 44.0,
+        "NOM" : 5.0,
+        "RFC" : 41.0,
+        "ED" : 2.0,
+        "PF" : 0.0,
+        "MIT" : 0.0,
+        "LCOM4" : 1.0,
+        "NOA" : 4.0,
+        "NOP" : 2.0,
+        "NOLM" : 0.0,
+        "DAM" : 1.0,
+        "DIT" : 0.0,
+        "SIX" : 0.0,
+        "LCC" : 1.0,
+        "NORM" : 0.0,
+        "CF" : 0.08620689655172414,
+        "DAC" : 3.0
+      },
+      "package" : "com.bea.gestion.service",
+      "implements" : [ ]
+    },
+    "com.bea.gestion.service.MaterielService" : {
+      "name" : "MaterielService",
+      "type" : "CLASS",
+      "bugProbability" : 0.4049332144469059,
+      "dependencies" : {
+        "getAll" : [ {
+          "with" : "MaterielMapper",
+          "amount" : 1
+        }, {
+          "with" : "MaterielRepository",
+          "amount" : 1
+        }, {
+          "with" : "Collectors",
+          "amount" : 1
+        }, {
+          "with" : "@materielRepository",
+          "amount" : 1
+        }, {
+          "with" : "@materielMapper",
+          "amount" : 1
+        } ],
+        "getById" : [ {
+          "with" : "ResourceNotFoundException",
+          "amount" : 1
+        }, {
+          "with" : "MaterielMapper",
+          "amount" : 1
+        }, {
+          "with" : "MaterielRepository",
+          "amount" : 1
+        }, {
+          "with" : "@materielRepository",
+          "amount" : 1
+        }, {
+          "with" : "@materielMapper",
+          "amount" : 1
+        } ],
+        "create" : [ {
+          "with" : "Materiel",
+          "amount" : 1
+        }, {
+          "with" : "MaterielMapper",
+          "amount" : 1
+        }, {
+          "with" : "MaterielRepository",
+          "amount" : 1
+        }, {
+          "with" : "this.fillFromRequest",
+          "amount" : 1
+        }, {
+          "with" : "@materielRepository",
+          "amount" : 1
+        }, {
+          "with" : "@materielMapper",
+          "amount" : 1
+        } ],
+        "update" : [ {
+          "with" : "MaterielRepository",
+          "amount" : 2
+        }, {
+          "with" : "ResourceNotFoundException",
+          "amount" : 1
+        }, {
+          "with" : "MaterielMapper",
+          "amount" : 1
+        }, {
+          "with" : "this.fillFromRequest",
+          "amount" : 1
+        }, {
+          "with" : "@materielRepository",
+          "amount" : 1
+        }, {
+          "with" : "@materielMapper",
+          "amount" : 1
+        } ],
+        "delete" : [ {
+          "with" : "MaterielRepository",
+          "amount" : 1
+        }, {
+          "with" : "@materielRepository",
+          "amount" : 1
+        } ],
+        "MaterielService" : [ {
+          "with" : "@materielRepository",
+          "amount" : 1
+        }, {
+          "with" : "@projetRepository",
+          "amount" : 1
+        }, {
+          "with" : "@materielMapper",
+          "amount" : 1
+        }, {
+          "with" : "@userRepository",
+          "amount" : 1
+        } ],
+        "fillFromRequest" : [ {
+          "with" : "Materiel",
+          "amount" : 10
+        }, {
+          "with" : "CreateMaterielRequest",
+          "amount" : 10
+        }, {
+          "with" : "ProjetRepository",
+          "amount" : 1
+        }, {
+          "with" : "@projetRepository",
+          "amount" : 1
+        } ]
+      },
+      "metrics" : {
+        "NOC" : 0.0,
+        "TLOC" : 69.0,
+        "RSM" : 0.0,
+        "CBO" : 7.0,
+        "MPC" : 37.0,
+        "NOM" : 7.0,
+        "RFC" : 36.0,
+        "ED" : 0.0,
+        "PF" : 0.0,
+        "MIT" : 0.0,
+        "LCOM4" : 1.0,
+        "NOA" : 4.0,
+        "NOP" : 1.5714285714285714,
+        "NOLM" : 0.0,
+        "DAM" : 1.0,
+        "DIT" : 0.0,
+        "SIX" : 0.0,
+        "LCC" : 1.0,
+        "NORM" : 0.0,
+        "CF" : 0.10344827586206896,
+        "DAC" : 4.0
+      },
+      "package" : "com.bea.gestion.service",
+      "implements" : [ ]
+    },
+    "com.bea.gestion.controller.NotificationController" : {
+      "name" : "NotificationController",
+      "type" : "CLASS",
+      "bugProbability" : 0.334485619018941,
+      "dependencies" : {
+        "getUser" : [ {
+          "with" : "UserRepository",
+          "amount" : 1
+        }, {
+          "with" : "Authentication",
+          "amount" : 1
+        }, {
+          "with" : "@userRepository",
+          "amount" : 1
+        } ],
+        "myNotifications" : [ {
+          "with" : "java.util.HashMap<String , Object > ",
+          "amount" : 8
+        }, {
+          "with" : "LAMBDA$0",
+          "amount" : 9
+        }, {
+          "with" : "UNKNOWN",
+          "amount" : 1
+        }, {
+          "with" : "ResponseEntity",
+          "amount" : 2
+        }, {
+          "with" : "this.getUser",
+          "amount" : 1
+        }, {
+          "with" : "NotificationService",
+          "amount" : 1
+        }, {
+          "with" : "Collectors",
+          "amount" : 1
+        }, {
+          "with" : "List<Notification > ",
+          "amount" : 1
+        }, {
+          "with" : "@notificationService",
+          "amount" : 1
+        } ],
+        "countUnread" : [ {
+          "with" : "ResponseEntity",
+          "amount" : 2
+        }, {
+          "with" : "Map",
+          "amount" : 1
+        }, {
+          "with" : "this.getUser",
+          "amount" : 1
+        }, {
+          "with" : "NotificationService",
+          "amount" : 1
+        }, {
+          "with" : "@notificationService",
+          "amount" : 1
+        } ],
+        "NotificationController" : [ {
+          "with" : "@notificationService",
+          "amount" : 1
+        }, {
+          "with" : "@userRepository",
+          "amount" : 1
+        } ],
+        "markAllRead" : [ {
+          "with" : "NotificationService",
+          "amount" : 1
+        }, {
+          "with" : "ResponseEntity",
+          "amount" : 2
+        }, {
+          "with" : "this.getUser",
+          "amount" : 1
+        }, {
+          "with" : "@notificationService",
+          "amount" : 1
+        } ],
+        "markAsRead" : [ {
+          "with" : "ResponseEntity",
+          "amount" : 1
+        }, {
+          "with" : "NotificationService",
+          "amount" : 1
+        }, {
+          "with" : "@notificationService",
+          "amount" : 1
+        } ]
+      },
+      "metrics" : {
+        "NOC" : 0.0,
+        "TLOC" : 68.0,
+        "RSM" : 0.0,
+        "CBO" : 10.0,
+        "MPC" : 37.0,
+        "NOM" : 6.0,
+        "RFC" : 29.0,
+        "ED" : 0.0,
+        "PF" : 0.0,
+        "MIT" : 0.0,
+        "LCOM4" : 1.0,
+        "NOA" : 2.0,
+        "NOP" : 1.1666666666666667,
+        "NOLM" : 0.0,
+        "DAM" : 1.0,
+        "DIT" : 0.0,
+        "SIX" : 0.0,
+        "LCC" : 1.0,
+        "NORM" : 0.0,
+        "CF" : 0.034482758620689655,
+        "DAC" : 1.0
+      },
+      "package" : "com.bea.gestion.controller",
+      "implements" : [ ]
+    },
+    "com.bea.gestion.dto.CreateProjetRequest" : {
+      "name" : "CreateProjetRequest",
+      "type" : "CLASS",
+      "bugProbability" : 0.12752577532979814,
+      "dependencies" : { },
+      "metrics" : {
+        "NOC" : 0.0,
+        "TLOC" : 18.0,
+        "RSM" : 0.0,
+        "CBO" : 0.0,
+        "MPC" : 0.0,
+        "NOM" : 0.0,
+        "RFC" : 0.0,
+        "ED" : 0.0,
+        "PF" : 0.0,
+        "MIT" : 0.0,
+        "LCOM4" : 10.0,
+        "NOA" : 10.0,
+        "NOP" : 0.0,
+        "NOLM" : 0.0,
+        "DAM" : 1.0,
+        "DIT" : 0.0,
+        "SIX" : 0.0,
+        "LCC" : 0.0,
+        "NORM" : 0.0,
+        "CF" : 0.0,
+        "DAC" : 2.0
+      },
+      "package" : "com.bea.gestion.dto",
+      "implements" : [ ]
+    },
+    "com.bea.gestion.controller.AuthController" : {
+      "name" : "AuthController",
+      "type" : "CLASS",
+      "bugProbability" : 0.09667391049377871,
+      "dependencies" : {
+        "login" : [ {
+          "with" : "ResponseEntity",
+          "amount" : 2
+        }, {
+          "with" : "UNKNOWN",
+          "amount" : 1
+        }, {
+          "with" : "AuthService",
+          "amount" : 1
+        }, {
+          "with" : "@authService",
+          "amount" : 1
+        } ],
+        "AuthController" : [ {
+          "with" : "@authService",
+          "amount" : 1
+        } ]
+      },
+      "metrics" : {
+        "NOC" : 0.0,
+        "TLOC" : 23.0,
+        "RSM" : 0.0,
+        "CBO" : 3.0,
+        "MPC" : 4.0,
+        "NOM" : 2.0,
+        "RFC" : 6.0,
+        "ED" : 1.0,
+        "PF" : 0.0,
+        "MIT" : 0.0,
+        "LCOM4" : 1.0,
+        "NOA" : 1.0,
+        "NOP" : 1.0,
+        "NOLM" : 0.0,
+        "DAM" : 1.0,
+        "DIT" : 0.0,
+        "SIX" : 0.0,
+        "LCC" : 1.0,
+        "NORM" : 0.0,
+        "CF" : 0.017241379310344827,
+        "DAC" : 1.0
+      },
+      "package" : "com.bea.gestion.controller",
+      "implements" : [ ]
+    },
+    "com.bea.gestion.service.EmailService" : {
+      "name" : "EmailService",
+      "type" : "CLASS",
+      "bugProbability" : 0.18232972517752655,
+      "dependencies" : {
+        "sendSimple" : [ {
+          "with" : "SimpleMailMessage",
+          "amount" : 5
+        }, {
+          "with" : "Logger",
+          "amount" : 2
+        }, {
+          "with" : "JavaMailSender",
+          "amount" : 1
+        }, {
+          "with" : "Exception",
+          "amount" : 1
+        }, {
+          "with" : "@log",
+          "amount" : 1
+        }, {
+          "with" : "@mailSender",
+          "amount" : 1
+        } ],
+        "sendHtml" : [ {
+          "with" : "MimeMessageHelper",
+          "amount" : 5
+        }, {
+          "with" : "Logger",
+          "amount" : 2
+        }, {
+          "with" : "JavaMailSender",
+          "amount" : 2
+        }, {
+          "with" : "MessagingException",
+          "amount" : 1
+        }, {
+          "with" : "@log",
+          "amount" : 1
+        }, {
+          "with" : "@mailSender",
+          "amount" : 1
+        } ],
+        "EmailService" : [ {
+          "with" : "@mailSender",
+          "amount" : 1
+        } ]
+      },
+      "metrics" : {
+        "NOC" : 0.0,
+        "TLOC" : 52.0,
+        "RSM" : 1.0,
+        "CBO" : 7.0,
+        "MPC" : 19.0,
+        "NOM" : 3.0,
+        "RFC" : 14.0,
+        "ED" : 2.0,
+        "PF" : 0.0,
+        "MIT" : 0.0,
+        "LCOM4" : 1.0,
+        "NOA" : 2.0,
+        "NOP" : 2.3333333333333335,
+        "NOLM" : 0.0,
+        "DAM" : 1.0,
+        "DIT" : 0.0,
+        "SIX" : 0.0,
+        "LCC" : 1.0,
+        "NORM" : 0.0,
+        "CF" : 0.0,
+        "DAC" : 0.0
+      },
+      "package" : "com.bea.gestion.service",
+      "implements" : [ ]
+    },
+    "com.bea.gestion.service.RemarqueService" : {
+      "name" : "RemarqueService",
+      "type" : "CLASS",
+      "bugProbability" : 0.4736609146027029,
+      "dependencies" : {
+        "RemarqueService" : [ {
+          "with" : "@remarqueRepository",
+          "amount" : 1
+        }, {
+          "with" : "@projetRepository",
+          "amount" : 1
+        }, {
+          "with" : "@userRepository",
+          "amount" : 1
+        } ],
+        "ajouter" : [ {
+          "with" : "RuntimeException",
+          "amount" : 3
+        }, {
+          "with" : "RemarqueRepository",
+          "amount" : 1
+        }, {
+          "with" : "ProjetRepository",
+          "amount" : 1
+        }, {
+          "with" : "String",
+          "amount" : 2
+        }, {
+          "with" : "Remarque",
+          "amount" : 5
+        }, {
+          "with" : "LocalDateTime",
+          "amount" : 1
+        }, {
+          "with" : "UserRepository",
+          "amount" : 1
+        }, {
+          "with" : "@projetRepository",
+          "amount" : 1
+        }, {
+          "with" : "@remarqueRepository",
+          "amount" : 1
+        }, {
+          "with" : "@userRepository",
+          "amount" : 1
+        } ],
+        "getByProjet" : [ {
+          "with" : "RuntimeException",
+          "amount" : 1
+        }, {
+          "with" : "RemarqueRepository",
+          "amount" : 1
+        }, {
+          "with" : "ProjetRepository",
+          "amount" : 1
+        }, {
+          "with" : "@projetRepository",
+          "amount" : 1
+        }, {
+          "with" : "@remarqueRepository",
+          "amount" : 1
+        } ],
+        "supprimer" : [ {
+          "with" : "RemarqueRepository",
+          "amount" : 1
+        }, {
+          "with" : "@remarqueRepository",
+          "amount" : 1
+        } ]
+      },
+      "metrics" : {
+        "NOC" : 0.0,
+        "TLOC" : 48.0,
+        "RSM" : 0.0,
+        "CBO" : 7.0,
+        "MPC" : 18.0,
+        "NOM" : 4.0,
+        "RFC" : 18.0,
+        "ED" : -1.0,
+        "PF" : 0.0,
+        "MIT" : 0.0,
+        "LCOM4" : 1.0,
+        "NOA" : 3.0,
+        "NOP" : 2.0,
+        "NOLM" : 0.0,
+        "DAM" : 1.0,
+        "DIT" : 0.0,
+        "SIX" : 0.0,
+        "LCC" : 1.0,
+        "NORM" : 0.0,
+        "CF" : 0.06896551724137931,
+        "DAC" : 3.0
+      },
+      "package" : "com.bea.gestion.service",
+      "implements" : [ ]
+    },
+    "com.bea.gestion.controller.SetupController" : {
+      "name" : "SetupController",
+      "type" : "CLASS",
+      "bugProbability" : 0.2984491870744228,
+      "dependencies" : {
+        "createUser" : [ {
+          "with" : "User",
+          "amount" : 7
+        }, {
+          "with" : "PasswordEncoder",
+          "amount" : 1
+        }, {
+          "with" : "UserRepository",
+          "amount" : 2
+        }, {
+          "with" : "StringBuilder",
+          "amount" : 2
+        }, {
+          "with" : "@passwordEncoder",
+          "amount" : 1
+        }, {
+          "with" : "@userRepository",
+          "amount" : 1
+        } ],
+        "createUsers" : [ {
+          "with" : "StringBuilder",
+          "amount" : 7
+        }, {
+          "with" : "this.createUser",
+          "amount" : 3
+        }, {
+          "with" : "UserRepository",
+          "amount" : 1
+        }, {
+          "with" : "Exception",
+          "amount" : 1
+        }, {
+          "with" : "@userRepository",
+          "amount" : 1
+        } ],
+        "check" : [ {
+          "with" : "ProjetRepository",
+          "amount" : 1
+        }, {
+          "with" : "UserRepository",
+          "amount" : 1
+        }, {
+          "with" : "@projetRepository",
+          "amount" : 1
+        }, {
+          "with" : "@userRepository",
+          "amount" : 1
+        } ]
+      },
+      "metrics" : {
+        "NOC" : 0.0,
+        "TLOC" : 56.0,
+        "RSM" : 0.0,
+        "CBO" : 6.0,
+        "MPC" : 26.0,
+        "NOM" : 3.0,
+        "RFC" : 16.0,
+        "ED" : 1.0,
+        "PF" : 0.0,
+        "MIT" : 0.0,
+        "LCOM4" : 1.0,
+        "NOA" : 3.0,
+        "NOP" : 2.6666666666666665,
+        "NOLM" : 0.0,
+        "DAM" : 1.0,
+        "DIT" : 0.0,
+        "SIX" : 0.0,
+        "LCC" : 1.0,
+        "NORM" : 0.0,
+        "CF" : 0.05172413793103448,
+        "DAC" : 2.0
+      },
+      "package" : "com.bea.gestion.controller",
+      "implements" : [ ]
+    },
+    "com.bea.gestion.entity.Role" : {
+      "name" : "Role",
+      "type" : "ENUM",
+      "bugProbability" : 0.10771453170148881,
+      "dependencies" : { },
+      "metrics" : {
+        "NOC" : 0.0,
+        "TLOC" : 3.0,
+        "RSM" : 5.0,
+        "CBO" : 0.0,
+        "MPC" : 0.0,
+        "NOM" : 0.0,
+        "RFC" : 0.0,
+        "ED" : 0.0,
+        "PF" : 0.0,
+        "MIT" : 0.0,
+        "LCOM4" : 5.0,
+        "NOA" : 5.0,
+        "NOP" : 0.0,
+        "NOLM" : 0.0,
+        "DAM" : 0.0,
+        "DIT" : 0.0,
+        "SIX" : 0.0,
+        "LCC" : 0.0,
+        "NORM" : 0.0,
+        "CF" : 0.0,
+        "DAC" : 1.0
+      },
+      "package" : "com.bea.gestion.entity",
+      "implements" : [ ]
+    },
+    "com.bea.gestion.controller.DashboardController" : {
+      "name" : "DashboardController",
+      "type" : "CLASS",
+      "bugProbability" : 0.12149597048642868,
+      "dependencies" : {
+        "getRecentProjets" : [ {
+          "with" : "StatistiquesService",
+          "amount" : 1
+        }, {
+          "with" : "ResponseEntity",
+          "amount" : 1
+        }, {
+          "with" : "@statistiquesService",
+          "amount" : 1
+        } ],
+        "getStatsByType" : [ {
+          "with" : "StatistiquesService",
+          "amount" : 1
+        }, {
+          "with" : "ResponseEntity",
+          "amount" : 1
+        }, {
+          "with" : "@statistiquesService",
+          "amount" : 1
+        } ],
+        "DashboardController" : [ {
+          "with" : "@statistiquesService",
+          "amount" : 1
+        } ],
+        "getProjetStats" : [ {
+          "with" : "ResponseEntity",
+          "amount" : 1
+        }, {
+          "with" : "StatistiquesService",
+          "amount" : 1
+        }, {
+          "with" : "@statistiquesService",
+          "amount" : 1
+        } ]
+      },
+      "metrics" : {
+        "NOC" : 0.0,
+        "TLOC" : 21.0,
+        "RSM" : 0.0,
+        "CBO" : 2.0,
+        "MPC" : 6.0,
+        "NOM" : 4.0,
+        "RFC" : 5.0,
+        "ED" : 0.0,
+        "PF" : 0.0,
+        "MIT" : 0.0,
+        "LCOM4" : 1.0,
+        "NOA" : 1.0,
+        "NOP" : 0.5,
+        "NOLM" : 0.0,
+        "DAM" : 1.0,
+        "DIT" : 0.0,
+        "SIX" : 0.0,
+        "LCC" : 1.0,
+        "NORM" : 0.0,
+        "CF" : 0.017241379310344827,
+        "DAC" : 1.0
+      },
+      "package" : "com.bea.gestion.controller",
+      "implements" : [ ]
+    },
+    "com.bea.gestion.enums.EtatMateriel" : {
+      "name" : "EtatMateriel",
+      "type" : "ENUM",
+      "bugProbability" : 0.13930262880493738,
+      "dependencies" : {
+        "getValue" : [ {
+          "with" : "@value",
+          "amount" : 1
+        } ],
+        "EtatMateriel" : [ {
+          "with" : "@value",
+          "amount" : 1
+        } ]
+      },
+      "metrics" : {
+        "NOC" : 0.0,
+        "TLOC" : 12.0,
+        "RSM" : 4.0,
+        "CBO" : 0.0,
+        "MPC" : 0.0,
+        "NOM" : 2.0,
+        "RFC" : 1.0,
+        "ED" : 0.0,
+        "PF" : 0.0,
+        "MIT" : 0.0,
+        "LCOM4" : 5.0,
+        "NOA" : 5.0,
+        "NOP" : 0.5,
+        "NOLM" : 0.0,
+        "DAM" : 0.0,
+        "DIT" : 0.0,
+        "SIX" : 0.0,
+        "LCC" : 0.14285714285714285,
+        "NORM" : 0.0,
+        "CF" : 0.0,
+        "DAC" : 1.0
+      },
+      "package" : "com.bea.gestion.enums",
+      "implements" : [ ]
+    },
+    "com.bea.gestion.service.StatistiquesService" : {
+      "name" : "StatistiquesService",
+      "type" : "CLASS",
+      "bugProbability" : 0.2453569172898442,
+      "dependencies" : {
+        "StatistiquesService" : [ {
+          "with" : "@projetRepository",
+          "amount" : 1
+        }, {
+          "with" : "@projetService",
+          "amount" : 1
+        } ],
+        "getRecentProjets" : [ {
+          "with" : "ProjetService",
+          "amount" : 1
+        }, {
+          "with" : "Collectors",
+          "amount" : 1
+        }, {
+          "with" : "ProjetRepository",
+          "amount" : 1
+        }, {
+          "with" : "LAMBDA$0",
+          "amount" : 1
+        }, {
+          "with" : "@projetRepository",
+          "amount" : 1
+        }, {
+          "with" : "@projetService",
+          "amount" : 1
+        } ],
+        "getStatsByType" : [ {
+          "with" : "Map<String , Long > ",
+          "amount" : 5
+        }, {
+          "with" : "List<ProjetDTO > ",
+          "amount" : 6
+        }, {
+          "with" : "LAMBDA$0",
+          "amount" : 5
+        }, {
+          "with" : "TypeProjet",
+          "amount" : 2
+        }, {
+          "with" : "Collectors",
+          "amount" : 1
+        }, {
+          "with" : "HashMap",
+          "amount" : 2
+        }, {
+          "with" : "ProjetService",
+          "amount" : 1
+        }, {
+          "with" : "Map<String , Map < String , Long >> ",
+          "amount" : 1
+        }, {
+          "with" : "@projetService",
+          "amount" : 1
+        } ],
+        "getProjetStats" : [ {
+          "with" : "Map<String , Long > ",
+          "amount" : 5
+        }, {
+          "with" : "ProjetRepository",
+          "amount" : 5
+        }, {
+          "with" : "HashMap",
+          "amount" : 1
+        }, {
+          "with" : "@projetRepository",
+          "amount" : 1
+        } ]
+      },
+      "metrics" : {
+        "NOC" : 0.0,
+        "TLOC" : 53.0,
+        "RSM" : 0.0,
+        "CBO" : 9.0,
+        "MPC" : 38.0,
+        "NOM" : 4.0,
+        "RFC" : 21.0,
+        "ED" : 0.0,
+        "PF" : 0.0,
+        "MIT" : 0.0,
+        "LCOM4" : 1.0,
+        "NOA" : 2.0,
+        "NOP" : 0.75,
+        "NOLM" : 0.0,
+        "DAM" : 1.0,
+        "DIT" : 0.0,
+        "SIX" : 0.0,
+        "LCC" : 1.0,
+        "NORM" : 0.0,
+        "CF" : 0.06896551724137931,
+        "DAC" : 2.0
+      },
+      "package" : "com.bea.gestion.service",
+      "implements" : [ ]
+    },
+    "com.bea.gestion.dto.ProjetDTO" : {
+      "name" : "ProjetDTO",
+      "type" : "CLASS",
+      "bugProbability" : 0.6977611210302102,
+      "dependencies" : {
+        "getDateCreation" : [ {
+          "with" : "@dateCreation",
+          "amount" : 1
+        } ],
+        "setChefProjetMatricule" : [ {
+          "with" : "@chefProjetMatricule",
+          "amount" : 1
+        } ],
+        "getMembresNoms" : [ {
+          "with" : "@membresNoms",
+          "amount" : 1
+        } ],
+        "setDateCreation" : [ {
+          "with" : "@dateCreation",
+          "amount" : 1
+        } ],
+        "setChefProjetId" : [ {
+          "with" : "@chefProjetId",
+          "amount" : 1
+        } ],
+        "setNom" : [ {
+          "with" : "@nom",
+          "amount" : 1
+        } ],
+        "getDateDebut" : [ {
+          "with" : "@dateDebut",
+          "amount" : 1
+        } ],
+        "setPriorite" : [ {
+          "with" : "@priorite",
+          "amount" : 1
+        } ],
+        "getId" : [ {
+          "with" : "@id",
+          "amount" : 1
+        } ],
+        "setDescription" : [ {
+          "with" : "@description",
+          "amount" : 1
+        } ],
+        "getStatut" : [ {
+          "with" : "@statut",
+          "amount" : 1
+        } ],
+        "setDeadline" : [ {
+          "with" : "@deadline",
+          "amount" : 1
+        } ],
+        "getDescription" : [ {
+          "with" : "@description",
+          "amount" : 1
+        } ],
+        "getMembresIds" : [ {
+          "with" : "@membresIds",
+          "amount" : 1
+        } ],
+        "getMembresMatricules" : [ {
+          "with" : "@membresMatricules",
+          "amount" : 1
+        } ],
+        "getDeadline" : [ {
+          "with" : "@deadline",
+          "amount" : 1
+        } ],
+        "getChefProjetMatricule" : [ {
+          "with" : "@chefProjetMatricule",
+          "amount" : 1
+        } ],
+        "getChefProjetNom" : [ {
+          "with" : "@chefProjetNom",
+          "amount" : 1
+        } ],
+        "setChefProjetNom" : [ {
+          "with" : "@chefProjetNom",
+          "amount" : 1
+        } ],
+        "setId" : [ {
+          "with" : "@id",
+          "amount" : 1
+        } ],
+        "setMembresNoms" : [ {
+          "with" : "@membresNoms",
+          "amount" : 1
+        } ],
+        "getNom" : [ {
+          "with" : "@nom",
+          "amount" : 1
+        } ],
+        "setMembresIds" : [ {
+          "with" : "@membresIds",
+          "amount" : 1
+        } ],
+        "getPriorite" : [ {
+          "with" : "@priorite",
+          "amount" : 1
+        } ],
+        "setType" : [ {
+          "with" : "@type",
+          "amount" : 1
+        } ],
+        "setStatut" : [ {
+          "with" : "@statut",
+          "amount" : 1
+        } ],
+        "getType" : [ {
+          "with" : "@type",
+          "amount" : 1
+        } ],
+        "setMembresMatricules" : [ {
+          "with" : "@membresMatricules",
+          "amount" : 1
+        } ],
+        "setDateDebut" : [ {
+          "with" : "@dateDebut",
+          "amount" : 1
+        } ],
+        "getChefProjetId" : [ {
+          "with" : "@chefProjetId",
+          "amount" : 1
+        } ]
+      },
+      "metrics" : {
+        "NOC" : 0.0,
+        "TLOC" : 127.0,
+        "RSM" : 0.0,
+        "CBO" : 0.0,
+        "MPC" : 0.0,
+        "NOM" : 30.0,
+        "RFC" : 15.0,
+        "ED" : 0.0,
+        "PF" : 0.0,
+        "MIT" : 0.0,
+        "LCOM4" : 15.0,
+        "NOA" : 15.0,
+        "NOP" : 0.5,
+        "NOLM" : 0.0,
+        "DAM" : 1.0,
+        "DIT" : 0.0,
+        "SIX" : 0.0,
+        "LCC" : 0.045454545454545456,
+        "NORM" : 0.0,
+        "CF" : 0.0,
+        "DAC" : 2.0
+      },
+      "package" : "com.bea.gestion.dto",
+      "implements" : [ ]
+    },
+    "com.bea.gestion.dto.MaterielDTO" : {
+      "name" : "MaterielDTO",
+      "type" : "CLASS",
+      "bugProbability" : 0.6708034464699371,
+      "dependencies" : {
+        "setQuantite" : [ {
+          "with" : "@quantite",
+          "amount" : 1
+        } ],
+        "setProjetId" : [ {
+          "with" : "@projetId",
+          "amount" : 1
+        } ],
+        
+        
+        "getEtat" : [ {
+          "with" : "@etat",
+          "amount" : 1
+        } ],
+        "setNom" : [ {
+          "with" : "@nom",
+          "amount" : 1
+        } ],
+        "getId" : [ {
+          "with" : "@id",
+          "amount" : 1
+        } ],
+        "setDescription" : [ {
+          "with" : "@description",
+          "amount" : 1
+        } ],
+        "setProjetNom" : [ {
+          "with" : "@projetNom",
+          "amount" : 1
+        } ],
+        "setEtat" : [ {
+          "with" : "@etat",
+          "amount" : 1
+        } ],
+        "getStatut" : [ {
+          "with" : "@statut",
+          "amount" : 1
+        } ],
+        "getDescription" : [ {
+          "with" : "@description",
+          "amount" : 1
+        } ],
+        "getProjetId" : [ {
+          "with" : "@projetId",
+          "amount" : 1
+        } ],
+        "getQuantite" : [ {
+          "with" : "@quantite",
+          "amount" : 1
+        } ],
+        "setStatut" : [ {
+          "with" : "@statut",
+          "amount" : 1
+        } ],
+        "setService" : [ {
+          "with" : "UnsupportedOperationException",
+          "amount" : 1
+        } ],
+        "setDateAcquisition" : [ {
+          "with" : "@dateAcquisition",
+          "amount" : 1
+        } ],
+        "setBureau" : [ {
+          "with" : "UnsupportedOperationException",
+          "amount" : 1
+        } ],
+        "getProjetNom" : [ {
+          "with" : "@projetNom",
+          "amount" : 1
+        } ],
+        "setId" : [ {
+          "with" : "@id",
+          "amount" : 1
+        } ],
+        "getMarque" : [ {
+          "with" : "@marque",
+          "amount" : 1
+        } ],
+        "setMarque" : [ {
+          "with" : "@marque",
+          "amount" : 1
+        } ],
+        "getNom" : [ {
+          "with" : "@nom",
+          "amount" : 1
+        } ],
+        "getDateAcquisition" : [ {
+          "with" : "@dateAcquisition",
+          "amount" : 1
+        } ]
+      },
+      "metrics" : {
+        "NOC" : 0.0,
+        "TLOC" : 100.0,
+        "RSM" : 0.0,
+        "CBO" : 1.0,
+        "MPC" : 2.0,
+        "NOM" : 24.0,
+        "RFC" : 12.0,
+        "ED" : -1.0,
+        "PF" : 0.0,
+        "MIT" : 0.0,
+        "LCOM4" : 13.0,
+        "NOA" : 11.0,
+        "NOP" : 0.5416666666666666,
+        "NOLM" : 0.0,
+        "DAM" : 1.0,
+        "DIT" : 0.0,
+        "SIX" : 0.0,
+        "LCC" : 0.05546218487394958,
+        "NORM" : 0.0,
+        "CF" : 0.0,
+        "DAC" : 2.0
+      },
+      "package" : "com.bea.gestion.dto",
+      "implements" : [ ]
+    },
+    "com.bea.gestion.dto.LoginResponse" : {
+      "name" : "LoginResponse",
+      "type" : "CLASS",
+      "bugProbability" : 0.2629373778462769,
+      "dependencies" : {
+        "LoginResponse" : [ {
+          "with" : "@role",
+          "amount" : 1
+        }, {
+          "with" : "@matricule",
+          "amount" : 1
+        }, {
+          "with" : "@id",
+          "amount" : 1
+        }, {
+          "with" : "@nom",
+          "amount" : 1
+        }, {
+          "with" : "@prenom",
+          "amount" : 1
+        }, {
+          "with" : "@email",
+          "amount" : 1
+        }, {
+          "with" : "@token",
+          "amount" : 1
+        } ],
+        "getPrenom" : [ {
+          "with" : "@prenom",
+          "amount" : 1
+        } ],
+        "getType" : [ {
+          "with" : "@type",
+          "amount" : 1
+        } ],
+        "getToken" : [ {
+          "with" : "@token",
+          "amount" : 1
+        } ],
+        "getRole" : [ {
+          "with" : "@role",
+          "amount" : 1
+        } ],
+        "getMatricule" : [ {
+          "with" : "@matricule",
+          "amount" : 1
+        } ],
+        "getEmail" : [ {
+          "with" : "@email",
+          "amount" : 1
+        } ],
+        "getId" : [ {
+          "with" : "@id",
+          "amount" : 1
+        } ],
+        "getNom" : [ {
+          "with" : "@nom",
+          "amount" : 1
+        } ]
+      },
+      "metrics" : {
+        "NOC" : 0.0,
+        "TLOC" : 52.0,
+        "RSM" : 0.0,
+        "CBO" : 0.0,
+        "MPC" : 0.0,
+        "NOM" : 9.0,
+        "RFC" : 8.0,
+        "ED" : 0.0,
+        "PF" : 0.0,
+        "MIT" : 0.0,
+        "LCOM4" : 2.0,
+        "NOA" : 8.0,
+        "NOP" : 0.7777777777777778,
+        "NOLM" : 0.0,
+        "DAM" : 1.0,
+        "DIT" : 0.0,
+        "SIX" : 0.0,
+        "LCC" : 0.7794117647058824,
+        "NORM" : 0.0,
+        "CF" : 0.0,
+        "DAC" : 0.0
+      },
+      "package" : "com.bea.gestion.dto",
+      "implements" : [ ]
+    },
+    "com.bea.gestion.mapper.ProjetMapper" : {
+      "name" : "ProjetMapper",
+      "type" : "CLASS",
+      "bugProbability" : 0.11660234250965995,
+      "dependencies" : {
+        "toDTO" : [ {
+          "with" : "ProjetDTO",
+          "amount" : 19
+        }, {
+          "with" : "Projet",
+          "amount" : 19
+        }, {
+          "with" : "LAMBDA$0",
+          "amount" : 3
+        }, {
+          "with" : "User",
+          "amount" : 2
+        }, {
+          "with" : "Collectors",
+          "amount" : 3
+        }, {
+          "with" : "List",
+          "amount" : 3
+        } ]
+      },
+      "metrics" : {
+        "NOC" : 0.0,
+        "TLOC" : 39.0,
+        "RSM" : 0.0,
+        "CBO" : 6.0,
+        "MPC" : 49.0,
+        "NOM" : 1.0,
+        "RFC" : 35.0,
+        "ED" : 0.0,
+        "PF" : 0.0,
+        "MIT" : 0.0,
+        "LCOM4" : 1.0,
+        "NOA" : 0.0,
+        "NOP" : 1.0,
+        "NOLM" : 0.0,
+        "DAM" : 0.0,
+        "DIT" : 0.0,
+        "SIX" : 0.0,
+        "LCC" : 1.0,
+        "NORM" : 0.0,
+        "CF" : 0.05172413793103448,
+        "DAC" : 0.0
+      },
+      "package" : "com.bea.gestion.mapper",
+      "implements" : [ ]
+    },
+    "com.bea.gestion.mapper.UserMapper" : {
+      "name" : "UserMapper",
+      "type" : "CLASS",
+      "bugProbability" : 0.08534423620908405,
+      "dependencies" : {
+        "toDTO" : [ {
+          "with" : "UserDTO",
+          "amount" : 8
+        }, {
+          "with" : "User",
+          "amount" : 8
+        } ]
+      },
+      "metrics" : {
+        "NOC" : 0.0,
+        "TLOC" : 19.0,
+        "RSM" : 0.0,
+        "CBO" : 2.0,
+        "MPC" : 16.0,
+        "NOM" : 1.0,
+        "RFC" : 16.0,
+        "ED" : 0.0,
+        "PF" : 0.0,
+        "MIT" : 0.0,
+        "LCOM4" : 1.0,
+        "NOA" : 0.0,
+        "NOP" : 1.0,
+        "NOLM" : 0.0,
+        "DAM" : 0.0,
+        "DIT" : 0.0,
+        "SIX" : 0.0,
+        "LCC" : 1.0,
+        "NORM" : 0.0,
+        "CF" : 0.034482758620689655,
+        "DAC" : 0.0
+      },
+      "package" : "com.bea.gestion.mapper",
+      "implements" : [ ]
+    },
+    "com.bea.gestion.enums.TypeProjet" : {
+      "name" : "TypeProjet",
+      "type" : "ENUM",
+      "bugProbability" : 0.12154284930855264,
+      "dependencies" : {
+        "getValue" : [ {
+          "with" : "@value",
+          "amount" : 1
+        } ],
+        "TypeProjet" : [ {
+          "with" : "@value",
+          "amount" : 1
+        } ]
+      },
+      "metrics" : {
+        "NOC" : 0.0,
+        "TLOC" : 12.0,
+        "RSM" : 2.0,
+        "CBO" : 0.0,
+        "MPC" : 0.0,
+        "NOM" : 2.0,
+        "RFC" : 1.0,
+        "ED" : 0.0,
+        "PF" : 0.0,
+        "MIT" : 0.0,
+        "LCOM4" : 3.0,
+        "NOA" : 3.0,
+        "NOP" : 0.5,
+        "NOLM" : 0.0,
+        "DAM" : 0.0,
+        "DIT" : 0.0,
+        "SIX" : 0.0,
+        "LCC" : 0.3,
+        "NORM" : 0.0,
+        "CF" : 0.0,
+        "DAC" : 1.0
+      },
+      "package" : "com.bea.gestion.enums",
+      "implements" : [ ]
+    },
+    "com.bea.gestion.repository.RemarqueRepository" : {
+      "name" : "RemarqueRepository",
+      "type" : "INTERFACE",
+      "bugProbability" : 0.06842552707216198,
+      "dependencies" : {
+        "findByProjetOrderByDateCreationDesc" : [ ]
+      },
+      "metrics" : {
+        "NOC" : 0.0,
+        "TLOC" : 9.0,
+        "RSM" : 0.0,
+        "CBO" : 0.0,
+        "MPC" : 0.0,
+        "NOM" : 1.0,
+        "RFC" : 0.0,
+        "ED" : 0.0,
+        "PF" : 0.0,
+        "MIT" : 0.0,
+        "LCOM4" : 1.0,
+        "NOA" : 0.0,
+        "NOP" : 1.0,
+        "NOLM" : 0.0,
+        "DAM" : 0.0,
+        "DIT" : 1.0,
+        "SIX" : 0.0,
+        "LCC" : 1.0,
+        "NORM" : 0.0,
+        "CF" : 0.0,
+        "DAC" : 0.0
+      },
+      "package" : "com.bea.gestion.repository",
+      "extends" : "org.springframework.data.jpa.repository.JpaRepository",
+      "implements" : [ ]
+    }
+  }
+}

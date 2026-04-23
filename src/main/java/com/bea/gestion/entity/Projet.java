@@ -2,6 +2,8 @@ package com.bea.gestion.entity;
 
 import com.bea.gestion.enums.StatutProjet;
 import com.bea.gestion.enums.TypeProjet;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.*;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -44,7 +46,9 @@ public class Projet {
         inverseJoinColumns = @JoinColumn(name = "user_id")
     )
     private List<User> membres = new ArrayList<>();
-    
+    @JsonIgnore
+@OneToMany(mappedBy = "projet")
+private List<Materiel> materiels;
     // Getters and Setters
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }

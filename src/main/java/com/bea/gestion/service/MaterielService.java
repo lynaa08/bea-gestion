@@ -66,7 +66,7 @@ public class MaterielService {
         m.setBureau(req.getBureau());
         m.setService(req.getService());
         m.setDescription(req.getDescription());
-        m.setStatut(req.getStatut());
+
         m.setQuantite(req.getQuantite());
         m.setDateAcquisition(req.getDateAcquisition());
         m.setEtat(req.getEtat());
