@@ -100,15 +100,13 @@
   <body>
     <div class="app-shell">
       <!-- TOPBAR -->
-      
-            <div class="topbar">
+      <div class="topbar">
         <div class="topbar-brand">
           <img
             th:src="@{/images/logo_sidebar.svg}"
             alt="Logo BEA"
             style="height: 40px; width: auto" />
         </div>
-      
         <div class="topbar-right">
           <div class="notif-btn" style="position: relative; cursor: pointer">
             <svg width="15" height="15" viewBox="0 0 24 24" fill="none">
@@ -120,7 +118,6 @@
             </svg>
             <div class="notif-dot"></div>
           </div>
-          <!-- REMARQUES ICON -->
           <div
             class="notif-btn"
             onclick="window.location.href = '/remarques'"
@@ -133,10 +130,7 @@
                 stroke-width="1.8"
                 fill="none" />
             </svg>
-            <div
-              class="notif-dot"
-              id="remarquesDot"
-              style="display: none"></div>
+            <div class="notif-dot" id="remarquesDot" style="display: none"></div>
           </div>
           <div class="user-chip">
             <div class="user-chip-avatar"></div>
@@ -147,264 +141,22 @@
           </div>
         </div>
       </div>
-
+ 
       <div class="body">
-        <!-- SIDEBAR -->
-        <div class="sidebar">
-          <div class="sidebar-profile">
-            <div class="avatar-ring">
-              <svg viewBox="0 0 36 36" fill="none">
-                <circle cx="18" cy="13" r="7" fill="rgba(255,255,255,0.9)" />
-                <path
-                  d="M4 32c0-7.7 6.3-14 14-14s14 6.3 14 14"
-                  fill="rgba(255,255,255,0.9)" />
-              </svg>
-            </div>
-            <div class="sidebar-name"></div>
-            <div class="sidebar-role"></div>
-          </div>
-
-          <div class="nav-section-label">Projets</div>
-          <div
-            class="nav-item"
-            onclick="window.location.href = '/projets-list?filter=encours'">
-            <div class="nav-icon">
-              <svg viewBox="0 0 24 24" fill="none">
-                <rect
-                  x="3"
-                  y="3"
-                  width="7"
-                  height="7"
-                  rx="1.5"
-                  stroke="rgba(255,255,255,0.5)"
-                  stroke-width="1.5" />
-                <rect
-                  x="14"
-                  y="3"
-                  width="7"
-                  height="7"
-                  rx="1.5"
-                  stroke="rgba(255,255,255,0.5)"
-                  stroke-width="1.5" />
-                <rect
-                  x="3"
-                  y="14"
-                  width="7"
-                  height="7"
-                  rx="1.5"
-                  stroke="rgba(255,255,255,0.5)"
-                  stroke-width="1.5" />
-                <rect
-                  x="14"
-                  y="14"
-                  width="7"
-                  height="7"
-                  rx="1.5"
-                  stroke="rgba(255,255,255,0.5)"
-                  stroke-width="1.5" />
-              </svg>
-            </div>
-            <span class="nav-label">Projet en Cours</span>
-            <span class="nav-badge" id="badge-encours">0</span>
-          </div>
-
-          <div
-            class="nav-item"
-            onclick="window.location.href = '/projets-list?filter=cloture'">
-            <div class="nav-icon">
-              <svg viewBox="0 0 24 24" fill="none">
-                <path
-                  d="M20 6L9 17l-5-5"
-                  stroke="rgba(255,255,255,0.5)"
-                  stroke-width="1.5"
-                  stroke-linecap="round"
-                  stroke-linejoin="round" />
-              </svg>
-            </div>
-            <span class="nav-label">Projet Clôturé</span>
-            <span class="nav-badge" id="badge-cloture">0</span>
-          </div>
-
-          <div
-            class="nav-item"
-            onclick="window.location.href = '/projets-list?filter=noncommence'">
-            <div class="nav-icon">
-              <svg viewBox="0 0 24 24" fill="none">
-                <circle
-                  cx="12"
-                  cy="12"
-                  r="9"
-                  stroke="rgba(255,255,255,0.5)"
-                  stroke-width="1.5" />
-                <path
-                  d="M12 7v5l3 3"
-                  stroke="rgba(255,255,255,0.5)"
-                  stroke-width="1.5"
-                  stroke-linecap="round" />
-              </svg>
-            </div>
-            <span class="nav-label">Projet Non Commencé</span>
-            <span class="nav-badge" id="badge-noncommence">0</span>
-          </div>
-
-          <div
-            class="nav-item"
-            onclick="
-              window.location.href = '/projets-list?filter=pasdevisibilite'
-            ">
-            <div class="nav-icon">
-              <svg viewBox="0 0 24 24" fill="none">
-                <path
-                  d="M17.94 17.94A10.07 10.07 0 0112 20c-7 0-11-8-11-8a18.45 18.45 0 015.06-5.94M9.9 4.24A9.12 9.12 0 0112 4c7 0 11 8 11 8a18.5 18.5 0 01-2.16 3.19m-6.72-1.07a3 3 0 11-4.24-4.24"
-                  stroke="rgba(255,255,255,0.5)"
-                  stroke-width="1.5"
-                  stroke-linecap="round"
-                  stroke-linejoin="round" />
-                <line
-                  x1="1"
-                  y1="1"
-                  x2="23"
-                  y2="23"
-                  stroke="rgba(255,255,255,0.5)"
-                  stroke-width="1.5"
-                  stroke-linecap="round"
-                  stroke-linejoin="round" />
-              </svg>
-            </div>
-            <span class="nav-label">Pas de Visibilité</span>
-            <span class="nav-badge" id="badge-pasdevisibilite">0</span>
-          </div>
-
-          <div class="nav-section-label" style="margin-top: 8px">
-            Administration
-          </div>
-          <div class="nav-item" onclick="window.location.href = '/users/new'">
-            <div class="nav-icon">
-              <svg viewBox="0 0 24 24" fill="none">
-                <circle
-                  cx="12"
-                  cy="8"
-                  r="4"
-                  stroke="rgba(255,255,255,0.5)"
-                  stroke-width="1.5" />
-                <path
-                  d="M4 20c0-4 3.6-7 8-7s8 3 8 7"
-                  stroke="rgba(255,255,255,0.5)"
-                  stroke-width="1.5"
-                  stroke-linecap="round" />
-                <path
-                  d="M19 8v6M22 11h-6"
-                  stroke="rgba(255,255,255,0.5)"
-                  stroke-width="1.5"
-                  stroke-linecap="round" />
-              </svg>
-            </div>
-            <span class="nav-label">Créer User</span>
-          </div>
-
-          <div class="nav-item" onclick="window.location.href = '/projets/new'">
-            <div class="nav-icon">
-              <svg viewBox="0 0 24 24" fill="none">
-                <rect
-                  x="3"
-                  y="5"
-                  width="18"
-                  height="16"
-                  rx="2"
-                  stroke="rgba(255,255,255,0.5)"
-                  stroke-width="1.5"
-                  fill="none" />
-                <path
-                  d="M8 3v4M16 3v4M3 11h18"
-                  stroke="rgba(255,255,255,0.5)"
-                  stroke-width="1.5"
-                  stroke-linecap="round" />
-              </svg>
-            </div>
-            <span class="nav-label">Créer un Projet</span>
-          </div>
-
-          <div class="nav-section-label" style="margin-top: 8px">Outils</div>
-          <div class="nav-item" onclick="window.location.href = '/agenda'">
-            <div class="nav-icon">
-              <svg viewBox="0 0 24 24" fill="none">
-                <rect
-                  x="3"
-                  y="4"
-                  width="18"
-                  height="18"
-                  rx="2"
-                  stroke="rgba(255,255,255,0.5)"
-                  stroke-width="1.5"
-                  fill="none" />
-                <path
-                  d="M8 2v4M16 2v4M3 10h18"
-                  stroke="rgba(255,255,255,0.5)"
-                  stroke-width="1.5"
-                  stroke-linecap="round" />
-              </svg>
-            </div>
-            <span class="nav-label">Agenda</span>
-          </div>
-
-          <div class="nav-item" onclick="window.location.href = '/remarques'">
-            <div class="nav-icon">
-              <svg viewBox="0 0 24 24" fill="none">
-                <path
-                  d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"
-                  stroke="rgba(255,255,255,0.5)"
-                  stroke-width="1.8"
-                  fill="none" />
-              </svg>
-            </div>
-            <span class="nav-label">Remarques</span>
-          </div>
-
-          <div class="nav-item" onclick="window.location.href = '/problemes'">
-            <div class="nav-icon">
-              <svg viewBox="0 0 24 24" fill="none">
-                <circle
-                  cx="12"
-                  cy="12"
-                  r="10"
-                  stroke="rgba(255,255,255,0.5)"
-                  stroke-width="1.5" />
-                <path
-                  d="M12 8v4M12 16h.01"
-                  stroke="rgba(255,255,255,0.5)"
-                  stroke-width="1.8"
-                  stroke-linecap="round" />
-              </svg>
-            </div>
-            <span class="nav-label">Problèmes</span>
-          </div>
-
-          <div class="sidebar-bottom">
-            <div class="logout-btn" onclick="logout()">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none">
-                <path
-                  d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4M16 17l5-5-5-5M21 12H9"
-                  stroke="#E8896A"
-                  stroke-width="1.8"
-                  stroke-linecap="round"
-                  stroke-linejoin="round" />
-              </svg>
-              <span class="logout-label">Déconnexion</span>
-            </div>
-          </div>
-        </div>
-
+        <!-- SIDEBAR — fragment unifié -->
+        <div th:replace="~{fragments/sidebar :: sidebar}"></div>
+ 
         <!-- MAIN CONTENT -->
         <div class="main">
           <div class="form-card">
             <div class="page-heading">
               <div class="page-title" id="pageTitle">Nouveau matériel</div>
             </div>
-
+ 
             <div id="msgArea"></div>
             <input type="hidden" id="materielId" />
-
-            <div class="section-label"> Informations générales</div>
+ 
+            <div class="section-label">Informations générales</div>
             <div class="form-grid2">
               <div class="field">
                 <label class="field-label"
@@ -426,7 +178,7 @@
                   placeholder="Ex: Dell Latitude 5520, HP ProBook..." />
               </div>
             </div>
-
+ 
             <div class="form-grid2">
               <div class="field">
                 <label class="field-label">Bureau</label>
@@ -445,7 +197,7 @@
                   placeholder="Ex: Service des systèmes, Service RH..." />
               </div>
             </div>
-
+ 
             <div class="form-grid2">
               <div class="field">
                 <label class="field-label"
@@ -468,11 +220,11 @@
                   <option value="DISPONIBLE">Disponible</option>
                   <option value="EN_UTILISATION">En utilisation</option>
                   <option value="EN_REPARATION">En réparation</option>
-      z            <option value="HORS_SERVICE">Hors service</option>
+                  <option value="HORS_SERVICE">Hors service</option>
                 </select>
               </div>
             </div>
-
+ 
             <div class="form-grid2">
               <div class="field">
                 <label class="field-label">Quantité</label>
@@ -489,15 +241,15 @@
                 <input type="date" class="field-input" id="dateAcquisition" />
               </div>
             </div>
-
-            <div class="section-label"> Affectation</div>
+ 
+            <div class="section-label">Affectation</div>
             <div class="field">
               <label class="field-label">Projet associé</label>
               <select class="field-select" id="projetId">
                 <option value="">-- Aucun projet --</option>
               </select>
             </div>
-
+ 
             <div class="section-label">Description</div>
             <div class="field">
               <textarea
@@ -506,7 +258,7 @@
                 rows="3"
                 placeholder="Description du matériel, caractéristiques techniques..."></textarea>
             </div>
-
+ 
             <div class="form-actions">
               <button
                 type="button"
@@ -522,7 +274,7 @@
         </div>
       </div>
     </div>
-
+ 
     <script th:src="@{/js/sidebar-badge-loader.js}"></script>
     <script th:src="@{/js/auth.js}"></script>
     <script>
@@ -532,7 +284,6 @@
             headers: getAuthHeaders(),
           });
           const projets = res.ok ? await res.json() : [];
-
           const pSel = document.getElementById("projetId");
           projets.forEach((p) => {
             const opt = document.createElement("option");
@@ -544,21 +295,21 @@
           console.error("Error loading projets:", e);
         }
       }
-
+ 
       async function loadForEdit() {
         const parts = window.location.pathname.split("/");
         const idx = parts.indexOf("edit");
         if (idx === -1) return;
         const id = parts[idx + 1];
         if (!id) return;
-
+ 
         try {
           const res = await fetch(`/api/materiels/${id}`, {
             headers: getAuthHeaders(),
           });
           if (!res.ok) return;
           const m = await res.json();
-
+ 
           document.getElementById("materielId").value = m.id || "";
           document.getElementById("nom").value = m.nom || "";
           document.getElementById("reference").value = m.reference || "";
@@ -570,37 +321,26 @@
           document.getElementById("dateAcquisition").value =
             m.dateAcquisition || "";
           document.getElementById("description").value = m.description || "";
-
           if (m.projetId) {
             document.getElementById("projetId").value = m.projetId;
           }
-
           document.getElementById("pageTitle").textContent =
             "Modifier : " + m.nom;
         } catch (e) {
           console.error("Error loading materiel:", e);
         }
       }
-
+ 
       async function saveMateriel() {
         const id = document.getElementById("materielId").value;
         const nom = document.getElementById("nom").value.trim();
         const etat = document.getElementById("etat").value;
         const statut = document.getElementById("statut").value;
-
-        if (!nom) {
-          showMsg("Le nom est obligatoire", "err");
-          return;
-        }
-        if (!etat) {
-          showMsg("L'état est obligatoire", "err");
-          return;
-        }
-        if (!statut) {
-          showMsg("Le statut est obligatoire", "err");
-          return;
-        }
-
+ 
+        if (!nom) { showMsg("Le nom est obligatoire", "err"); return; }
+        if (!etat) { showMsg("L'état est obligatoire", "err"); return; }
+        if (!statut) { showMsg("Le statut est obligatoire", "err"); return; }
+ 
         const body = {
           nom,
           reference: document.getElementById("reference").value || null,
@@ -609,12 +349,11 @@
           etat,
           statut,
           quantite: parseInt(document.getElementById("quantite").value) || 1,
-          dateAcquisition:
-            document.getElementById("dateAcquisition").value || null,
+          dateAcquisition: document.getElementById("dateAcquisition").value || null,
           description: document.getElementById("description").value || null,
           projetId: document.getElementById("projetId").value || null,
         };
-
+ 
         try {
           const url = id ? `/api/materiels/${id}` : "/api/materiels";
           const method = id ? "PUT" : "POST";
@@ -634,12 +373,12 @@
           showMsg("Erreur réseau", "err");
         }
       }
-
+ 
       function showMsg(msg, type) {
         document.getElementById("msgArea").innerHTML =
           `<div class="msg ${type}">${msg}</div>`;
       }
-
+ 
       document.addEventListener("DOMContentLoaded", async () => {
         if (!checkAuth()) return;
         loadUserInfo();
