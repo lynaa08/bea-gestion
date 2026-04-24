@@ -49,7 +49,6 @@
         content: "";
         position: absolute;
         inset: 0;
-        background: rgba(5, 18, 50, 0.52);
         z-index: 0;
       }
 
@@ -468,7 +467,8 @@
   <body>
     <div
       class="login-page"
-      th:style="'background-image: url(/images/login_bg_bea.jpg)'">
+      th:style="'background-image: url(/images/login_bg_bea.jpg)'"
+    >
       <div class="left-panel">
         <div class="logo-wrap"></div>
 
@@ -498,12 +498,14 @@
                     cy="8"
                     r="4"
                     stroke="#B0BDD0"
-                    stroke-width="1.5" />
+                    stroke-width="1.5"
+                  />
                   <path
                     d="M4 20c0-4 3.6-7 8-7s8 3 8 7"
                     stroke="#B0BDD0"
                     stroke-width="1.5"
-                    stroke-linecap="round" />
+                    stroke-linecap="round"
+                  />
                 </svg>
               </div>
               <input
@@ -511,7 +513,8 @@
                 type="text"
                 id="matricule"
                 placeholder="Ex: ADM001"
-                required />
+                required
+              />
             </div>
           </div>
 
@@ -527,12 +530,14 @@
                     height="11"
                     rx="2"
                     stroke="#B0BDD0"
-                    stroke-width="1.5" />
+                    stroke-width="1.5"
+                  />
                   <path
                     d="M7 11V7a5 5 0 0110 0v4"
                     stroke="#B0BDD0"
                     stroke-width="1.5"
-                    stroke-linecap="round" />
+                    stroke-linecap="round"
+                  />
                 </svg>
               </div>
               <input
@@ -540,19 +545,22 @@
                 type="password"
                 id="password"
                 placeholder="••••••••••"
-                required />
+                required
+              />
               <div class="show-pwd" onclick="togglePassword()">
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
                   <path
                     d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"
                     stroke="#8A9FBF"
-                    stroke-width="1.5" />
+                    stroke-width="1.5"
+                  />
                   <circle
                     cx="12"
                     cy="12"
                     r="3"
                     stroke="#8A9FBF"
-                    stroke-width="1.5" />
+                    stroke-width="1.5"
+                  />
                 </svg>
               </div>
             </div>
@@ -565,7 +573,8 @@
                 stroke="white"
                 stroke-width="2"
                 stroke-linecap="round"
-                stroke-linejoin="round" />
+                stroke-linejoin="round"
+              />
             </svg>
             SE CONNECTER
           </button>
@@ -583,13 +592,15 @@
               d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"
               stroke="#5A78AA"
               stroke-width="1.5"
-              fill="none" />
+              fill="none"
+            />
             <path
               d="M9 12l2 2 4-4"
               stroke="#5A78AA"
               stroke-width="1.5"
               stroke-linecap="round"
-              stroke-linejoin="round" />
+              stroke-linejoin="round"
+            />
           </svg>
           <span
             >Vos données sont protégées. Ne partagez jamais vos
