@@ -72,4 +72,10 @@ public class User implements UserDetails {
     @Override public boolean isAccountNonLocked() { return true; }
     @Override public boolean isCredentialsNonExpired() { return true; }
     @Override public boolean isEnabled() { return true; }
+    // Après le champ "telephone" existant, ajouter :
+@Column(name = "push_token")
+private String pushToken;
+
+public String getPushToken() { return pushToken; }
+public void setPushToken(String pushToken) { this.pushToken = pushToken; }
 }
