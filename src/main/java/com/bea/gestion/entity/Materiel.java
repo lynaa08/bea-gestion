@@ -11,7 +11,7 @@ import com.bea.gestion.enums.StatutMateriel;
 public class Materiel {
     
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
     
     @Column(nullable = false)
@@ -40,8 +40,8 @@ public class Materiel {
     @Column(length = 1000)
     private String description;
     
-    @ManyToOne
-    @JoinColumn(name = "projet_id")
+  @ManyToOne(fetch = FetchType.LAZY)
+  @JoinColumn(name = "projet_id")
     private Projet projet;
     
     // ENLEVÉ : @ManyToOne responsable
@@ -79,12 +79,6 @@ public class Materiel {
     
     public Projet getProjet() { return projet; }
     public void setProjet(Projet projet) { this.projet = projet; }
-    public String getMarque() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'getMarque'");
-    }
-    public void setMarque(String marque) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'setMarque'");
-    }
+    public String getMarque() { return this.reference; }
+    public void setMarque(String marque) { this.reference = marque; }
 }

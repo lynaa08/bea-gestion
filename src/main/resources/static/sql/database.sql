@@ -8,20 +8,20 @@
 -- ============================================================================
 -- 1. CRÉATION TABLE MATERIELS
 -- ============================================================================
-CREATE TABLE IF NOT EXISTS materiels (
-    id BIGINT PRIMARY KEY AUTO_INCREMENT,
+CREATE TABLE materiels (
+    id BIGINT IDENTITY(1,1) PRIMARY KEY,
     nom VARCHAR(255) NOT NULL,
-    reference VARCHAR(255) COMMENT 'Référence ou marque du matériel',
+    reference VARCHAR(255),
     bureau VARCHAR(255),
     service VARCHAR(255),
-    etat VARCHAR(50) COMMENT 'NEUF, BON_ETAT, USAGE, EN_PANNE',
-    statut VARCHAR(50) COMMENT 'DISPONIBLE, EN_UTILISATION, EN_REPARATION, HORS_SERVICE',
+    etat VARCHAR(50),
+    statut VARCHAR(50),
     quantite INT DEFAULT 1,
     date_acquisition DATE,
     description VARCHAR(1000),
     projet_id BIGINT,
     CONSTRAINT fk_materiel_projet FOREIGN KEY (projet_id) REFERENCES projets(id) ON DELETE SET NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+);
 
 -- ============================================================================
 -- 2. CRÉATION TABLE PROJET_MEMBRES (Many-to-Many)
@@ -80,7 +80,8 @@ VALUES
   ('Ordinateur portable Dell', 'Dell Latitude 5520', 'Bureau 203', 'Service Informatique', 'NEUF', 'DISPONIBLE', 1, '2024-01-15', 'PC portable pour développement', NULL),
   ('Imprimante HP', 'HP LaserJet Pro M404dn', 'Bureau 105', 'Service Administratif', 'BON_ETAT', 'EN_UTILISATION', 1, '2023-06-20', 'Imprimante laser noir et blanc', NULL),
   ('Routeur Cisco', 'Cisco RV340', 'Salle serveur', 'Service Réseau', 'BON_ETAT', 'EN_UTILISATION', 2, '2023-03-10', 'Routeur VPN dual WAN', NULL);
-
+UPDATE materiels SET statut = 'EN_UTILISATION' WHERE statut = 'En utilisation';
+UPDATE materiels SET etat = 'BON_ETAT' WHERE etat = 'Bon état';
 -- Vérifier l'insertion
 SELECT * FROM materiels;
 

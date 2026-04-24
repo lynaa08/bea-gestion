@@ -205,7 +205,7 @@ body.no-sidebar #mainSidebar {
   background: #fff;
   border: 1.5px solid #d8e6f2;
   border-radius: 10px;
-  font-size: 14px;
+  font-size: 18px;
   color: #1a2d5a;
   outline: none;
   transition: border-color 0.15s;
@@ -393,7 +393,12 @@ body.no-sidebar #mainSidebar {
   background: #e05a2b;
   border: 1.5px solid #fff;
 }
-
+.data-table th:last-child,
+.data-table td:last-child {
+  width: 200px;
+  text-align: center;
+  white-space: nowrap;
+}
 .user-chip {
   display: flex;
   align-items: center;
