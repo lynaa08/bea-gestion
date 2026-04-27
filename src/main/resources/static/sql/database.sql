@@ -84,7 +84,9 @@ UPDATE materiels SET statut = 'EN_UTILISATION' WHERE statut = 'En utilisation';
 UPDATE materiels SET etat = 'BON_ETAT' WHERE etat = 'Bon état';
 -- Vérifier l'insertion
 SELECT * FROM materiels;
-
+ALTER TABLE materiel ADD responsable VARCHAR(150);
+ALTER TABLE materiel ADD tel_responsable VARCHAR(30);
+ALTER TABLE projet ADD date_creation DATE;
 -- ============================================================================
 -- 7. ROLLBACK (EN CAS DE PROBLÈME)
 -- ============================================================================

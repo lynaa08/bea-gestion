@@ -223,6 +223,7 @@
                   <th>Service</th>
                   <th>État</th>
                   <th>Quantité</th>
+                  <th>Responsable</th>
                   <th>Projet</th>
                   <th>Actions</th>
                 </tr>
@@ -230,7 +231,7 @@
               <tbody id="materielsBody">
                 <tr>
                   <td
-                    colspan="9"
+                    colspan="10"
                     style="text-align: center; padding: 40px; color: #b0bdd0">
                     Chargement...
                   </td>
@@ -299,7 +300,7 @@
               (m.marque || "").toLowerCase().includes(q),
           );
         if (etat) list = list.filter((m) => m.etat === etat);
-        if (statut) list = list.filter((m) => m.statut === statut); 
+        if (statut) list = list.filter((m) => m.statut === statut);
         renderMateriels(list);
       }
 
@@ -322,6 +323,18 @@
       <td style="text-align:center;font-weight:600">${m.quantite ?? "—"}</td>
       <td style="font-size:12px;color:#6a80a0">${m.projetNom || "—"}</td>
       <td>
+  <span style="
+    background:#f4f7ff;
+    color:#0d2b6e;
+    padding:4px 10px;
+    border-radius:20px;
+    font-size:11px;
+    font-weight:700">
+    ${m.responsable || "—"}
+  </span>
+</td>
+
+      <td>
         <button onclick="window.location.href='/materiels/edit/${m.id}'" style="background:#eef4ff;border:none;padding:5px 12px;border-radius:6px;cursor:pointer;font-size:11px;color:#0d2b6e;font-weight:600">Modifier</button>
         <button onclick="deleteMateriel(${m.id})" style="background:#fee;border:none;padding:5px 12px;border-radius:6px;cursor:pointer;font-size:11px;color:#c00;font-weight:600;margin-left:4px">Supprimer</button>
       </td>
@@ -332,7 +345,7 @@
 
       function renderEmpty() {
         document.getElementById("materielsBody").innerHTML =
-          '<tr><td colspan="9" style="text-align:center;padding:40px;color:#b0bdd0">Aucun matériel trouvé</td></tr>';
+          '<tr><td colspan="10" style="text-align:center;padding:40px;color:#b0bdd0">Aucun matériel trouvé</td></tr>';
       }
 
       async function deleteMateriel(id) {
