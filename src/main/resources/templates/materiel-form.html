@@ -130,7 +130,10 @@
                 stroke-width="1.8"
                 fill="none" />
             </svg>
-            <div class="notif-dot" id="remarquesDot" style="display: none"></div>
+            <div
+              class="notif-dot"
+              id="remarquesDot"
+              style="display: none"></div>
           </div>
           <div class="user-chip">
             <div class="user-chip-avatar"></div>
@@ -141,21 +144,21 @@
           </div>
         </div>
       </div>
- 
+
       <div class="body">
         <!-- SIDEBAR — fragment unifié -->
         <div th:replace="~{fragments/sidebar :: sidebar}"></div>
- 
+
         <!-- MAIN CONTENT -->
         <div class="main">
           <div class="form-card">
             <div class="page-heading">
               <div class="page-title" id="pageTitle">Nouveau matériel</div>
             </div>
- 
+
             <div id="msgArea"></div>
             <input type="hidden" id="materielId" />
- 
+
             <div class="section-label">Informations générales</div>
             <div class="form-grid2">
               <div class="field">
@@ -178,7 +181,7 @@
                   placeholder="Ex: Dell Latitude 5520, HP ProBook..." />
               </div>
             </div>
- 
+
             <div class="form-grid2">
               <div class="field">
                 <label class="field-label">Bureau</label>
@@ -197,7 +200,26 @@
                   placeholder="Ex: Service des systèmes, Service RH..." />
               </div>
             </div>
- 
+            <div class="form-grid2">
+              <div class="field">
+                <label class="field-label">Responsable</label>
+                <input
+                  type="text"
+                  class="field-input"
+                  id="responsable"
+                  placeholder="Ex: Ahmed Benali" />
+              </div>
+
+              <div class="field">
+                <label class="field-label">Téléphone responsable</label>
+                <input
+                  type="text"
+                  class="field-input"
+                  id="telResponsable"
+                  placeholder="Ex: 0555123456" />
+              </div>
+            </div>
+
             <div class="form-grid2">
               <div class="field">
                 <label class="field-label"
@@ -224,7 +246,7 @@
                 </select>
               </div>
             </div>
- 
+
             <div class="form-grid2">
               <div class="field">
                 <label class="field-label">Quantité</label>
@@ -241,7 +263,7 @@
                 <input type="date" class="field-input" id="dateAcquisition" />
               </div>
             </div>
- 
+
             <div class="section-label">Affectation</div>
             <div class="field">
               <label class="field-label">Projet associé</label>
@@ -249,7 +271,7 @@
                 <option value="">-- Aucun projet --</option>
               </select>
             </div>
- 
+
             <div class="section-label">Description</div>
             <div class="field">
               <textarea
@@ -258,7 +280,7 @@
                 rows="3"
                 placeholder="Description du matériel, caractéristiques techniques..."></textarea>
             </div>
- 
+
             <div class="form-actions">
               <button
                 type="button"
@@ -274,7 +296,7 @@
         </div>
       </div>
     </div>
- 
+
     <script th:src="@{/js/sidebar-badge-loader.js}"></script>
     <script th:src="@{/js/auth.js}"></script>
     <script>
@@ -295,26 +317,29 @@
           console.error("Error loading projets:", e);
         }
       }
- 
+
       async function loadForEdit() {
         const parts = window.location.pathname.split("/");
         const idx = parts.indexOf("edit");
         if (idx === -1) return;
         const id = parts[idx + 1];
         if (!id) return;
- 
+
         try {
           const res = await fetch(`/api/materiels/${id}`, {
             headers: getAuthHeaders(),
           });
           if (!res.ok) return;
           const m = await res.json();
- 
+
           document.getElementById("materielId").value = m.id || "";
           document.getElementById("nom").value = m.nom || "";
           document.getElementById("reference").value = m.reference || "";
           document.getElementById("bureau").value = m.bureau || "";
           document.getElementById("service").value = m.service || "";
+          document.getElementById("responsable").value = m.responsable || "";
+          document.getElementById("telResponsable").value =
+            m.telResponsable || "";
           document.getElementById("etat").value = m.etat || "";
           document.getElementById("statut").value = m.statut || "";
           document.getElementById("quantite").value = m.quantite || 1;
@@ -330,17 +355,26 @@
           console.error("Error loading materiel:", e);
         }
       }
- 
+
       async function saveMateriel() {
         const id = document.getElementById("materielId").value;
         const nom = document.getElementById("nom").value.trim();
         const etat = document.getElementById("etat").value;
         const statut = document.getElementById("statut").value;
- 
-        if (!nom) { showMsg("Le nom est obligatoire", "err"); return; }
-        if (!etat) { showMsg("L'état est obligatoire", "err"); return; }
-        if (!statut) { showMsg("Le statut est obligatoire", "err"); return; }
- 
+
+        if (!nom) {
+          showMsg("Le nom est obligatoire", "err");
+          return;
+        }
+        if (!etat) {
+          showMsg("L'état est obligatoire", "err");
+          return;
+        }
+        if (!statut) {
+          showMsg("Le statut est obligatoire", "err");
+          return;
+        }
+
         const body = {
           nom,
           reference: document.getElementById("reference").value || null,
@@ -349,11 +383,14 @@
           etat,
           statut,
           quantite: parseInt(document.getElementById("quantite").value) || 1,
-          dateAcquisition: document.getElementById("dateAcquisition").value || null,
+          dateAcquisition:
+            document.getElementById("dateAcquisition").value || null,
           description: document.getElementById("description").value || null,
           projetId: document.getElementById("projetId").value || null,
+          responsable: document.getElementById("responsable").value || null,
+          telResponsable: document.getElementById("telResponsable").value || null,
         };
- 
+
         try {
           const url = id ? `/api/materiels/${id}` : "/api/materiels";
           const method = id ? "PUT" : "POST";
@@ -373,12 +410,12 @@
           showMsg("Erreur réseau", "err");
         }
       }
- 
+
       function showMsg(msg, type) {
         document.getElementById("msgArea").innerHTML =
           `<div class="msg ${type}">${msg}</div>`;
       }
- 
+
       document.addEventListener("DOMContentLoaded", async () => {
         if (!checkAuth()) return;
         loadUserInfo();

@@ -26,6 +26,7 @@ public class Projet {
     private LocalDate dateCreation;
     private LocalDate dateDebut;
     private LocalDate deadline;
+   
     
     @Enumerated(EnumType.STRING)
     private StatutProjet statut;

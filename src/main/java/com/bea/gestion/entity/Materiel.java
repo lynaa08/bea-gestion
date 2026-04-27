@@ -44,7 +44,8 @@ public class Materiel {
   @JoinColumn(name = "projet_id")
     private Projet projet;
     
-    // ENLEVÉ : @ManyToOne responsable
+    private String responsable;
+    private String telResponsable;
 
     // Getters and Setters
     public Long getId() { return id; }
@@ -81,4 +82,10 @@ public class Materiel {
     public void setProjet(Projet projet) { this.projet = projet; }
     public String getMarque() { return this.reference; }
     public void setMarque(String marque) { this.reference = marque; }
+    
+    public String getResponsable() { return responsable; }
+    public void setResponsable(String responsable) { this.responsable = responsable; }
+    
+    public String getTelResponsable() { return telResponsable; }
+    public void setTelResponsable(String telResponsable) { this.telResponsable = telResponsable; }
 }
