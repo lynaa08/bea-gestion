@@ -173,6 +173,15 @@ public class NotificationService {
         notificationRepository.markAllAsRead(user);
     }
 
+    public void deleteNotification(Long id, User user) {
+        notificationRepository.findById(id).ifPresent(n -> {
+            // Only delete if it belongs to this user
+            if (n.getUser() != null && n.getUser().getId().equals(user.getId())) {
+                notificationRepository.deleteById(id);
+            }
+        });
+    }
+
     // ─── Builder HTML email ───────────────────────────────────────────────────
     private String buildHtml(String title, String greeting, String intro,
                              String[][] fields, String footer) {
