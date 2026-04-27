@@ -1,0 +1,259 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" type="image/png" href="/favicon.png" />
+    <title>Utilisateurs - BEA</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}" />
+    <style>
+      .users-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 20px;
+      }
+      .btn-add {
+        background: #0d2b6e;
+        color: white;
+        padding: 10px 20px;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-size: 13px;
+        font-weight: 600;
+      }
+      .btn-add:hover {
+        background: #1a3f8f;
+      }
+      .empty-state {
+        text-align: center;
+        padding: 60px;
+        color: #8a9fbf;
+        font-size: 13px;
+      }
+      .search-bar {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        margin-bottom: 16px;
+      }
+      .search-input-u {
+        padding: 8px 14px;
+        border: 1.5px solid #d8e6f2;
+        border-radius: 8px;
+        font-size: 13px;
+        outline: none;
+        width: 260px;
+      }
+      .search-input-u:focus {
+        border-color: #5bb8e8;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="app-shell">
+      <div class="topbar">
+        <div class="topbar-brand">
+          <img
+            th:src="@{/images/logo_sidebar.svg}"
+            alt="Logo BEA"
+            style="height: 40px; width: auto" />
+        </div>
+        <div class="topbar-right">
+          <div
+            class="notif-btn"
+            id="remarqueBtnTopbar"
+            title="Remarques"
+            style="cursor: pointer; margin-right: 2px">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none">
+              <path
+                d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"
+                stroke="#4A6A9E"
+                stroke-width="1.8"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                fill="none" />
+            </svg>
+            <div
+              class="notif-dot remarque-dot"
+              id="remarqueDot"
+              style="display: none; background: #0d2b6e"></div>
+          </div>
+          <div
+            class="notif-btn"
+            id="notifBellBtn"
+            style="position: relative; cursor: pointer">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none">
+              <path
+                d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9M13.73 21a2 2 0 01-3.46 0"
+                stroke="#4A6A9E"
+                stroke-width="1.8"
+                stroke-linecap="round" />
+            </svg>
+            <div class="notif-dot"></div>
+          </div>
+          <div class="user-chip">
+            <div class="user-chip-avatar"></div>
+            <div class="user-chip-info">
+              <div class="user-chip-name"></div>
+              <div class="user-chip-role"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="body">
+        <div th:replace="~{fragments/sidebar :: sidebar}"></div>
+
+        <div class="main">
+          <div class="table-card">
+            <div class="users-header">
+              <div>
+                <div class="page-title">Utilisateurs</div>
+              </div>
+              <button
+                class="btn-add"
+                onclick="window.location.href = '/users/new'">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none">
+                  <path
+                    d="M12 5v14M5 12h14"
+                    stroke="white"
+                    stroke-width="2.2"
+                    stroke-linecap="round" />
+                </svg>
+                Nouvel utilisateur
+              </button>
+            </div>
+
+            <div class="search-bar">
+              <input
+                class="search-input-u"
+                type="text"
+                id="searchInput"
+                placeholder="Rechercher par nom ou matricule…"
+                oninput="filterUsers()" />
+            </div>
+
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>Matricule</th>
+                  <th>Nom complet</th>
+                  <th>Email</th>
+                  <th>Rôle</th>
+                  <th>Téléphone</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody id="usersTableBody">
+                <tr>
+                  <td
+                    colspan="6"
+                    style="text-align: center; padding: 40px; color: #b0bdd0">
+                    Chargement...
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script th:src="@{/js/sidebar-badge-loader.js}"></script>
+    <script th:src="@{/js/auth.js}"></script>
+    <script th:src="@{/js/users.js}"></script>
+    <script>
+      let allUsers = [];
+      async function loadUsers() {
+        try {
+          const res = await fetch("/api/users", { headers: getAuthHeaders() });
+          if (!res.ok) {
+            showEmpty();
+            return;
+          }
+          allUsers = await res.json();
+          renderUsersTable(allUsers);
+        } catch (e) {
+          showEmpty();
+        }
+      }
+
+      const roleLabels = {
+        ADMIN: "Administrateur",
+        DIRECTEUR: "Directeur",
+        CHEF_DEPARTEMENT: "Chef Département",
+        INGENIEUR_ETUDE_PMO: "PMO",
+        DEVELOPPEUR: "Développeur",
+      };
+      const roleColors = {
+        ADMIN: "#7c3aed",
+        DIRECTEUR: "#0d2b6e",
+        CHEF_DEPARTEMENT: "#0891b2",
+        INGENIEUR_ETUDE_PMO: "#059669",
+        DEVELOPPEUR: "#d97706",
+      };
+
+      function renderUsersTable(list) {
+        const tbody = document.getElementById("usersTableBody");
+        if (!list || list.length === 0) {
+          showEmpty();
+          return;
+        }
+        tbody.innerHTML = list
+          .map((u) => {
+            const c = roleColors[u.role] || "#8a9fbf";
+            const l = roleLabels[u.role] || u.role || "—";
+            return `<tr>
+      <td style="font-weight:700;color:#0d2b6e;letter-spacing:.06em;font-size:13px">${u.matricule || "—"}</td>
+      <td>${u.prenom || ""} ${u.nom || ""}</td>
+      <td style="color:#5a78aa">${u.email || "—"}</td>
+      <td><span style="background:${c}22;color:${c};padding:3px 10px;border-radius:20px;font-size:11px;font-weight:700">${l}</span></td>
+      <td>${u.telephone || "—"}</td>
+      <td>
+        <button onclick="window.location.href='/users/edit/${u.id}'" style="background:#eef4ff;border:none;padding:5px 12px;border-radius:6px;cursor:pointer;font-size:11px;color:#0d2b6e;font-weight:600">Modifier</button>
+        <button onclick="deleteUser(${u.id})" style="background:#fee;border:none;padding:5px 12px;border-radius:6px;cursor:pointer;font-size:11px;color:#c00;font-weight:600;margin-left:4px">Supprimer</button>
+      </td>
+    </tr>`;
+          })
+          .join("");
+      }
+
+      function showEmpty() {
+        document.getElementById("usersTableBody").innerHTML =
+          '<tr><td colspan="6" style="text-align:center;padding:50px;color:#b0bdd0">Aucun utilisateur trouvé</td></tr>';
+      }
+
+      function filterUsers() {
+        const q = document.getElementById("searchInput").value.toLowerCase();
+        const filtered = allUsers.filter(
+          (u) =>
+            (u.nom || "").toLowerCase().includes(q) ||
+            (u.prenom || "").toLowerCase().includes(q) ||
+            (u.matricule || "").toLowerCase().includes(q),
+        );
+        renderUsersTable(filtered);
+      }
+
+      async function deleteUser(id) {
+        if (!confirm("Supprimer cet utilisateur ?")) return;
+        try {
+          const res = await fetch(`/api/users/${id}`, {
+            method: "DELETE",
+            headers: getAuthHeaders(),
+          });
+          if (res.ok) loadUsers();
+          else alert("Erreur lors de la suppression");
+        } catch (e) {
+          alert("Erreur réseau");
+        }
+      }
+
+      document.addEventListener("DOMContentLoaded", loadUsers);
+    </script>
+  </body>
+</html>

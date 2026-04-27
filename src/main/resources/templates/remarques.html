@@ -1,0 +1,445 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" type="image/png" href="/favicon.png" />
+    <title>Remarques - BEA Gestion Projets</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}" />
+    <style>
+      .rq-page-card {
+        background: #fff;
+        border-radius: 14px;
+        border: 0.5px solid #d8e6f2;
+        box-shadow: 0 2px 10px rgba(13, 43, 110, 0.06);
+        overflow: hidden;
+        margin-bottom: 18px;
+      }
+      .rq-page-card-header {
+        background: linear-gradient(135deg, #0d2b6e 0%, #1a3f8f 100%);
+        padding: 16px 20px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+      .rq-page-card-title {
+        color: #fff;
+        font-size: 14px;
+        font-weight: 700;
+      }
+      .rq-page-card-sub {
+        color: rgba(255, 255, 255, 0.6);
+        font-size: 11px;
+        margin-left: auto;
+      }
+      .rq-project-block {
+        border-bottom: 0.5px solid #eef2f8;
+        padding: 14px 20px;
+      }
+      .rq-project-block:last-child {
+        border-bottom: none;
+      }
+      .rq-project-name {
+        font-size: 13px;
+        font-weight: 700;
+        color: #0d2b6e;
+        margin-bottom: 10px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+      .rq-project-badge {
+        font-size: 10px;
+        font-weight: 600;
+        padding: 2px 8px;
+        border-radius: 20px;
+        background: #eef4ff;
+        color: #4a6a9e;
+      }
+      .rq-item {
+        background: #f8fafd;
+        border-radius: 8px;
+        padding: 10px 14px;
+        margin-bottom: 8px;
+        border-left: 3px solid #5bb8e8;
+        display: flex;
+        gap: 10px;
+        align-items: flex-start;
+      }
+      .rq-item-avatar {
+        width: 28px;
+        height: 28px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, #0d2b6e, #5bb8e8);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #fff;
+        font-size: 10px;
+        font-weight: 700;
+        flex-shrink: 0;
+      }
+      .rq-item-body {
+        flex: 1;
+      }
+      .rq-item-meta {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        margin-bottom: 4px;
+      }
+      .rq-item-author {
+        font-size: 11px;
+        font-weight: 700;
+        color: #0d2b6e;
+      }
+      .rq-item-date {
+        font-size: 10px;
+        color: #b0bdd0;
+      }
+      .rq-item-text {
+        font-size: 12px;
+        color: #4a6080;
+        line-height: 1.5;
+      }
+      .rq-empty {
+        text-align: center;
+        padding: 50px;
+        color: #b0bdd0;
+        font-size: 13px;
+      }
+      .rq-filter-bar {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        margin-bottom: 16px;
+        flex-wrap: wrap;
+      }
+      .rq-search {
+        flex: 1;
+        min-width: 200px;
+        padding: 9px 14px;
+        border: 1.5px solid #d8e6f2;
+        border-radius: 8px;
+        font-size: 13px;
+        outline: none;
+      }
+      .rq-search:focus {
+        border-color: #5bb8e8;
+      }
+      .rq-count-badge {
+        background: #0d2b6e;
+        color: #fff;
+        font-size: 10px;
+        font-weight: 700;
+        padding: 2px 8px;
+        border-radius: 20px;
+        margin-left: 6px;
+      }
+      .rq-link-btn {
+        padding: 5px 12px;
+        background: #eef4ff;
+        border: none;
+        border-radius: 6px;
+        font-size: 11px;
+        color: #0d2b6e;
+        font-weight: 600;
+        cursor: pointer;
+        text-decoration: none;
+        display: inline-block;
+      }
+      .rq-link-btn:hover {
+        background: #d8e6f2;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="app-shell">
+      <!-- TOPBAR -->
+      <div class="topbar">
+        <div class="topbar-brand">
+          <img
+            th:src="@{/images/logo_sidebar.svg}"
+            alt="Logo BEA"
+            style="height: 40px; width: auto" />
+        </div>
+
+        <div class="topbar-right">
+          <!-- Icône Remarques (notification-style) -->
+          <div
+            class="notif-btn remarque-notif-btn"
+            id="remarqueBtnTopbar"
+            title="Remarques"
+            style="background: #1a3f8f22; cursor: pointer">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none">
+              <path
+                d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"
+                stroke="#0d2b6e"
+                stroke-width="1.8"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                fill="none" />
+            </svg>
+            <div
+              class="notif-dot remarque-dot"
+              id="remarqueDot"
+              style="display: none"></div>
+          </div>
+          <!-- Icône Notifications -->
+          <div class="notif-btn">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none">
+              <path
+                d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9M13.73 21a2 2 0 01-3.46 0"
+                stroke="#4A6A9E"
+                stroke-width="1.8"
+                stroke-linecap="round" />
+            </svg>
+            <div class="notif-dot"></div>
+          </div>
+          <div class="user-chip">
+            <div class="user-chip-avatar"></div>
+            <div class="user-chip-info">
+              <div class="user-chip-name"></div>
+              <div class="user-chip-role"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- BODY -->
+      <div class="body">
+        <!-- SIDEBAR -->
+        <div th:replace="~{fragments/sidebar :: sidebar}"></div>
+
+        <!-- MAIN CONTENT -->
+        <div class="main">
+          <div class="page-heading">
+            <div class="page-icon">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
+                <path
+                  d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"
+                  stroke="#0D2B6E"
+                  stroke-width="2"
+                  fill="none" />
+              </svg>
+            </div>
+            <div class="page-title">Remarques des projets</div>
+          </div>
+
+          <div class="rq-filter-bar">
+            <input
+              class="rq-search"
+              type="text"
+              id="searchInput"
+              placeholder=" Rechercher par projet ou auteur..."
+              oninput="filterRemarques()" />
+            <span id="totalBadge" style="color: #8a9fbf; font-size: 12px"
+              >Chargement...</span
+            >
+          </div>
+
+          <div id="remarquesList">
+            <div class="rq-empty">Chargement des remarques...</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script th:src="@{/js/sidebar-badge-loader.js}"></script>
+    <script th:src="@{/js/auth.js}"></script>
+    <script>
+      let allRemarques = []; // [{projetId, projetNom, statut, remarques:[...]}]
+
+      async function loadAllRemarques() {
+        const container = document.getElementById("remarquesList");
+        try {
+          const projRes = await fetch("/api/projets/all", {
+            headers: getAuthHeaders(),
+          });
+          if (!projRes.ok) {
+            container.innerHTML =
+              '<div class="rq-empty">Erreur chargement projets</div>';
+            return;
+          }
+          const projets = await projRes.json();
+
+          const results = await Promise.all(
+            projets.map(async (p) => {
+              try {
+                const rRes = await fetch(`/api/projets/${p.id}/remarques`, {
+                  headers: getAuthHeaders(),
+                });
+                const remarques = rRes.ok ? await rRes.json() : [];
+                return {
+                  projetId: p.id,
+                  projetNom: p.nom,
+                  statut: p.statut,
+                  remarques,
+                };
+              } catch {
+                return {
+                  projetId: p.id,
+                  projetNom: p.nom,
+                  statut: p.statut,
+                  remarques: [],
+                };
+              }
+            }),
+          );
+
+          allRemarques = results.filter(
+            (r) => r.remarques && r.remarques.length > 0,
+          );
+          const totalCount = allRemarques.reduce(
+            (s, r) => s + r.remarques.length,
+            0,
+          );
+
+          // Update badges
+          const badge = document.getElementById("sidebarRemarqueBadge");
+          if (totalCount > 0 && badge) {
+            badge.textContent = totalCount;
+            badge.style.display = "flex";
+          }
+          const dot = document.getElementById("remarqueDot");
+          if (totalCount > 0 && dot) dot.style.display = "block";
+
+          renderRemarques(allRemarques, totalCount);
+        } catch (e) {
+          container.innerHTML =
+            '<div class="rq-empty" style="color:#ef4444">Erreur réseau : ' +
+            e.message +
+            "</div>";
+        }
+      }
+
+      function renderRemarques(data, total) {
+        const container = document.getElementById("remarquesList");
+        const badge = document.getElementById("totalBadge");
+        if (badge)
+          badge.textContent =
+            total !== undefined ? total + " remarque(s) au total" : "";
+
+        if (!data || data.length === 0) {
+          container.innerHTML =
+            '<div class="rq-empty">Aucune remarque trouvée</div>';
+          return;
+        }
+
+        const statutLabel = {
+          EN_COURS: "En cours",
+          CLOTURE: "Clôturé",
+          NON_COMMENCE: "Non commencé",
+          PAS_DE_VISIBILITE: "Pas de visibilité",
+        };
+        const statutColor = {
+          EN_COURS: "#5bb8e8",
+          CLOTURE: "#22c55e",
+          NON_COMMENCE: "#f59e0b",
+          PAS_DE_VISIBILITE: "#8a9fbf",
+        };
+
+        container.innerHTML = data
+          .map((group) => {
+            const color = statutColor[group.statut] || "#8a9fbf";
+            const label = statutLabel[group.statut] || group.statut || "—";
+            const items = group.remarques
+              .map((r) => {
+                const auteur =
+                  r.auteurNom ||
+                  (r.auteur ? r.auteur.prenom + " " + r.auteur.nom : "—");
+                const initiales = auteur
+                  .split(" ")
+                  .map((w) => w[0] || "")
+                  .join("")
+                  .substring(0, 2)
+                  .toUpperCase();
+                const date = r.dateCreation
+                  ? new Date(r.dateCreation).toLocaleDateString("fr-FR", {
+                      day: "2-digit",
+                      month: "short",
+                      year: "numeric",
+                    })
+                  : "";
+                const contenu = r.contenu || "";
+                return `<div class="rq-item">
+              <div class="rq-item-avatar">${initiales}</div>
+              <div class="rq-item-body">
+                <div class="rq-item-meta">
+                  <span class="rq-item-author">${auteur}</span>
+                  <span class="rq-item-date">${date}</span>
+                </div>
+                <div class="rq-item-text">${contenu}</div>
+              </div>
+            </div>`;
+              })
+              .join("");
+
+            return `<div class="rq-page-card">
+            <div class="rq-page-card-header">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none">
+                <path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z" stroke="#5BB8E8" stroke-width="1.8" fill="none"/>
+              </svg>
+              <div class="rq-page-card-title">${group.projetNom}</div>
+              <span style="font-size:10px;padding:2px 8px;border-radius:20px;background:${color}33;color:${color};font-weight:700;margin-left:8px">${label}</span>
+              <div class="rq-page-card-sub">${group.remarques.length} remarque(s)</div>
+              <a href="/projets/edit/${group.projetId}" class="rq-link-btn" style="margin-left:10px">Voir projet →</a>
+            </div>
+            <div style="padding:12px 20px">${items}</div>
+          </div>`;
+          })
+          .join("");
+      }
+
+      function filterRemarques() {
+        const q = document.getElementById("searchInput").value.toLowerCase();
+        if (!q) {
+          const total = allRemarques.reduce(
+            (s, r) => s + r.remarques.length,
+            0,
+          );
+          renderRemarques(allRemarques, total);
+          return;
+        }
+        const filtered = allRemarques
+          .map((group) => {
+            if (group.projetNom.toLowerCase().includes(q)) return group;
+            const filteredRq = group.remarques.filter((r) => {
+              const auteur =
+                r.auteurNom ||
+                (r.auteur ? r.auteur.prenom + " " + r.auteur.nom : "");
+              return (
+                auteur.toLowerCase().includes(q) ||
+                (r.contenu || "").toLowerCase().includes(q)
+              );
+            });
+            return filteredRq.length
+              ? { ...group, remarques: filteredRq }
+              : null;
+          })
+          .filter(Boolean);
+        const total = filtered.reduce((s, r) => s + r.remarques.length, 0);
+        renderRemarques(filtered, total);
+      }
+
+      document.addEventListener("DOMContentLoaded", () => {
+        loadAllRemarques();
+        // Init user info
+        const u = localStorage.getItem("user");
+        if (u) {
+          const user = JSON.parse(u);
+          const nameEl = document.querySelector(".sidebar-name");
+          const roleEl = document.querySelector(".sidebar-role");
+          const chipName = document.querySelector(".user-chip-name");
+          const chipRole = document.querySelector(".user-chip-role");
+          if (nameEl)
+            nameEl.textContent = (user.prenom || "") + " " + (user.nom || "");
+          if (roleEl) roleEl.textContent = user.role || "";
+          if (chipName)
+            chipName.textContent = (user.prenom || "") + " " + (user.nom || "");
+          if (chipRole) chipRole.textContent = user.role || "";
+        }
+      });
+    </script>
+  </body>
+</html>

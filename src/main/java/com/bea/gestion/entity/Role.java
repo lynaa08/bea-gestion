@@ -1,5 +1,9 @@
 package com.bea.gestion.entity;
 
-public class Role {
-    
+public enum Role {
+    DIRECTEUR,
+    CHEF_DEPARTEMENT,
+    ADMIN,
+    INGENIEUR_ETUDE_PMO,
+    DEVELOPPEUR
 }

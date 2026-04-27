@@ -1,0 +1,685 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" type="image/png" href="/favicon.png" />
+    <title>Formulaire projet - BEA</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}" />
+    <style>
+      .page-layout {
+        display: flex;
+        gap: 24px;
+        align-items: flex-start;
+      }
+      .form-card {
+        flex: 1;
+        min-width: 0;
+      }
+      .remarques-panel {
+        width: 320px;
+        flex-shrink: 0;
+        background: #fff;
+        border-radius: 12px;
+        border: 0.5px solid #d8e6f2;
+        box-shadow: 0 2px 8px rgba(13, 43, 110, 0.06);
+        overflow: hidden;
+      }
+      .rq-header {
+        background: #0d2b6e;
+        padding: 14px 16px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+      .rq-header-title {
+        color: #fff;
+        font-size: 13px;
+        font-weight: 700;
+      }
+      .rq-body {
+        padding: 12px;
+        max-height: 500px;
+        overflow-y: auto;
+      }
+      .rq-item {
+        background: #f8fafd;
+        border-radius: 8px;
+        padding: 10px 12px;
+        margin-bottom: 8px;
+        border-left: 3px solid #5bb8e8;
+      }
+      .rq-item-author {
+        font-size: 10px;
+        font-weight: 700;
+        color: #0d2b6e;
+      }
+      .rq-item-date {
+        font-size: 9px;
+        color: #b0bdd0;
+        margin-left: 6px;
+      }
+      .rq-item-text {
+        font-size: 12px;
+        color: #4a6080;
+        margin-top: 4px;
+        line-height: 1.5;
+      }
+      .rq-empty {
+        text-align: center;
+        padding: 30px;
+        color: #b0bdd0;
+        font-size: 12px;
+      }
+      .rq-footer {
+        padding: 12px;
+        border-top: 0.5px solid #eef2f8;
+      }
+      .rq-textarea {
+        width: 100%;
+        padding: 8px 10px;
+        border: 1.5px solid #d8e6f2;
+        border-radius: 8px;
+        font-size: 12px;
+        resize: vertical;
+        min-height: 70px;
+        outline: none;
+        font-family: inherit;
+      }
+      .rq-textarea:focus {
+        border-color: #5bb8e8;
+      }
+      .rq-btn {
+        width: 100%;
+        margin-top: 8px;
+        padding: 8px;
+        background: #0d2b6e;
+        color: #fff;
+        border: none;
+        border-radius: 8px;
+        font-size: 12px;
+        font-weight: 600;
+        cursor: pointer;
+      }
+      .rq-btn:hover {
+        background: #1a3f8f;
+      }
+      .rq-only-chef {
+        text-align: center;
+        padding: 20px;
+        color: #8a9fbf;
+        font-size: 11px;
+      }
+      .form-grid2 {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 18px;
+      }
+      .form-grid3 {
+        display: grid;
+        grid-template-columns: 1fr 1fr 1fr;
+        gap: 18px;
+      }
+      .field {
+        margin-bottom: 12px;
+      }
+      .field-label {
+        font-size: 11px;
+        font-weight: 600;
+        color: #4a6080;
+        margin-bottom: 5px;
+        display: block;
+        text-transform: uppercase;
+        letter-spacing: 0.04em;
+      }
+      .req {
+        color: #e05a2b;
+      }
+      .field-input,
+      .field-select {
+        width: 100%;
+        padding: 9px 12px;
+        border: 1.5px solid #d8e6f2;
+        border-radius: 8px;
+        font-size: 13px;
+        color: #1a2d5a;
+        outline: none;
+        transition: border-color 0.15s;
+        background: #fff;
+      }
+      .field-input:focus,
+      .field-select:focus {
+        border-color: #5bb8e8;
+      }
+      .section-label {
+        font-size: 11px;
+        font-weight: 700;
+        color: #8a9fbf;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        margin: 16px 0 10px;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+      }
+      .form-actions {
+        display: flex;
+        justify-content: flex-end;
+        gap: 10px;
+        margin-top: 20px;
+        padding-top: 14px;
+        border-top: 1px solid #eef2f8;
+      }
+      .btn-cancel {
+        padding: 9px 18px;
+        background: #f5f5f5;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        cursor: pointer;
+        font-size: 13px;
+      }
+      .btn-submit {
+        padding: 9px 22px;
+        background: #0d2b6e;
+        color: white;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+        font-size: 13px;
+        font-weight: 600;
+      }
+      .btn-submit:hover {
+        background: #1a3f8f;
+      }
+      #msgArea {
+        margin-bottom: 12px;
+      }
+      .err {
+        background: #fee;
+        color: #c00;
+        padding: 9px;
+        border-radius: 8px;
+        font-size: 12px;
+      }
+      .suc {
+        background: #efe;
+        color: #0a0;
+        padding: 9px;
+        border-radius: 8px;
+        font-size: 12px;
+      }
+      /* Multi-select styles */
+      .multi-select-wrapper {
+        position: relative;
+        border: 1.5px solid #d8e6f2;
+        border-radius: 8px;
+        background: #fff;
+        min-height: 42px;
+        cursor: text;
+        transition: border-color 0.15s;
+      }
+      .multi-select-wrapper:focus-within {
+        border-color: #5bb8e8;
+      }
+      .multi-select-chips {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 6px;
+        padding: 7px 10px;
+        align-items: center;
+      }
+      .multi-chip {
+        display: inline-flex;
+        align-items: center;
+        gap: 5px;
+        background: #eef4ff;
+        border: 1px solid #c0d4f0;
+        color: #0d2b6e;
+        font-size: 11px;
+        font-weight: 600;
+        padding: 3px 8px;
+        border-radius: 20px;
+      }
+      .multi-chip-remove {
+        cursor: pointer;
+        color: #4a6a9e;
+        font-size: 14px;
+        line-height: 1;
+        font-weight: 700;
+      }
+      .multi-chip-remove:hover {
+        color: #e05a2b;
+      }
+      .multi-select-search {
+        border: none;
+        outline: none;
+        font-size: 13px;
+        color: #1a2d5a;
+        flex: 1;
+        min-width: 180px;
+        padding: 2px 0;
+        background: transparent;
+        font-family: inherit;
+      }
+      .multi-select-dropdown {
+        position: absolute;
+        top: calc(100% + 4px);
+        left: 0;
+        right: 0;
+        background: #fff;
+        border: 1.5px solid #d8e6f2;
+        border-radius: 8px;
+        max-height: 200px;
+        overflow-y: auto;
+        z-index: 100;
+        box-shadow: 0 4px 16px rgba(13, 43, 110, 0.12);
+      }
+      .multi-select-opt {
+        padding: 9px 14px;
+        font-size: 12px;
+        color: #1a2d5a;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        border-bottom: 0.5px solid #f0f4fa;
+      }
+      .multi-select-opt:last-child {
+        border-bottom: none;
+      }
+      .multi-select-opt:hover,
+      .multi-select-opt.selected {
+        background: #eef4ff;
+      }
+      .multi-select-opt.selected {
+        color: #0d2b6e;
+        font-weight: 600;
+      }
+      .multi-select-opt-mat {
+        font-weight: 700;
+        color: #0d2b6e;
+        min-width: 70px;
+      }
+      .multi-select-opt-name {
+        color: #4a6080;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="app-shell">
+      <div class="topbar">
+        <div class="topbar-brand">
+          <img
+            th:src="@{/images/logo_sidebar.svg}"
+            alt="Logo BEA"
+            style="height: 40px; width: auto" />
+        </div>
+        <div class="topbar-right">
+          <div
+            class="notif-btn"
+            id="remarqueBtnTopbar"
+            title="Remarques"
+            style="cursor: pointer; margin-right: 2px">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none">
+              <path
+                d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"
+                stroke="#4A6A9E"
+                stroke-width="1.8"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                fill="none" />
+            </svg>
+            <div
+              class="notif-dot remarque-dot"
+              id="remarqueDot"
+              style="display: none; background: #0d2b6e"></div>
+          </div>
+          <div class="notif-btn" style="position: relative; cursor: pointer">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none">
+              <path
+                d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9M13.73 21a2 2 0 01-3.46 0"
+                stroke="#4A6A9E"
+                stroke-width="1.8"
+                stroke-linecap="round" />
+            </svg>
+          </div>
+          <div class="user-chip">
+            <div class="user-chip-avatar"></div>
+            <div class="user-chip-info">
+              <div class="user-chip-name"></div>
+              <div class="user-chip-role"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="body">
+        <div th:replace="~{fragments/sidebar :: sidebar}"></div>
+
+        <div class="main">
+          <div class="page-layout">
+            <!-- FORM -->
+            <div class="form-card">
+              <div class="page-heading">
+                <div class="page-icon">
+                  <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
+                    <rect
+                      x="3"
+                      y="5"
+                      width="18"
+                      height="16"
+                      rx="2"
+                      stroke="#0D2B6E"
+                      stroke-width="2"
+                      fill="none" />
+                    <path
+                      d="M8 3v4M16 3v4M3 11h18"
+                      stroke="#0D2B6E"
+                      stroke-width="2"
+                      stroke-linecap="round" />
+                  </svg>
+                </div>
+                <div class="page-title" id="pageTitle">Créer un projet</div>
+              </div>
+
+              <div id="msgArea"></div>
+
+              <form id="projectForm" onsubmit="handleProjectSubmit(event)">
+                <input type="hidden" id="projectId" />
+
+                <div class="section-label">Informations générales</div>
+                <div class="field">
+                  <label class="field-label"
+                    >Nom du projet <span class="req">*</span></label
+                  >
+                  <input
+                    type="text"
+                    class="field-input"
+                    id="nom"
+                    required
+                    placeholder="Entrez le nom du projet" />
+                </div>
+
+                <div class="section-label">Chef de projet</div>
+                <div class="field">
+                  <label class="field-label">Chef de projet</label>
+                  <select class="field-select" id="chefProjetSelect">
+                    <option value="">
+                      -- Sélectionner un chef de projet --
+                    </option>
+                  </select>
+                  <small
+                    style="
+                      color: #8a9fbf;
+                      font-size: 10px;
+                      margin-top: 3px;
+                      display: block;
+                    ">
+                    Sélectionnez le responsable du projet
+                  </small>
+                </div>
+
+                <div class="section-label">Membres du projet</div>
+                <div class="field">
+                  <label class="field-label"
+                    >Membres (sélection multiple)</label
+                  >
+                  <div class="multi-select-wrapper" id="membresWrapper">
+                    <div class="multi-select-chips" id="membresChips">
+                      <input
+                        type="text"
+                        class="multi-select-search"
+                        id="membresSearch"
+                        placeholder="Rechercher un membre par matricule ou nom..."
+                        oninput="filterMembresDropdown()"
+                        onfocus="showMembresDropdown()" />
+                    </div>
+                    <div
+                      class="multi-select-dropdown"
+                      id="membresDropdown"
+                      style="display: none"></div>
+                  </div>
+                  <small
+                    style="
+                      color: #8a9fbf;
+                      font-size: 10px;
+                      margin-top: 3px;
+                      display: block;
+                    ">
+                    Cliquez pour sélectionner plusieurs membres
+                  </small>
+                </div>
+
+                <div class="form-grid2">
+                  <div class="field">
+                    <label class="field-label"
+                      >Statut <span class="req">*</span></label
+                    >
+                    <select class="field-select" id="statut" required>
+                      <option value="">-- Sélectionner --</option>
+                      <option value="EN_COURS">Projet en cours</option>
+                      <option value="CLOTURE">Projet clôturé</option>
+                      <option value="NON_COMMENCE">Projet non commencé</option>
+                      <option value="PAS_DE_VISIBILITE">
+                        Pas de visibilité
+                      </option>
+                    </select>
+                  </div>
+                  <div class="field">
+                    <label class="field-label"
+                      >Type <span class="req">*</span></label
+                    >
+                    <select class="field-select" id="type" required>
+                      <option value="">-- Sélectionner --</option>
+                      <option value="INTERNE">Interne</option>
+                      <option value="EXTERNE">Externe</option>
+                    </select>
+                  </div>
+                </div>
+
+                <div class="form-grid2">
+                  <div class="field">
+                    <label class="field-label">Priorité</label>
+                    <select class="field-select" id="priorite">
+                      <option value="">-- Sélectionner --</option>
+                      <option value="Haute">Haute</option>
+                      <option value="Moyenne">Moyenne</option>
+                      <option value="Basse">Basse</option>
+                    </select>
+                  </div>
+                </div>
+
+                <div class="section-label">Dates</div>
+                <div class="form-grid2">
+                  <div class="field">
+                    <label class="field-label">Date de création</label>
+                    <input type="date" class="field-input" id="dateCreation" />
+                  </div>
+                  <div class="field">
+                    <label class="field-label">Date début</label>
+                    <input type="date" class="field-input" id="dateDebut" />
+                  </div>
+                  <div class="field">
+                    <label class="field-label">Deadline</label>
+                    <input type="date" class="field-input" id="deadline" />
+                  </div>
+                </div>
+
+                <div class="section-label">Description</div>
+                <div class="field">
+                  <label class="field-label">Description</label>
+                  <textarea
+                    class="field-input"
+                    id="description"
+                    rows="4"
+                    placeholder="Décrivez le projet..."></textarea>
+                </div>
+
+                <div class="form-actions">
+                  <button
+                    type="button"
+                    class="btn-cancel"
+                    onclick="window.location.href = '/projets-list'">
+                    Annuler
+                  </button>
+                  <button type="submit" class="btn-submit">✓ Valider</button>
+                </div>
+              </form>
+            </div>
+
+            <!-- REMARQUES PANEL (right side) -->
+            <div
+              class="remarques-panel"
+              id="remarquesPanel"
+              style="display: none">
+              <div class="rq-header">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none">
+                  <path
+                    d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"
+                    stroke="#5BB8E8"
+                    stroke-width="1.8"
+                    fill="none" />
+                </svg>
+                <div class="rq-header-title">Remarques — Chef Département</div>
+              </div>
+              <div class="rq-body" id="rqList">
+                <div class="rq-empty">Aucune remarque</div>
+              </div>
+              <div class="rq-footer" id="rqFooter" style="display: none">
+                <textarea
+                  class="rq-textarea"
+                  id="rqText"
+                  placeholder="Votre remarque sur ce projet..."></textarea>
+                <button class="rq-btn" onclick="submitRemarque()">
+                  Envoyer la remarque
+                </button>
+              </div>
+              <div class="rq-only-chef" id="rqReadOnly" style="display: none">
+                Seul le Chef de Département peut ajouter des remarques.
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script th:src="@{/js/sidebar-badge-loader.js}"></script>
+    <script th:src="@{/js/auth.js}"></script>
+    <script th:src="@{/js/projets.js}"></script>
+    <script>
+      // Remarques panel logic
+      const userStr = localStorage.getItem("user");
+      const currentUser = userStr ? JSON.parse(userStr) : null;
+      const isChefDep = currentUser && currentUser.role === "CHEF_DEPARTEMENT";
+
+      function getProjectIdFromUrl() {
+        const parts = window.location.pathname.split("/");
+        const idx = parts.indexOf("edit");
+        return idx !== -1 ? parts[idx + 1] : null;
+      }
+
+      function initRemarquesPanel() {
+        const projectId = getProjectIdFromUrl();
+        if (!projectId) return;
+        document.getElementById("remarquesPanel").style.display = "block";
+        if (isChefDep) {
+          document.getElementById("rqFooter").style.display = "block";
+          document.getElementById("rqReadOnly").style.display = "none";
+        } else {
+          document.getElementById("rqFooter").style.display = "none";
+          document.getElementById("rqReadOnly").style.display = "block";
+        }
+        loadRemarques(projectId);
+      }
+
+      async function loadRemarques(projectId) {
+        const el = document.getElementById("rqList");
+        el.innerHTML = '<div class="rq-empty">Chargement...</div>';
+        try {
+          const res = await fetch(`/api/projets/${projectId}/remarques`, {
+            headers: getAuthHeaders(),
+          });
+          if (!res.ok) {
+            el.innerHTML = '<div class="rq-empty">Erreur chargement</div>';
+            return;
+          }
+          const list = await res.json();
+          if (!list || list.length === 0) {
+            el.innerHTML =
+              '<div class="rq-empty">Aucune remarque pour ce projet</div>';
+            return;
+          }
+          el.innerHTML = list
+            .map((r) => {
+              // Support both raw entity (auteur object) and serialized Map (auteurNom)
+              const auteur =
+                r.auteurNom ||
+                (r.auteur ? r.auteur.prenom + " " + r.auteur.nom : "—");
+              const date = r.dateCreation
+                ? new Date(r.dateCreation).toLocaleDateString("fr-FR")
+                : "";
+              const contenu = r.contenu || "";
+              return `<div class="rq-item">
+        <div>
+          <span class="rq-item-author">${auteur}</span>
+          <span class="rq-item-date">${date}</span>
+        </div>
+        <div class="rq-item-text">${contenu}</div>
+      </div>`;
+            })
+            .join("");
+        } catch (e) {
+          el.innerHTML =
+            '<div class="rq-empty" style="color:#ef4444">Erreur : ' +
+            e.message +
+            "</div>";
+        }
+      }
+
+      async function submitRemarque() {
+        const projectId = getProjectIdFromUrl();
+        const text = document.getElementById("rqText").value.trim();
+        if (!text) {
+          alert("Veuillez saisir une remarque");
+          return;
+        }
+        if (!projectId) {
+          alert("Projet non trouvé");
+          return;
+        }
+        const btn = document.querySelector(".rq-btn");
+        btn.disabled = true;
+        btn.textContent = "Envoi...";
+        try {
+          const res = await fetch(`/api/projets/${projectId}/remarques`, {
+            method: "POST",
+            headers: getAuthHeaders(),
+            body: JSON.stringify({ contenu: text }),
+          });
+          const data = await res.json().catch(() => ({}));
+          if (res.ok) {
+            document.getElementById("rqText").value = "";
+            loadRemarques(projectId);
+          } else {
+            alert("Erreur : " + (data.error || res.status));
+          }
+        } catch (e) {
+          alert("Erreur réseau : " + e.message);
+        } finally {
+          btn.disabled = false;
+          btn.textContent = "Envoyer la remarque";
+        }
+      }
+
+      document.addEventListener("DOMContentLoaded", () => {
+        const field = document.getElementById("dateCreation");
+
+        if (field && !field.value) {
+          field.value = new Date().toISOString().split("T")[0];
+        }
+
+        initRemarquesPanel();
+      });
+    </script>
+  </body>
+</html>

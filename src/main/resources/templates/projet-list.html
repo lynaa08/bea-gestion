@@ -1,0 +1,697 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" type="image/png" href="/favicon.png" />
+    <title>Liste des projets - BEA</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}" />
+    <!-- Tailwind CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              bea: {
+                900: "#0a1f54",
+                800: "#0d2b6e",
+                700: "#1a3d8f",
+                600: "#1a4a9e",
+                400: "#5bb8e8",
+                100: "#eef4ff",
+                50: "#f5f8fd",
+              },
+            },
+          },
+        },
+      };
+    </script>
+    <style>
+      /* ── Drawer (slide-in) ── */
+      .drawer {
+        position: fixed;
+        top: 0;
+        right: 0;
+        width: 400px;
+        max-width: 96vw;
+        height: 100vh;
+        background: #fff;
+        z-index: 901;
+        box-shadow: -8px 0 50px rgba(10, 20, 80, 0.16);
+        transform: translateX(100%);
+        transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        display: flex;
+        flex-direction: column;
+        overflow: hidden;
+      }
+      .drawer.open {
+        transform: translateX(0);
+      }
+
+      .drawer-overlay {
+        display: none;
+        position: fixed;
+        inset: 0;
+        background: rgba(10, 20, 60, 0.35);
+        z-index: 900;
+        backdrop-filter: blur(2px);
+      }
+      .drawer-overlay.open {
+        display: block;
+      }
+
+      /* Priorité couleurs */
+      .prio-HAUTE {
+        color: #ef4444 !important;
+      }
+      .prio-CRITIQUE {
+        color: #b91c1c !important;
+      }
+      .prio-MOYENNE {
+        color: #f59e0b !important;
+      }
+      .prio-BASSE {
+        color: #22c55e !important;
+      }
+
+      /* Row hover highlight */
+      .proj-row {
+        transition: background 0.12s;
+        cursor: default;
+      }
+      .proj-row:hover {
+        background: #f5f8fd;
+      }
+      .proj-row.selected {
+        background: #eef4ff;
+      }
+
+      /* Section divider inside drawer */
+      .d-section {
+        font-size: 10px;
+        font-weight: 700;
+        color: #8a9fbf;
+        text-transform: uppercase;
+        letter-spacing: 0.6px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+      .d-section::after {
+        content: "";
+        flex: 1;
+        height: 1px;
+        background: #e8f0f8;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="app-shell">
+      <!-- ── TOPBAR ── -->
+      
+           <div class="topbar">
+        <div class="topbar-brand">
+          <img th:src="@{/images/logo_sidebar.svg}" 
+               alt="Logo BEA" 
+               style="height: 40px; width: auto;" />
+        </div>
+        <div class="topbar-right">
+          <div
+            class="notif-btn"
+            id="remarqueBtnTopbar"
+            title="Remarques"
+            style="cursor: pointer; margin-right: 2px"
+          >
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none">
+              <path
+                d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"
+                stroke="#4A6A9E"
+                stroke-width="1.8"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                fill="none"
+              />
+            </svg>
+            <div
+              class="notif-dot remarque-dot"
+              id="remarqueDot"
+              style="display: none; background: #0d2b6e"
+            ></div>
+          </div>
+          <div class="notif-btn" style="position: relative; cursor: pointer">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none">
+              <path
+                d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9M13.73 21a2 2 0 01-3.46 0"
+                stroke="#4A6A9E"
+                stroke-width="1.8"
+                stroke-linecap="round"
+              />
+            </svg>
+            <div class="notif-dot"></div>
+          </div>
+          <div class="user-chip">
+            <div class="user-chip-avatar"></div>
+            <div class="user-chip-info">
+              <div class="user-chip-name"></div>
+              <div class="user-chip-role"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="body">
+        <!-- ── SIDEBAR ── -->
+        <div th:replace="~{fragments/sidebar :: sidebar}"></div>
+
+        <!-- ── MAIN CONTENT ── -->
+        <div class="main">
+          <div class="px-1 py-1">
+            <!-- Toolbar -->
+            <div class="flex items-center gap-3 mb-5 flex-wrap">
+              <!-- Search -->
+              <div
+                class="flex items-center gap-2 bg-white border border-slate-200 rounded-xl px-4 py-2.5 flex-1 min-w-[180px] max-w-xs shadow-sm"
+              >
+                <svg
+                  width="13"
+                  height="13"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  class="shrink-0"
+                >
+                  <circle
+                    cx="11"
+                    cy="11"
+                    r="8"
+                    stroke="#94a3b8"
+                    stroke-width="1.8"
+                  />
+                  <path
+                    d="M21 21l-4.35-4.35"
+                    stroke="#94a3b8"
+                    stroke-width="1.8"
+                    stroke-linecap="round"
+                  />
+                </svg>
+                <input
+                  id="searchInput"
+                  oninput="onSearch()"
+                  class="border-none outline-none text-xs text-slate-700 w-full bg-transparent placeholder-slate-400"
+                  placeholder="Rechercher un projet…"
+                />
+              </div>
+
+              <!-- Filter tabs -->
+              <div class="flex gap-1.5 bg-slate-100 rounded-xl p-1">
+                <button
+                  class="ftab active px-3.5 py-1.5 rounded-lg text-xs font-semibold transition-all duration-150"
+                  onclick="setFilter('Tous', this)"
+                >
+                  Tous
+                </button>
+                <button
+                  class="ftab px-3.5 py-1.5 rounded-lg text-xs font-semibold transition-all duration-150 text-slate-500"
+                  onclick="setFilter('EN_COURS', this)"
+                >
+                  En cours
+                </button>
+                <button
+                  class="ftab px-3.5 py-1.5 rounded-lg text-xs font-semibold transition-all duration-150 text-slate-500"
+                  onclick="setFilter('NON_COMMENCE', this)"
+                >
+                  Non commencé
+                </button>
+                <button
+                  class="ftab px-3.5 py-1.5 rounded-lg text-xs font-semibold transition-all duration-150 text-slate-500"
+                  onclick="setFilter('CLOTURE', this)"
+                >
+                  Clôturé
+                </button>
+                <button
+                  class="ftab px-3.5 py-1.5 rounded-lg text-xs font-semibold transition-all duration-150 text-slate-500"
+                  onclick="setFilter('PAS_DE_VISIBILITE', this)"
+                >
+                  Pas de visibilité
+                </button>
+              </div>
+
+              <!-- New project button -->
+              <button
+                onclick="window.location.href = '/projets/new'"
+                class="ml-auto flex items-center gap-2 bg-bea-800 hover:bg-bea-700 text-white text-xs font-semibold px-4 py-2.5 rounded-xl shadow-sm transition-all duration-150 border border-bea-700"
+              >
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none">
+                  <path
+                    d="M12 5v14M5 12h14"
+                    stroke="white"
+                    stroke-width="2.2"
+                    stroke-linecap="round"
+                  />
+                </svg>
+                Nouveau projet
+              </button>
+            </div>
+
+            <!-- Table card -->
+            <div
+              class="bg-white rounded-2xl border border-slate-100 shadow-sm overflow-hidden"
+            >
+              <!-- Stat strip -->
+              <div
+                class="flex items-center gap-6 px-5 py-3 border-b border-slate-100 bg-bea-50"
+              >
+                <div class="flex items-center gap-2">
+                  <span
+                    class="w-2 h-2 rounded-full bg-bea-400 inline-block"
+                  ></span>
+                  <span class="text-xs text-slate-500 font-medium" id="pageInfo"
+                    >0 projet(s)</span
+                  >
+                </div>
+                <div class="h-3 w-px bg-slate-200"></div>
+                <span class="text-xs text-slate-400"
+                  >Cliquez sur 👁 pour voir les détails</span
+                >
+              </div>
+
+              <table class="w-full border-collapse">
+                <thead>
+                  <tr class="bg-bea-800">
+                    <th
+                      class="text-left px-5 py-3 text-xs font-semibold text-white/70 uppercase tracking-wider w-12"
+                    >
+                      ID
+                    </th>
+                    <th
+                      class="text-left px-5 py-3 text-xs font-semibold text-white uppercase tracking-wider"
+                    >
+                      Nom projet
+                    </th>
+                    <th
+                      class="text-left px-5 py-3 text-xs font-semibold text-white/80 uppercase tracking-wider"
+                    >
+                      Date début
+                    </th>
+                    <th
+                      class="text-left px-5 py-3 text-xs font-semibold text-white/80 uppercase tracking-wider"
+                    >
+                      État
+                    </th>
+                    <th
+                      class="text-left px-5 py-3 text-xs font-semibold text-white/80 uppercase tracking-wider"
+                    >
+                      Type
+                    </th>
+                    <th
+                      class="text-left px-5 py-3 text-xs font-semibold text-white/80 uppercase tracking-wider"
+                    >
+                      Chef de projet
+                    </th>
+                    <th
+                      class="text-left px-5 py-3 text-xs font-semibold text-white/80 uppercase tracking-wider"
+                    >
+                      Actions
+                    </th>
+                  </tr>
+                </thead>
+                <tbody id="projetsBody">
+                  <tr>
+                    <td
+                      colspan="7"
+                      class="text-center py-12 text-slate-300 text-sm"
+                    >
+                      Chargement...
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+        <!-- /main -->
+      </div>
+    </div>
+
+    <!-- ── OVERLAY ── -->
+    <div
+      class="drawer-overlay"
+      id="drawerOverlay"
+      onclick="closeDrawer()"
+    ></div>
+
+    <!-- ── PANNEAU LATÉRAL ── -->
+    <div class="drawer" id="drawer">
+      <!-- Header dégradé -->
+      <div
+        style="background: linear-gradient(135deg, #0d2b6e 0%, #1a4a9e 100%)"
+        class="px-5 py-5 flex-shrink-0"
+      >
+        <div class="flex items-start justify-between gap-3">
+          <div class="min-w-0 flex-1">
+            <p
+              class="text-xs font-semibold mb-1"
+              style="color: #7ab4e8"
+              id="d-id"
+            >
+              Projet #—
+            </p>
+            <h2
+              class="text-lg font-bold text-white mb-2 leading-snug"
+              id="d-nom"
+            >
+              —
+            </h2>
+            <span
+              id="d-badge"
+              class="inline-block px-3 py-0.5 rounded-full text-xs font-bold"
+              >—</span
+            >
+          </div>
+          <button
+            onclick="closeDrawer()"
+            class="w-8 h-8 rounded-full flex items-center justify-center text-white text-sm font-bold flex-shrink-0 mt-0.5 transition-all"
+            style="background: rgba(255, 255, 255, 0.15)"
+            onmouseover="this.style.background = 'rgba(255,255,255,0.28)'"
+            onmouseout="this.style.background = 'rgba(255,255,255,0.15)'"
+          >
+            ✕
+          </button>
+        </div>
+      </div>
+
+      <!-- Body scrollable -->
+      <div class="flex-1 overflow-y-auto p-5 space-y-5">
+        <!-- Section : Informations -->
+        <div>
+          <div class="d-section mb-3">Informations</div>
+          <div class="grid grid-cols-2 gap-2.5">
+            <div class="bg-slate-50 border border-slate-100 rounded-xl p-3">
+              <p
+                class="text-xs text-slate-400 uppercase tracking-wide font-semibold mb-1"
+              >
+                Type
+              </p>
+              <p class="text-sm font-semibold text-bea-800" id="d-type">—</p>
+            </div>
+
+            <div class="bg-slate-50 border border-slate-100 rounded-xl p-3">
+              <p
+                class="text-xs text-slate-400 uppercase tracking-wide font-semibold mb-1"
+              >
+                Priorité
+              </p>
+              <p class="text-sm font-bold" id="d-priorite">—</p>
+            </div>
+
+            <div class="bg-slate-50 border border-slate-100 rounded-xl p-3">
+              <p
+                class="text-xs text-slate-400 uppercase tracking-wide font-semibold mb-1"
+              >
+                Date création
+              </p>
+              <p class="text-sm font-semibold text-bea-800" id="d-dateCreation">
+                —
+              </p>
+            </div>
+
+            <div class="bg-slate-50 border border-slate-100 rounded-xl p-3">
+              <p
+                class="text-xs text-slate-400 uppercase tracking-wide font-semibold mb-1"
+              >
+                Date début
+              </p>
+              <p class="text-sm font-semibold text-bea-800" id="d-dateDebut">
+                —
+              </p>
+            </div>
+
+            <div
+              class="bg-slate-50 border border-slate-100 rounded-xl p-3 col-span-2"
+            >
+              <p
+                class="text-xs text-slate-400 uppercase tracking-wide font-semibold mb-1"
+              >
+                Deadline
+              </p>
+              <p class="text-sm font-semibold" id="d-deadline">—</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Section : Description -->
+        <div>
+          <div class="d-section mb-3">Description</div>
+          <div
+            class="bg-slate-50 border border-slate-100 rounded-xl p-4 text-sm text-slate-500 leading-relaxed whitespace-pre-wrap min-h-[60px]"
+            id="d-desc"
+          >
+            —
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script th:src="@{/js/sidebar-badge-loader.js}"></script>
+    <script th:src="@{/js/auth.js}"></script>
+    <script>
+      let allProjets = [];
+      let currentFilter = "Tous";
+      let searchVal = "";
+      let activeRow = null;
+
+      const statutLabel = {
+        EN_COURS: "Projet en cours",
+        CLOTURE: "Projet clôturé",
+        NON_COMMENCE: "Projet non commencé",
+        PAS_DE_VISIBILITE: "Pas de visibilité",
+        // Legacy
+        EN_ATTENTE: "En attente",
+        TERMINE: "Terminé",
+      };
+      const statutColor = {
+        EN_COURS: "#5bb8e8",
+        CLOTURE: "#22c55e",
+        NON_COMMENCE: "#f59e0b",
+        PAS_DE_VISIBILITE: "#8a9fbf",
+        EN_ATTENTE: "#f59e0b",
+        TERMINE: "#22c55e",
+      };
+      const statutBg = {
+        EN_COURS: "#e8f5ff",
+        CLOTURE: "#e8faf0",
+        NON_COMMENCE: "#fff7e6",
+        PAS_DE_VISIBILITE: "#f4f7fc",
+        EN_ATTENTE: "#fff7e6",
+        TERMINE: "#e8faf0",
+      };
+
+      /* ── Filtre tabs ── */
+      document.querySelectorAll(".ftab").forEach((t) => {
+        t.addEventListener("click", function () {
+          document.querySelectorAll(".ftab").forEach((x) => {
+            x.classList.remove("active", "bg-bea-800", "text-white");
+            x.classList.add("text-slate-500");
+          });
+          this.classList.add("active", "bg-bea-800", "text-white");
+          this.classList.remove("text-slate-500");
+        });
+      });
+
+      async function loadProjets() {
+        try {
+          const res = await fetch("/api/projets/all", {
+            headers: getAuthHeaders(),
+          });
+          if (!res.ok) {
+            showEmpty();
+            return;
+          }
+          allProjets = await res.json();
+          render();
+        } catch (e) {
+          showEmpty();
+        }
+      }
+
+      function setFilter(f, el) {
+        currentFilter = f;
+        render();
+      }
+
+      function onSearch() {
+        searchVal = document.getElementById("searchInput").value.toLowerCase();
+        render();
+      }
+
+      function render() {
+        const tbody = document.getElementById("projetsBody");
+        let list = allProjets;
+        if (currentFilter !== "Tous")
+          list = list.filter((p) => p.statut === currentFilter);
+        if (searchVal)
+          list = list.filter((p) =>
+            (p.nom || "").toLowerCase().includes(searchVal),
+          );
+        document.getElementById("pageInfo").textContent =
+          list.length + " projet(s)";
+        if (!list.length) {
+          showEmpty();
+          return;
+        }
+
+        tbody.innerHTML = list
+          .map((p, i) => {
+            const sc = statutColor[p.statut] || "#8a9fbf";
+            const sbg = statutBg[p.statut] || "#f0f4ff";
+            const sl = statutLabel[p.statut] || p.statut || "—";
+            const chefInfo = p.chefProjetMatricule
+              ? `<span class="font-semibold text-bea-800 text-xs">${p.chefProjetMatricule}</span><br><span class="text-slate-400 text-xs">${p.chefProjetNom || ""}</span>`
+              : `<span class="text-slate-400 text-xs">${p.chefProjetNom || "—"}</span>`;
+
+            const rowBg = i % 2 === 0 ? "" : "bg-slate-50/50";
+
+            return `<tr class="proj-row border-b border-slate-100 ${rowBg}" id="row-${p.id}">
+      <td class="px-5 py-3.5 text-xs text-slate-300 font-mono">#${p.id}</td>
+      <td class="px-5 py-3.5 font-semibold text-bea-800 text-sm">${p.nom || "—"}</td>
+      <td class="px-5 py-3.5 text-xs text-slate-500">${p.dateDebut || "—"}</td>
+      <td class="px-5 py-3.5">
+        <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-bold"
+          style="background:${sbg};color:${sc}">
+          <span class="w-1.5 h-1.5 rounded-full inline-block" style="background:${sc}"></span>
+          ${sl}
+        </span>
+      </td>
+      <td class="px-5 py-3.5">
+        <span class="bg-slate-100 text-slate-600 text-xs font-semibold px-2.5 py-1 rounded-lg">${p.type || "—"}</span>
+      </td>
+      <td class="px-5 py-3.5">${chefInfo}</td>
+      <td class="px-5 py-3.5">
+        <div class="flex items-center gap-1.5">
+          <button onclick="openDrawer(${p.id})" title="Voir les détails"
+            class="inline-flex items-center justify-center w-8 h-8 rounded-lg bg-bea-50 border border-bea-100 hover:bg-bea-100 hover:border-bea-400 transition-all">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none">
+              <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" stroke="#0d2b6e" stroke-width="1.8" stroke-linecap="round"/>
+              <circle cx="12" cy="12" r="3" stroke="#0d2b6e" stroke-width="1.8"/>
+            </svg>
+          </button>
+          <button onclick="window.location.href='/projets/edit/${p.id}'"
+            class="inline-flex items-center gap-1 px-3 py-1.5 rounded-lg bg-bea-50 border border-bea-100 hover:bg-bea-100 text-bea-800 text-xs font-semibold transition-all">
+            Modifier
+          </button>
+          <button onclick="delProjet(${p.id})"
+            class="inline-flex items-center gap-1 px-3 py-1.5 rounded-lg bg-red-50 border border-red-100 hover:bg-red-100 text-red-600 text-xs font-semibold transition-all">
+            Supprimer
+          </button>
+        </div>
+      </td>
+    </tr>`;
+          })
+          .join("");
+      }
+
+      function showEmpty() {
+        document.getElementById("projetsBody").innerHTML =
+          `<tr><td colspan="7" class="text-center py-14 text-slate-300 text-sm">
+      <svg class="mx-auto mb-3 opacity-30" width="40" height="40" viewBox="0 0 24 24" fill="none">
+        <rect x="3" y="3" width="7" height="7" rx="1.5" stroke="#94a3b8" stroke-width="1.5"/>
+        <rect x="14" y="3" width="7" height="7" rx="1.5" stroke="#94a3b8" stroke-width="1.5"/>
+        <rect x="3" y="14" width="7" height="7" rx="1.5" stroke="#94a3b8" stroke-width="1.5"/>
+        <rect x="14" y="14" width="7" height="7" rx="1.5" stroke="#94a3b8" stroke-width="1.5"/>
+      </svg>
+      Aucun projet trouvé
+    </td></tr>`;
+      }
+
+      async function delProjet(id) {
+        if (!confirm("Supprimer ce projet ?")) return;
+        try {
+          const res = await fetch(`/api/projets/${id}`, {
+            method: "DELETE",
+            headers: getAuthHeaders(),
+          });
+          if (res.ok) {
+            closeDrawer();
+            loadProjets();
+          } else alert("Erreur suppression");
+        } catch (e) {
+          alert("Erreur réseau");
+        }
+      }
+
+      /* ══════════════════════════
+   PANNEAU LATÉRAL
+══════════════════════════ */
+      function openDrawer(id) {
+        const p = allProjets.find((x) => x.id === id);
+        if (!p) return;
+
+        // Highlight row
+        if (activeRow)
+          document.getElementById(activeRow)?.classList.remove("selected");
+        activeRow = `row-${id}`;
+        document.getElementById(activeRow)?.classList.add("selected");
+
+        // Header
+        document.getElementById("d-id").textContent = `Projet #${p.id}`;
+        document.getElementById("d-nom").textContent = p.nom || "—";
+
+        const sc = statutColor[p.statut] || "#8a9fbf";
+        const sbg = statutBg[p.statut] || "#f0f4ff";
+        const sl = statutLabel[p.statut] || p.statut || "—";
+        const badge = document.getElementById("d-badge");
+        badge.textContent = sl;
+        badge.style.background = sbg;
+        badge.style.color = sc;
+
+        // Infos
+        document.getElementById("d-type").textContent = p.type || "—";
+
+        const prioEl = document.getElementById("d-priorite");
+        prioEl.textContent = p.priorite || "—";
+        prioEl.className = "text-sm font-bold prio-" + (p.priorite || "");
+
+        document.getElementById("d-dateCreation").textContent =
+          p.dateCreation || "—";
+        document.getElementById("d-dateDebut").textContent = p.dateDebut || "—";
+
+        const dlEl = document.getElementById("d-deadline");
+        dlEl.textContent = p.deadline || "—";
+        if (p.deadline) {
+          const diff = Math.ceil(
+            (new Date(p.deadline) - new Date()) / 86400000,
+          );
+          dlEl.className =
+            "text-sm font-semibold " +
+            (diff < 0
+              ? "text-red-500"
+              : diff < 7
+                ? "text-amber-500"
+                : "text-bea-800");
+        }
+
+        document.getElementById("d-desc").textContent =
+          p.description || "Aucune description renseignée.";
+
+        // Ouvrir
+        document.getElementById("drawer").classList.add("open");
+        document.getElementById("drawerOverlay").classList.add("open");
+        document.body.style.overflow = "hidden";
+      }
+
+      function closeDrawer() {
+        if (activeRow)
+          document.getElementById(activeRow)?.classList.remove("selected");
+        activeRow = null;
+        document.getElementById("drawer").classList.remove("open");
+        document.getElementById("drawerOverlay").classList.remove("open");
+        document.body.style.overflow = "";
+      }
+
+      document.addEventListener("keydown", (e) => {
+        if (e.key === "Escape") closeDrawer();
+      });
+      document.addEventListener("DOMContentLoaded", loadProjets);
+    </script>
+  </body>
+</html>

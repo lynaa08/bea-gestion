@@ -1,0 +1,39 @@
+package com.bea.gestion.mapper;
+
+import com.bea.gestion.dto.MaterielDTO;
+import com.bea.gestion.entity.Materiel;
+import org.springframework.stereotype.Component;
+
+@Component
+public class MaterielMapper {
+
+    public MaterielDTO toDTO(Materiel m) {
+    if (m == null) return null;
+
+    MaterielDTO dto = new MaterielDTO();
+
+    dto.setId(m.getId());
+    dto.setNom(m.getNom());
+    dto.setMarque(m.getMarque());
+    dto.setBureau(m.getBureau());
+    dto.setService(m.getService());
+    dto.setDescription(m.getDescription());
+
+    dto.setQuantite(m.getQuantite());
+    dto.setDateAcquisition(m.getDateAcquisition());
+
+    // SAFE ENUM HANDLING
+    dto.setEtat(m.getEtat());
+    dto.setStatut(m.getStatut());
+
+    // SAFE PROJECT HANDLING
+    if (m.getProjet() != null) {
+        dto.setProjetId(m.getProjet().getId());
+        dto.setProjetNom(
+            m.getProjet().getNom() != null ? m.getProjet().getNom() : null
+        );
+    }
+
+    return dto;
+}
+}

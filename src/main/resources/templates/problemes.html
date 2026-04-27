@@ -1,0 +1,536 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" type="image/png" href="/favicon.png" />
+    <title>Problèmes - BEA</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}" />
+    <style>
+      .prob-card {
+        background: #fff;
+        border-radius: 12px;
+        border: 0.5px solid #d8e6f2;
+        box-shadow: 0 2px 8px rgba(13, 43, 110, 0.06);
+        padding: 20px;
+        margin-bottom: 16px;
+      }
+      .prob-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 10px;
+      }
+      .prob-title {
+        font-size: 15px;
+        font-weight: 700;
+        color: #0d2b6e;
+      }
+      .prob-meta {
+        font-size: 11px;
+        color: #8a9fbf;
+        margin-top: 2px;
+      }
+      .prob-desc {
+        font-size: 13px;
+        color: #4a6080;
+        line-height: 1.5;
+        margin: 10px 0;
+      }
+      .prob-footer {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        flex-wrap: wrap;
+      }
+      .badge {
+        display: inline-block;
+        padding: 3px 10px;
+        border-radius: 20px;
+        font-size: 10px;
+        font-weight: 700;
+        text-transform: uppercase;
+      }
+      .badge-OUVERT {
+        background: #fff3cd;
+        color: #856404;
+      }
+      .badge-EN_COURS {
+        background: #cce5ff;
+        color: #004085;
+      }
+      .badge-RESOLU {
+        background: #d4edda;
+        color: #155724;
+      }
+      .badge-FERME {
+        background: #f0f0f0;
+        color: #666;
+      }
+      .badge-CRITIQUE {
+        background: #f8d7da;
+        color: #721c24;
+      }
+      .badge-HAUTE {
+        background: #ffe0d0;
+        color: #7d3510;
+      }
+      .badge-MOYENNE {
+        background: #fff3cd;
+        color: #856404;
+      }
+      .badge-BASSE {
+        background: #d4edda;
+        color: #155724;
+      }
+      .pmo-comment {
+        background: #eef4ff;
+        border-left: 3px solid #5bb8e8;
+        padding: 8px 12px;
+        border-radius: 0 8px 8px 0;
+        font-size: 12px;
+        color: #4a6080;
+        margin-top: 8px;
+      }
+      .declare-form {
+        background: #fff;
+        border-radius: 12px;
+        border: 0.5px solid #d8e6f2;
+        box-shadow: 0 2px 8px rgba(13, 43, 110, 0.06);
+        padding: 20px;
+        margin-bottom: 24px;
+      }
+      .declare-form h3 {
+        font-size: 14px;
+        font-weight: 700;
+        color: #0d2b6e;
+        margin-bottom: 14px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+      .field {
+        margin-bottom: 12px;
+      }
+      .field-label {
+        font-size: 11px;
+        font-weight: 600;
+        color: #4a6080;
+        margin-bottom: 5px;
+        display: block;
+        text-transform: uppercase;
+        letter-spacing: 0.04em;
+      }
+      .req {
+        color: #e05a2b;
+      }
+      .field-input,
+      .field-select {
+        width: 100%;
+        padding: 9px 12px;
+        border: 1.5px solid #d8e6f2;
+        border-radius: 8px;
+        font-size: 13px;
+        color: #1a2d5a;
+        outline: none;
+        transition: border-color 0.15s;
+        background: #fff;
+      }
+      .field-input:focus,
+      .field-select:focus {
+        border-color: #5bb8e8;
+      }
+      .grid2 {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 14px;
+      }
+      .btn-declare {
+        padding: 10px 24px;
+        background: #0d2b6e;
+        color: #fff;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+        font-size: 13px;
+        font-weight: 600;
+      }
+      .btn-declare:hover {
+        background: #1a3f8f;
+      }
+      .pmo-actions select {
+        padding: 6px 10px;
+        border: 1.5px solid #d8e6f2;
+        border-radius: 8px;
+        font-size: 12px;
+        outline: none;
+        background: #fff;
+        margin-right: 6px;
+      }
+      .pmo-actions input {
+        padding: 6px 10px;
+        border: 1.5px solid #d8e6f2;
+        border-radius: 8px;
+        font-size: 12px;
+        outline: none;
+        background: #fff;
+        margin-right: 6px;
+        width: 200px;
+      }
+      .btn-sm {
+        padding: 6px 14px;
+        background: #0d2b6e;
+        color: #fff;
+        border: none;
+        border-radius: 8px;
+        font-size: 11px;
+        cursor: pointer;
+        font-weight: 600;
+      }
+      .empty-state {
+        text-align: center;
+        padding: 60px 20px;
+        color: #b0bdd0;
+        font-size: 13px;
+      }
+      .section-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 16px;
+      }
+      .section-title {
+        font-size: 16px;
+        font-weight: 700;
+        color: #0d2b6e;
+      }
+      #msgArea {
+        margin-bottom: 12px;
+      }
+      .err {
+        background: #fee;
+        color: #c00;
+        padding: 9px;
+        border-radius: 8px;
+        font-size: 12px;
+        margin-bottom: 10px;
+      }
+      .suc {
+        background: #efe;
+        color: #0a0;
+        padding: 9px;
+        border-radius: 8px;
+        font-size: 12px;
+        margin-bottom: 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="app-shell">
+      <div class="topbar">
+        <div class="topbar-brand">
+          <img th:src="@{/images/logo_sidebar.svg}" 
+               alt="Logo BEA" 
+               style="height: 40px; width: auto;" />
+        </div>
+              "
+         
+        <div class="topbar-right">
+          <div
+            class="notif-btn"
+            id="remarqueBtnTopbar"
+            title="Remarques"
+            style="cursor: pointer; margin-right: 2px"
+          >
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none">
+              <path
+                d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"
+                stroke="#4A6A9E"
+                stroke-width="1.8"
+                fill="none"
+              />
+            </svg>
+            <div class="notif-dot" id="remarqueDot" style="display: none"></div>
+          </div>
+          <div
+            class="notif-btn"
+            id="notifBellBtn"
+            style="position: relative; cursor: pointer"
+          >
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none">
+              <path
+                d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9M13.73 21a2 2 0 01-3.46 0"
+                stroke="#4A6A9E"
+                stroke-width="1.8"
+                stroke-linecap="round"
+              />
+            </svg>
+          </div>
+          <div class="user-chip">
+            <div class="user-chip-avatar"></div>
+            <div class="user-chip-info">
+              <div class="user-chip-name"></div>
+              <div class="user-chip-role"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="body">
+        <div th:replace="~{fragments/sidebar :: sidebar}"></div>
+
+        <div class="main">
+          <div id="msgArea"></div>
+
+          <!-- DEVELOPPEUR: declare a problem -->
+          <div class="declare-form" id="declarerSection" style="display: none">
+            <h3>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+                <circle
+                  cx="12"
+                  cy="12"
+                  r="10"
+                  stroke="#E05A2B"
+                  stroke-width="2"
+                />
+                <path
+                  d="M12 8v4M12 16h.01"
+                  stroke="#E05A2B"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                />
+              </svg>
+              Déclarer un problème au PMO
+            </h3>
+            <div class="field">
+              <label class="field-label"
+                >Titre du problème <span class="req">*</span></label
+              >
+              <input
+                type="text"
+                class="field-input"
+                id="probTitre"
+                placeholder="Décrivez brièvement le problème"
+                required
+              />
+            </div>
+            <div class="grid2">
+              <div class="field">
+                <label class="field-label">Priorité</label>
+                <select class="field-select" id="probPriorite">
+                  <option value="BASSE">Basse</option>
+                  <option value="MOYENNE" selected>Moyenne</option>
+                  <option value="HAUTE">Haute</option>
+                  <option value="CRITIQUE">Critique</option>
+                </select>
+              </div>
+              <div class="field">
+                <label class="field-label">Projet concerné</label>
+                <select class="field-select" id="probProjet">
+                  <option value="">-- Aucun --</option>
+                </select>
+              </div>
+            </div>
+            <div class="field">
+              <label class="field-label">Description détaillée</label>
+              <textarea
+                class="field-input"
+                id="probDesc"
+                rows="3"
+                placeholder="Donnez tous les détails utiles..."
+              ></textarea>
+            </div>
+            <button class="btn-declare" onclick="declarerProbleme()">
+              📤 Envoyer au PMO
+            </button>
+          </div>
+
+          <!-- Problem list -->
+          <div class="section-header">
+            <div class="section-title" id="listTitle">Problèmes signalés</div>
+          </div>
+          <div id="problemesList">
+            <div class="empty-state">Chargement...</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script th:src="@{/js/sidebar-badge-loader.js}"></script>
+    <script th:src="@{/js/auth.js}"></script>
+    <script>
+      const userProb = localStorage.getItem("user")
+        ? JSON.parse(localStorage.getItem("user"))
+        : null;
+      const role = userProb ? userProb.role : "";
+
+      document.addEventListener("DOMContentLoaded", () => {
+        checkAuth();
+        if (role === "DEVELOPPEUR") {
+          document.getElementById("declarerSection").style.display = "block";
+          document.getElementById("listTitle").textContent =
+            "Mes problèmes déclarés";
+          loadProjets();
+          loadMineProblemes();
+        } else if (
+          role === "INGENIEUR_ETUDE_PMO" ||
+          role === "ADMIN" ||
+          role === "DIRECTEUR" ||
+          role === "CHEF_DEPARTEMENT"
+        ) {
+          loadAllProblemes();
+        } else {
+          loadMineProblemes();
+        }
+      });
+
+      async function loadProjets() {
+        try {
+          const res = await fetch("/api/projets/all", {
+            headers: getAuthHeaders(),
+          });
+          if (!res.ok) return;
+          const list = await res.json();
+          const sel = document.getElementById("probProjet");
+          list.forEach((p) => {
+            const opt = document.createElement("option");
+            opt.value = p.id;
+            opt.textContent = p.nom;
+            sel.appendChild(opt);
+          });
+        } catch (e) {}
+      }
+
+      async function declarerProbleme() {
+        const titre = document.getElementById("probTitre").value.trim();
+        if (!titre) {
+          showMsg("Le titre est obligatoire", "err");
+          return;
+        }
+        const body = {
+          titre,
+          description: document.getElementById("probDesc").value,
+          priorite: document.getElementById("probPriorite").value,
+          projetId: document.getElementById("probProjet").value || null,
+        };
+        try {
+          const res = await fetch("/api/problemes", {
+            method: "POST",
+            headers: getAuthHeaders(),
+            body: JSON.stringify(body),
+          });
+          if (res.ok) {
+            showMsg(
+              "Problème déclaré avec succès ! Le PMO a été notifié.",
+              "suc",
+            );
+            document.getElementById("probTitre").value = "";
+            document.getElementById("probDesc").value = "";
+            loadMineProblemes();
+          } else {
+            showMsg("Erreur lors de la déclaration", "err");
+          }
+        } catch (e) {
+          showMsg("Erreur réseau", "err");
+        }
+      }
+
+      async function loadAllProblemes() {
+        try {
+          const res = await fetch("/api/problemes", {
+            headers: getAuthHeaders(),
+          });
+          renderProblemes(await res.json(), true);
+        } catch (e) {}
+      }
+
+      async function loadMineProblemes() {
+        try {
+          const res = await fetch("/api/problemes/mine", {
+            headers: getAuthHeaders(),
+          });
+          renderProblemes(await res.json(), false);
+        } catch (e) {}
+      }
+
+      function renderProblemes(list, canEdit) {
+        const el = document.getElementById("problemesList");
+        if (!list || list.length === 0) {
+          el.innerHTML =
+            '<div class="empty-state">🎉 Aucun problème signalé</div>';
+          return;
+        }
+        el.innerHTML = list
+          .map(
+            (p) => `
+    <div class="prob-card">
+      <div class="prob-header">
+        <div>
+          <div class="prob-title"
+            style="${p.projet ? "cursor:pointer;" : ""}"
+            onclick="${p.projet ? "window.location.href='/projets/edit/" + p.projet.id + "'" : ""}">
+            ${p.titre || ""}
+          </div>
+          <div class="prob-meta">
+            Par ${p.declarant ? p.declarant.prenom + " " + p.declarant.nom + " (" + p.declarant.matricule + ")" : "—"}
+            ${p.projet ? ' · <a href="/projets/edit/' + p.projet.id + '" style="color:#5bb8e8;font-weight:600;text-decoration:none;">📁 ' + p.projet.nom + "</a>" : ""}
+            · ${p.dateCreation ? new Date(p.dateCreation).toLocaleDateString("fr-FR") : ""}
+          </div>
+        </div>
+        <div style="display:flex;gap:6px;flex-shrink:0">
+          <span class="badge badge-${p.priorite || "MOYENNE"}">${p.priorite || "—"}</span>
+          <span class="badge badge-${p.statut || "OUVERT"}">${(p.statut || "OUVERT").replace("_", " ")}</span>
+        </div>
+      </div>
+      ${p.description ? `<div class="prob-desc">${p.description}</div>` : ""}
+      ${p.commentairePmo ? `<div class="pmo-comment">💬 PMO: ${p.commentairePmo}</div>` : ""}
+      ${
+        canEdit
+          ? `
+        <div class="prob-footer" style="margin-top:12px">
+          <div class="pmo-actions">
+            <select id="st_${p.id}" onchange="">
+              <option ${p.statut === "OUVERT" ? "selected" : ""} value="OUVERT">OUVERT</option>
+              <option ${p.statut === "EN_COURS" ? "selected" : ""} value="EN_COURS">EN COURS</option>
+              <option ${p.statut === "RESOLU" ? "selected" : ""} value="RESOLU">RÉSOLU</option>
+              <option ${p.statut === "FERME" ? "selected" : ""} value="FERME">FERMÉ</option>
+            </select>
+            <input type="text" id="cm_${p.id}" placeholder="Commentaire PMO..." value="${p.commentairePmo || ""}"/>
+            <button class="btn-sm" onclick="updateStatut(${p.id})">Mettre à jour</button>
+          </div>
+        </div>
+      `
+          : ""
+      }
+    </div>
+  `,
+          )
+          .join("");
+      }
+
+      async function updateStatut(id) {
+        const statut = document.getElementById("st_" + id).value;
+        const commentaire = document.getElementById("cm_" + id).value;
+        try {
+          const res = await fetch(`/api/problemes/${id}/statut`, {
+            method: "PATCH",
+            headers: getAuthHeaders(),
+            body: JSON.stringify({ statut, commentaire }),
+          });
+          if (res.ok) {
+            showMsg("Statut mis à jour", "suc");
+            loadAllProblemes();
+          } else showMsg("Erreur mise à jour", "err");
+        } catch (e) {
+          showMsg("Erreur réseau", "err");
+        }
+      }
+
+      function showMsg(msg, type) {
+        const el = document.getElementById("msgArea");
+        el.innerHTML = `<div class="${type}">${msg}</div>`;
+        setTimeout(() => (el.innerHTML = ""), 4000);
+      }
+    </script>
+  </body>
+</html>
