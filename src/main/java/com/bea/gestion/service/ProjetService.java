@@ -127,4 +127,11 @@ public class ProjetService {
 
         return projetMapper.toDTO(saved);
     }
+    public List<ProjetDTO> getMesProjets(String matricule) {
+        return projetRepository.findAll().stream()
+            .filter(p -> p.getMembres() != null && p.getMembres().stream()
+                .anyMatch(u -> u.getMatricule().equals(matricule)))
+            .map(projetMapper::toDTO)
+            .collect(Collectors.toList());
+    }
 }

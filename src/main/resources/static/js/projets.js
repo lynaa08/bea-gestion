@@ -133,6 +133,7 @@ async function handleProjectSubmit(event) {
     priorite: document.getElementById("priorite").value,
     dateDebut: document.getElementById("dateDebut").value || null,
     deadline: document.getElementById("deadline").value || null,
+    dateCreation: document.getElementById("dateCreation").value || null,
     description: document.getElementById("description").value,
     chefProjetId,
     membresIds: Array.from(selectedMembresIds),
@@ -299,6 +300,7 @@ async function loadProjectForEdit() {
     document.getElementById("type").value = p.type || "";
     document.getElementById("priorite").value = p.priorite || "";
     document.getElementById("dateDebut").value = p.dateDebut || "";
+    document.getElementById("dateCreation").value = p.dateCreation || "";
     document.getElementById("deadline").value = p.deadline || "";
     document.getElementById("description").value = p.description || "";
 
