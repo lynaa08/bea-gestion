@@ -8,32 +8,30 @@ import org.springframework.stereotype.Component;
 public class MaterielMapper {
 
     public MaterielDTO toDTO(Materiel m) {
-    if (m == null) return null;
+        if (m == null) return null;
 
-    MaterielDTO dto = new MaterielDTO();
+        MaterielDTO dto = new MaterielDTO();
+        dto.setId(m.getId());
+        dto.setNom(m.getNom());
+        dto.setMarque(m.getMarque());
+        dto.setReference(m.getReference());
+        dto.setBureau(m.getBureau());
+        dto.setService(m.getService());
+        dto.setDescription(m.getDescription());
+        dto.setQuantite(m.getQuantite());
+        dto.setEtat(m.getEtat());
+        dto.setStatut(m.getStatut());
 
-    dto.setId(m.getId());
-    dto.setNom(m.getNom());
-    dto.setMarque(m.getMarque());
-    dto.setBureau(m.getBureau());
-    dto.setService(m.getService());
-    dto.setDescription(m.getDescription());
+        // ✅ FIXED: was mapping dateLicence into dateAcquisition (wrong field)
+        //    and calling setDateExpiration() which threw UnsupportedOperationException
+        dto.setDateLicence(m.getDateLicence());
+        dto.setDateExpiration(m.getDateExpiration());
 
-    dto.setQuantite(m.getQuantite());
-    dto.setDateAcquisition(m.getDateAcquisition());
+        if (m.getProjet() != null) {
+            dto.setProjetId(m.getProjet().getId());
+            dto.setProjetNom(m.getProjet().getNom());
+        }
 
-    // SAFE ENUM HANDLING
-    dto.setEtat(m.getEtat());
-    dto.setStatut(m.getStatut());
-
-    // SAFE PROJECT HANDLING
-    if (m.getProjet() != null) {
-        dto.setProjetId(m.getProjet().getId());
-        dto.setProjetNom(
-            m.getProjet().getNom() != null ? m.getProjet().getNom() : null
-        );
+        return dto;
     }
-
-    return dto;
-}
 }

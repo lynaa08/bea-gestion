@@ -50,4 +50,8 @@ public class ViewController {
 
     @GetMapping("/materiels/edit/{id}")
     public String editMateriel() { return "materiel-form"; }
+
+    // ✅ Page liste des réservations (vue chef de département)
+    @GetMapping("/reservations-list")
+    public String reservationsList() { return "reservations-list"; }
 }
