@@ -35,6 +35,7 @@ public class AuthService {
 
         String token = jwtUtil.generateToken(user.getMatricule(), user.getRole().name());
 
+        // ✅ Pass mustChangePassword so the frontend can intercept first login
         return new LoginResponse(
             token,
             user.getId(),
@@ -42,7 +43,8 @@ public class AuthService {
             user.getNom(),
             user.getPrenom(),
             user.getRole().name(),
-            user.getMatricule()
+            user.getMatricule(),
+            user.isMustChangePassword()
         );
     }
 }

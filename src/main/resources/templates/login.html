@@ -716,7 +716,221 @@
       </div>
     </div>
 
+    <!-- ✅ Change-password modal (shown on first login) -->
+    <div
+      id="changePwdModal"
+      style="
+        display: none;
+        position: fixed;
+        inset: 0;
+        z-index: 9999;
+        background: rgba(10, 20, 60, 0.55);
+        backdrop-filter: blur(4px);
+        align-items: center;
+        justify-content: center;
+      ">
+      <div
+        style="
+          background: #fff;
+          border-radius: 20px;
+          width: 440px;
+          max-width: 94vw;
+          box-shadow: 0 24px 80px rgba(10, 20, 80, 0.25);
+          overflow: hidden;
+        ">
+        <!-- Header -->
+        <div
+          style="
+            background: linear-gradient(135deg, #0d2b6e, #1e40af);
+            padding: 24px 28px;
+          ">
+          <div
+            style="
+              color: #fff;
+              font-size: 18px;
+              font-weight: 800;
+              margin-bottom: 4px;
+            ">
+            🔐 Première connexion
+          </div>
+          <div style="color: #93c5fd; font-size: 13px">
+            Pour votre sécurité, veuillez définir un nouveau mot de passe
+            personnel.
+          </div>
+        </div>
+        <!-- Body -->
+        <div style="padding: 28px">
+          <div id="changePwdMsg" style="margin-bottom: 12px"></div>
+
+          <div style="margin-bottom: 16px">
+            <label
+              style="
+                display: block;
+                font-size: 11px;
+                font-weight: 700;
+                color: #4a6080;
+                text-transform: uppercase;
+                letter-spacing: 0.05em;
+                margin-bottom: 6px;
+              ">
+              Nouveau mot de passe <span style="color: #e05a2b">*</span>
+            </label>
+            <div style="position: relative">
+              <input
+                type="password"
+                id="newPwd"
+                placeholder="Minimum 6 caractères"
+                style="
+                  width: 100%;
+                  padding: 11px 42px 11px 14px;
+                  border: 1.5px solid #d8e6f2;
+                  border-radius: 10px;
+                  font-size: 14px;
+                  color: #1a2d5a;
+                  outline: none;
+                  box-sizing: border-box;
+                "
+                oninput="checkPwdStrength(this.value)" />
+              <span
+                onclick="togglePwd('newPwd', 'eyeNew')"
+                style="
+                  position: absolute;
+                  right: 13px;
+                  top: 50%;
+                  transform: translateY(-50%);
+                  cursor: pointer;
+                ">
+                <svg
+                  width="18"
+                  height="18"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  id="eyeNew">
+                  <path
+                    d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"
+                    stroke="#8A9FBF"
+                    stroke-width="1.5" />
+                  <circle
+                    cx="12"
+                    cy="12"
+                    r="3"
+                    stroke="#8A9FBF"
+                    stroke-width="1.5" />
+                </svg>
+              </span>
+            </div>
+            <!-- Strength bar -->
+            <div
+              style="
+                margin-top: 6px;
+                height: 4px;
+                background: #e8eef5;
+                border-radius: 4px;
+                overflow: hidden;
+              ">
+              <div
+                id="strengthBar"
+                style="
+                  height: 4px;
+                  width: 0%;
+                  border-radius: 4px;
+                  transition:
+                    width 0.3s,
+                    background 0.3s;
+                "></div>
+            </div>
+            <div
+              id="strengthLabel"
+              style="font-size: 10px; color: #8a9fbf; margin-top: 3px"></div>
+          </div>
+
+          <div style="margin-bottom: 24px">
+            <label
+              style="
+                display: block;
+                font-size: 11px;
+                font-weight: 700;
+                color: #4a6080;
+                text-transform: uppercase;
+                letter-spacing: 0.05em;
+                margin-bottom: 6px;
+              ">
+              Confirmer le mot de passe <span style="color: #e05a2b">*</span>
+            </label>
+            <div style="position: relative">
+              <input
+                type="password"
+                id="confirmPwd"
+                placeholder="Répéter le mot de passe"
+                style="
+                  width: 100%;
+                  padding: 11px 42px 11px 14px;
+                  border: 1.5px solid #d8e6f2;
+                  border-radius: 10px;
+                  font-size: 14px;
+                  color: #1a2d5a;
+                  outline: none;
+                  box-sizing: border-box;
+                "
+                oninput="checkMatch()" />
+              <span
+                onclick="togglePwd('confirmPwd', 'eyeConfirm')"
+                style="
+                  position: absolute;
+                  right: 13px;
+                  top: 50%;
+                  transform: translateY(-50%);
+                  cursor: pointer;
+                ">
+                <svg
+                  width="18"
+                  height="18"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  id="eyeConfirm">
+                  <path
+                    d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"
+                    stroke="#8A9FBF"
+                    stroke-width="1.5" />
+                  <circle
+                    cx="12"
+                    cy="12"
+                    r="3"
+                    stroke="#8A9FBF"
+                    stroke-width="1.5" />
+                </svg>
+              </span>
+            </div>
+            <div
+              id="matchMsg"
+              style="font-size: 11px; margin-top: 4px; height: 16px"></div>
+          </div>
+
+          <button
+            id="changePwdBtn"
+            onclick="submitNewPassword()"
+            style="
+              width: 100%;
+              padding: 13px;
+              background: #0d2b6e;
+              color: #fff;
+              border: none;
+              border-radius: 10px;
+              cursor: pointer;
+              font-size: 14px;
+              font-weight: 700;
+              transition: background 0.15s;
+            ">
+            ✓ Confirmer le nouveau mot de passe
+          </button>
+        </div>
+      </div>
+    </div>
+
     <script>
+      // ── Pending login data (set after successful auth, before pwd change) ──
+      let _pendingLoginData = null;
+
       async function handleLogin(event) {
         event.preventDefault();
         const matricule = document.getElementById("matricule").value.trim();
@@ -734,6 +948,14 @@
           if (res.ok && data.token) {
             localStorage.setItem("token", data.token);
             localStorage.setItem("user", JSON.stringify(data));
+
+            // ✅ First login: show change-password modal instead of redirecting
+            if (data.mustChangePassword) {
+              _pendingLoginData = data;
+              openChangePwdModal();
+              return; // don't redirect yet
+            }
+
             showMsg("Connexion réussie ! Redirection...", "success");
             setTimeout(() => (window.location.href = "/dashboard"), 800);
           } else {
@@ -750,26 +972,147 @@
           btn.disabled = false;
         }
       }
+
+      // ── Change-password modal ─────────────────────────────────────────────
+      function openChangePwdModal() {
+        const modal = document.getElementById("changePwdModal");
+        modal.style.display = "flex";
+        document.getElementById("newPwd").focus();
+      }
+
+      function checkPwdStrength(val) {
+        const bar = document.getElementById("strengthBar");
+        const label = document.getElementById("strengthLabel");
+        let score = 0;
+        if (val.length >= 6) score++;
+        if (val.length >= 10) score++;
+        if (/[A-Z]/.test(val)) score++;
+        if (/[0-9]/.test(val)) score++;
+        if (/[^A-Za-z0-9]/.test(val)) score++;
+        const levels = [
+          { w: "0%", bg: "#e8eef5", txt: "" },
+          { w: "25%", bg: "#ef4444", txt: "Très faible" },
+          { w: "50%", bg: "#f59e0b", txt: "Faible" },
+          { w: "75%", bg: "#3b82f6", txt: "Moyen" },
+          { w: "90%", bg: "#22c55e", txt: "Fort" },
+          { w: "100%", bg: "#16a34a", txt: "Très fort" },
+        ];
+        const l = levels[Math.min(score, 5)];
+        bar.style.width = l.w;
+        bar.style.background = l.bg;
+        label.textContent = l.txt;
+        label.style.color = l.bg;
+        checkMatch();
+      }
+
+      function checkMatch() {
+        const a = document.getElementById("newPwd").value;
+        const b = document.getElementById("confirmPwd").value;
+        const el = document.getElementById("matchMsg");
+        if (!b) {
+          el.textContent = "";
+          return;
+        }
+        if (a === b) {
+          el.textContent = "✓ Les mots de passe correspondent";
+          el.style.color = "#16a34a";
+        } else {
+          el.textContent = "✗ Les mots de passe ne correspondent pas";
+          el.style.color = "#ef4444";
+        }
+      }
+
+      function togglePwd(inputId, iconId) {
+        const input = document.getElementById(inputId);
+        const icon = document.getElementById(iconId);
+        if (input.type === "password") {
+          input.type = "text";
+          icon.innerHTML =
+            '<path d="M17.94 17.94A10.07 10.07 0 0112 20c-7 0-11-8-11-8a18.45 18.45 0 015.06-5.94M9.9 4.24A9.12 9.12 0 0112 4c7 0 11 8 11 8a18.5 18.5 0 01-2.16 3.19M1 1l22 22" stroke="#5BB8E8" stroke-width="1.5" stroke-linecap="round"/>';
+        } else {
+          input.type = "password";
+          icon.innerHTML =
+            '<path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" stroke="#8A9FBF" stroke-width="1.5"/><circle cx="12" cy="12" r="3" stroke="#8A9FBF" stroke-width="1.5"/>';
+        }
+      }
+
+      async function submitNewPassword() {
+        const newPwd = document.getElementById("newPwd").value;
+        const confirmPwd = document.getElementById("confirmPwd").value;
+        const msgEl = document.getElementById("changePwdMsg");
+        const btn = document.getElementById("changePwdBtn");
+
+        if (newPwd.length < 6) {
+          msgEl.innerHTML =
+            '<div style="background:#fee;color:#c00;padding:9px 12px;border-radius:8px;font-size:13px">Le mot de passe doit contenir au moins 6 caractères.</div>';
+          return;
+        }
+        if (newPwd !== confirmPwd) {
+          msgEl.innerHTML =
+            '<div style="background:#fee;color:#c00;padding:9px 12px;border-radius:8px;font-size:13px">Les mots de passe ne correspondent pas.</div>';
+          return;
+        }
+
+        btn.disabled = true;
+        btn.textContent = "Enregistrement...";
+        msgEl.innerHTML = "";
+
+        try {
+          const res = await fetch("/api/auth/change-password", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: "Bearer " + localStorage.getItem("token"),
+            },
+            body: JSON.stringify({
+              matricule: _pendingLoginData.matricule,
+              newPassword: newPwd,
+            }),
+          });
+          const data = await res.json();
+
+          if (res.ok) {
+            msgEl.innerHTML =
+              '<div style="background:#e6f9ee;color:#1a7a40;padding:9px 12px;border-radius:8px;font-size:13px">✅ Mot de passe mis à jour ! Redirection...</div>';
+            // Update local storage so mustChangePassword is no longer true
+            const user = JSON.parse(localStorage.getItem("user") || "{}");
+            user.mustChangePassword = false;
+            localStorage.setItem("user", JSON.stringify(user));
+            setTimeout(() => (window.location.href = "/dashboard"), 1200);
+          } else {
+            msgEl.innerHTML = `<div style="background:#fee;color:#c00;padding:9px 12px;border-radius:8px;font-size:13px">${data.message || "Erreur serveur"}</div>`;
+            btn.disabled = false;
+            btn.textContent = "✓ Confirmer le nouveau mot de passe";
+          }
+        } catch (e) {
+          msgEl.innerHTML =
+            '<div style="background:#fee;color:#c00;padding:9px 12px;border-radius:8px;font-size:13px">Erreur réseau.</div>';
+          btn.disabled = false;
+          btn.textContent = "✓ Confirmer le nouveau mot de passe";
+        }
+      }
+
+      // ── Original password toggle for login form ──────────────────────────
       function togglePassword() {
         const p = document.getElementById("password");
         const icon = document.getElementById("eyeIcon");
         if (p.type === "password") {
           p.type = "text";
-          // Œil barré
           icon.innerHTML =
             '<path d="M17.94 17.94A10.07 10.07 0 0112 20c-7 0-11-8-11-8a18.45 18.45 0 015.06-5.94M9.9 4.24A9.12 9.12 0 0112 4c7 0 11 8 11 8a18.5 18.5 0 01-2.16 3.19M1 1l22 22" stroke="#5BB8E8" stroke-width="1.5" stroke-linecap="round"/>';
         } else {
           p.type = "password";
-          // Œil ouvert
           icon.innerHTML =
             '<path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" stroke="#8A9FBF" stroke-width="1.5"/><circle cx="12" cy="12" r="3" stroke="#8A9FBF" stroke-width="1.5"/>';
         }
       }
+
       function showMsg(msg, type) {
         const area = document.getElementById("messageArea");
         area.innerHTML = `<div class="${type}-message">${msg}</div>`;
         if (type !== "success") setTimeout(() => (area.innerHTML = ""), 5000);
       }
+
       // Already logged in? redirect
       if (localStorage.getItem("token")) window.location.href = "/dashboard";
     </script>

@@ -9,9 +9,12 @@ public class LoginResponse {
     private String prenom;
     private String role;
     private String matricule;
+    // ✅ NEW: frontend reads this to decide whether to show change-password modal
+    private boolean mustChangePassword;
 
     public LoginResponse(String token, Long id, String email,
-                         String nom, String prenom, String role, String matricule) {
+                         String nom, String prenom, String role,
+                         String matricule, boolean mustChangePassword) {
         this.token = token;
         this.id = id;
         this.email = email;
@@ -19,6 +22,7 @@ public class LoginResponse {
         this.prenom = prenom;
         this.role = role;
         this.matricule = matricule;
+        this.mustChangePassword = mustChangePassword;
     }
 
     public String getToken() { return token; }
@@ -29,4 +33,5 @@ public class LoginResponse {
     public String getPrenom() { return prenom; }
     public String getRole() { return role; }
     public String getMatricule() { return matricule; }
+    public boolean isMustChangePassword() { return mustChangePassword; }
 }
