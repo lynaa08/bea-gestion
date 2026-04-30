@@ -7,11 +7,20 @@
     <title>Matériel - BEA</title>
     <link rel="stylesheet" th:href="@{/css/style.css}" />
     <style>
+      .form-card {
+        max-width: 860px;
+        margin: 0 auto;
+      }
+      .form-grid2 {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 20px;
+      }
       .field {
         margin-bottom: 14px;
       }
       .field-label {
-        font-size: 11px;
+        font-size: 12px;
         font-weight: 600;
         color: #4a6080;
         margin-bottom: 5px;
@@ -25,10 +34,10 @@
       .field-input,
       .field-select {
         width: 100%;
-        padding: 9px 12px;
+        padding: 10px 12px;
         border: 1.5px solid #d8e6f2;
         border-radius: 8px;
-        font-size: 13px;
+        font-size: 14px;
         color: #1a2d5a;
         outline: none;
         transition: border-color 0.15s;
@@ -39,21 +48,32 @@
       .field-select:focus {
         border-color: #5bb8e8;
       }
-      .form-grid2 {
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        gap: 16px;
+      .section-label {
+        font-size: 11px;
+        font-weight: 700;
+        color: #8a9fbf;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        margin: 18px 0 12px;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+      }
+      .divider {
+        height: 1px;
+        background: #eef2f8;
+        margin: 16px 0;
       }
       .form-actions {
         display: flex;
         justify-content: flex-end;
         gap: 10px;
-        margin-top: 20px;
-        padding-top: 14px;
+        margin-top: 24px;
+        padding-top: 16px;
         border-top: 1px solid #eef2f8;
       }
       .btn-cancel {
-        padding: 9px 18px;
+        padding: 10px 20px;
         background: #f5f5f5;
         border: 1px solid #ddd;
         border-radius: 8px;
@@ -61,7 +81,7 @@
         font-size: 13px;
       }
       .btn-submit {
-        padding: 9px 22px;
+        padding: 10px 24px;
         background: #0d2b6e;
         color: #fff;
         border: none;
@@ -73,33 +93,274 @@
       .btn-submit:hover {
         background: #1a3f8f;
       }
-      .section-label {
-        font-size: 10px;
-        font-weight: 700;
-        color: #5bb8e8;
-        text-transform: uppercase;
-        letter-spacing: 0.08em;
-        margin: 16px 0 10px;
+      .tabs {
+        display: flex;
+        gap: 0;
+        border-bottom: 2px solid #e0eaf5;
+        margin-bottom: 24px;
       }
-      .msg {
-        padding: 9px;
-        border-radius: 8px;
-        font-size: 12px;
+      .tab-btn {
+        padding: 11px 22px;
+        font-size: 13px;
+        font-weight: 600;
+        color: #8a9fbf;
+        border: none;
+        background: none;
+        cursor: pointer;
+        border-bottom: 2px solid transparent;
+        margin-bottom: -2px;
+        transition: all 0.15s;
+        border-radius: 8px 8px 0 0;
+      }
+      .tab-btn.active {
+        color: #0d2b6e;
+        border-bottom-color: #0d2b6e;
+        background: #f0f4ff;
+      }
+      .tab-panel {
+        display: none;
+      }
+      .tab-panel.active {
+        display: block;
+      }
+      .upload-zone {
+        border: 2px dashed #5bb8e8;
+        border-radius: 14px;
+        padding: 40px;
+        text-align: center;
+        cursor: pointer;
+        transition: all 0.2s;
+        background: #f7fbff;
+        position: relative;
+      }
+      .upload-zone:hover,
+      .upload-zone.drag-over {
+        border-color: #0d2b6e;
+        background: #eef4ff;
+      }
+      .upload-zone input[type="file"] {
+        position: absolute;
+        inset: 0;
+        opacity: 0;
+        cursor: pointer;
+        width: 100%;
+        height: 100%;
+      }
+      .upload-icon {
+        font-size: 48px;
         margin-bottom: 12px;
       }
-      .err {
-        background: #fee;
-        color: #c00;
+      .upload-title {
+        font-size: 16px;
+        font-weight: 700;
+        color: #0d2b6e;
+        margin-bottom: 6px;
       }
-      .suc {
-        background: #efe;
-        color: #0a0;
+      .upload-sub {
+        font-size: 13px;
+        color: #8a9fbf;
+      }
+      .template-box {
+        background: #f0f7ff;
+        border: 1px solid #c2d8f0;
+        border-radius: 10px;
+        padding: 14px 18px;
+        margin-bottom: 20px;
+        display: flex;
+        align-items: center;
+        gap: 14px;
+      }
+      .template-icon {
+        font-size: 28px;
+      }
+      .template-info {
+        flex: 1;
+      }
+      .template-title {
+        font-weight: 700;
+        color: #0d2b6e;
+        font-size: 13px;
+      }
+      .template-sub {
+        font-size: 12px;
+        color: #6a8ab0;
+        margin-top: 2px;
+      }
+      .btn-download {
+        padding: 8px 16px;
+        background: #0d2b6e;
+        color: #fff;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+        font-size: 12px;
+        font-weight: 600;
+        white-space: nowrap;
+      }
+      .btn-download:hover {
+        background: #1a3f8f;
+      }
+      .preview-section {
+        margin-top: 24px;
+      }
+      .preview-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 10px;
+      }
+      .preview-title {
+        font-size: 14px;
+        font-weight: 700;
+        color: #1a2d5a;
+      }
+      .preview-stats {
+        font-size: 12px;
+        color: #8a9fbf;
+      }
+      .preview-table-wrap {
+        overflow-x: auto;
+        border-radius: 10px;
+        border: 1px solid #e0eaf5;
+      }
+      table.preview-table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 12px;
+      }
+      .preview-table th {
+        background: #f0f4ff;
+        color: #4a6080;
+        padding: 8px 12px;
+        text-align: left;
+        font-weight: 700;
+        font-size: 11px;
+        text-transform: uppercase;
+        border-bottom: 1px solid #e0eaf5;
+        white-space: nowrap;
+      }
+      .preview-table td {
+        padding: 8px 12px;
+        border-bottom: 1px solid #f0f4ff;
+        color: #1a2d5a;
+      }
+      .preview-table tr:last-child td {
+        border-bottom: none;
+      }
+      .preview-table tr:hover td {
+        background: #f8fbff;
+      }
+      .badge-ok {
+        display: inline-block;
+        background: #e6f9ee;
+        color: #1a7a40;
+        padding: 2px 8px;
+        border-radius: 10px;
+        font-size: 11px;
+        font-weight: 600;
+      }
+      .badge-err {
+        display: inline-block;
+        background: #fee;
+        color: #b00;
+        padding: 2px 8px;
+        border-radius: 10px;
+        font-size: 11px;
+        font-weight: 600;
+      }
+      .badge-role {
+        display: inline-block;
+        background: #e8eeff;
+        color: #0d2b6e;
+        padding: 2px 8px;
+        border-radius: 10px;
+        font-size: 11px;
+        font-weight: 600;
+      }
+      .alert {
+        padding: 12px 16px;
+        border-radius: 10px;
+        margin-bottom: 16px;
+        font-size: 13px;
+      }
+      .alert-success {
+        background: #e6f9ee;
+        color: #1a7a40;
+        border: 1px solid #b8e8cb;
+      }
+      .alert-error {
+        background: #fee;
+        color: #b00;
+        border: 1px solid #f5c0c0;
+      }
+      .alert-info {
+        background: #f0f7ff;
+        color: #1a5080;
+        border: 1px solid #c2d8f0;
+      }
+      .confirm-bar {
+        background: #f0f7ff;
+        border: 1px solid #c2d8f0;
+        border-radius: 10px;
+        padding: 14px 18px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-top: 16px;
+        gap: 14px;
+      }
+      .confirm-info {
+        font-size: 13px;
+        color: #1a5080;
+      }
+      .confirm-info strong {
+        color: #0d2b6e;
+      }
+      .btn-confirm {
+        padding: 10px 22px;
+        background: #27ae60;
+        color: #fff;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+        font-size: 13px;
+        font-weight: 700;
+      }
+      .btn-confirm:hover {
+        background: #219150;
+      }
+      .btn-confirm:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+      }
+      .btn-reset {
+        padding: 10px 16px;
+        background: #f5f5f5;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        cursor: pointer;
+        font-size: 13px;
+      }
+      .loading {
+        display: inline-block;
+        width: 14px;
+        height: 14px;
+        border: 2px solid #fff;
+        border-top-color: transparent;
+        border-radius: 50%;
+        animation: spin 0.7s linear infinite;
+        vertical-align: middle;
+        margin-right: 6px;
+      }
+      @keyframes spin {
+        to {
+          transform: rotate(360deg);
+        }
       }
     </style>
   </head>
   <body>
     <div class="app-shell">
-      <!-- TOPBAR -->
       <div class="topbar">
         <div class="topbar-brand">
           <img
@@ -108,6 +369,21 @@
             style="height: 40px; width: auto" />
         </div>
         <div class="topbar-right">
+          <div
+            class="notif-btn"
+            id="remarqueBtnTopbar"
+            title="Remarques"
+            style="cursor: pointer; margin-right: 2px">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none">
+              <path
+                d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"
+                stroke="#4A6A9E"
+                stroke-width="1.8"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                fill="none" />
+            </svg>
+          </div>
           <div class="notif-btn" style="position: relative; cursor: pointer">
             <svg width="15" height="15" viewBox="0 0 24 24" fill="none">
               <path
@@ -116,24 +392,6 @@
                 stroke-width="1.8"
                 stroke-linecap="round" />
             </svg>
-            <div class="notif-dot"></div>
-          </div>
-          <div
-            class="notif-btn"
-            onclick="window.location.href = '/remarques'"
-            style="position: relative; cursor: pointer"
-            title="Remarques">
-            <svg width="15" height="15" viewBox="0 0 24 24" fill="none">
-              <path
-                d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"
-                stroke="#4A6A9E"
-                stroke-width="1.8"
-                fill="none" />
-            </svg>
-            <div
-              class="notif-dot"
-              id="remarquesDot"
-              style="display: none"></div>
           </div>
           <div class="user-chip">
             <div class="user-chip-avatar"></div>
@@ -147,123 +405,270 @@
 
       <div class="body">
         <div th:replace="~{fragments/sidebar :: sidebar}"></div>
-
         <div class="main">
           <div class="form-card">
             <div class="page-heading">
-              <div class="page-title" id="pageTitle">Nouveau matériel</div>
+              <div class="page-icon">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                  <rect
+                    x="2"
+                    y="7"
+                    width="20"
+                    height="14"
+                    rx="2"
+                    stroke="#0D2B6E"
+                    stroke-width="2" />
+                  <path
+                    d="M16 7V5a2 2 0 00-2-2h-4a2 2 0 00-2 2v2"
+                    stroke="#0D2B6E"
+                    stroke-width="2" />
+                  <line
+                    x1="12"
+                    y1="12"
+                    x2="12"
+                    y2="16"
+                    stroke="#0D2B6E"
+                    stroke-width="2"
+                    stroke-linecap="round" />
+                  <line
+                    x1="10"
+                    y1="14"
+                    x2="14"
+                    y2="14"
+                    stroke="#0D2B6E"
+                    stroke-width="2"
+                    stroke-linecap="round" />
+                </svg>
+              </div>
+              <div class="page-title" id="pageTitle">Gestion des matériels</div>
+            </div>
+            <div class="page-sub">
+              Créez un matériel manuellement ou importez plusieurs matériels
+              depuis un fichier Excel.
             </div>
 
-            <div id="msgArea"></div>
-            <input type="hidden" id="materielId" />
-
-            <div class="section-label">Informations générales</div>
-            <div class="form-grid2">
-              <div class="field">
-                <label class="field-label"
-                  >Nom du matériel <span class="req">*</span></label
-                >
-                <input
-                  type="text"
-                  class="field-input"
-                  id="nom"
-                  placeholder="Ex: Ordinateur portable Dell" />
-              </div>
-              <div class="field">
-                <label class="field-label">Marque / Référence</label>
-                <input
-                  type="text"
-                  class="field-input"
-                  id="reference"
-                  placeholder="Ex: Dell Latitude 5520, HP ProBook..." />
-              </div>
-            </div>
-
-            <div class="form-grid2">
-              <div class="field">
-                <label class="field-label">Bureau</label>
-                <input
-                  type="text"
-                  class="field-input"
-                  id="bureau"
-                  placeholder="Ex: Bureau 203, Direction informatique..." />
-              </div>
-              <div class="field">
-                <label class="field-label">Service</label>
-                <input
-                  type="text"
-                  class="field-input"
-                  id="service"
-                  placeholder="Ex: Service des systèmes, Service RH..." />
-              </div>
-            </div>
-
-            <div class="form-grid2">
-              <div class="field">
-                <label class="field-label"
-                  >État <span class="req">*</span></label
-                >
-                <select class="field-select" id="etat">
-                  <option value="">-- Sélectionner --</option>
-                  <option value="NEUF">Neuf</option>
-                  <option value="BON_ETAT">Bon état</option>
-                  <option value="USAGE">Usagé</option>
-                  <option value="EN_PANNE">En panne</option>
-                </select>
-              </div>
-              <div class="field">
-                <label class="field-label"
-                  >Statut <span class="req">*</span></label
-                >
-                <select class="field-select" id="statut">
-                  <option value="">-- Sélectionner --</option>
-                  <option value="DISPONIBLE">Disponible</option>
-                  <option value="EN_UTILISATION">En utilisation</option>
-                  <option value="EN_REPARATION">En réparation</option>
-                  <option value="HORS_SERVICE">Hors service</option>
-                </select>
-              </div>
-            </div>
-
-            <div class="form-grid2">
-              <div class="field">
-                <label class="field-label">Quantité</label>
-                <input
-                  type="number"
-                  class="field-input"
-                  id="quantite"
-                  min="1"
-                  value="1" />
-              </div>
-              <div class="field">
-                <label class="field-label">Date de licence</label>
-                <input type="date" class="field-input" id="dateLicence" />
-              </div>
-              <div class="field">
-                <label class="field-label">Date d'expiration</label>
-                <input type="date" class="field-input" id="dateExpiration" />
-              </div>
-            </div>
-
-            <div class="section-label">Description</div>
-            <div class="field">
-              <textarea
-                class="field-input"
-                id="description"
-                rows="3"
-                placeholder="Description du matériel, caractéristiques techniques..."></textarea>
-            </div>
-
-            <div class="form-actions">
+            <div class="tabs">
+              <button class="tab-btn active" onclick="switchTabMat('manual')">
+                 Saisie manuelle
+              </button>
               <button
-                type="button"
-                class="btn-cancel"
-                onclick="window.location.href = '/materiels-list'">
-                Annuler
+                class="tab-btn"
+                id="tabExcelBtn"
+                onclick="switchTabMat('excel')">
+                 Import Excel (plusieurs matériels)
               </button>
-              <button type="button" class="btn-submit" onclick="saveMateriel()">
-                ✓ Valider
-              </button>
+            </div>
+
+            <!-- TAB 1: Manuel -->
+            <div id="tab-manual" class="tab-panel active">
+              <div id="msgArea"></div>
+              <input type="hidden" id="materielId" />
+
+              <div class="section-label">Informations générales</div>
+              <div class="form-grid2">
+                <div class="field">
+                  <label class="field-label"
+                    >Nom du matériel <span class="req">*</span></label
+                  >
+                  <input
+                    type="text"
+                    class="field-input"
+                    id="nom"
+                    placeholder="Ex: Ordinateur portable Dell" />
+                </div>
+                <div class="field">
+                  <label class="field-label">Marque / Référence</label>
+                  <input
+                    type="text"
+                    class="field-input"
+                    id="reference"
+                    placeholder="Ex: Dell Latitude 5520" />
+                </div>
+              </div>
+              <div class="form-grid2">
+                <div class="field">
+                  <label class="field-label">Bureau</label>
+                  <input
+                    type="text"
+                    class="field-input"
+                    id="bureau"
+                    placeholder="Ex: Bureau 203" />
+                </div>
+                <div class="field">
+                  <label class="field-label">Service</label>
+                  <input
+                    type="text"
+                    class="field-input"
+                    id="service"
+                    placeholder="Ex: Service DSI" />
+                </div>
+              </div>
+              <div class="form-grid2">
+                <div class="field">
+                  <label class="field-label"
+                    >État <span class="req">*</span></label
+                  >
+                  <select class="field-select" id="etat">
+                    <option value="">-- Sélectionner --</option>
+                    <option value="NEUF">Neuf</option>
+                    <option value="BON_ETAT">Bon état</option>
+                    <option value="USAGE">Usagé</option>
+                    <option value="EN_PANNE">En panne</option>
+                  </select>
+                </div>
+                <div class="field">
+                  <label class="field-label"
+                    >Statut <span class="req">*</span></label
+                  >
+                  <select class="field-select" id="statut">
+                    <option value="">-- Sélectionner --</option>
+                    <option value="DISPONIBLE">Disponible</option>
+                    <option value="EN_UTILISATION">En utilisation</option>
+                    <option value="EN_REPARATION">En réparation</option>
+                    <option value="HORS_SERVICE">Hors service</option>
+                  </select>
+                </div>
+              </div>
+              <div class="form-grid2">
+                <div class="field">
+                  <label class="field-label">Quantité</label>
+                  <input
+                    type="number"
+                    class="field-input"
+                    id="quantite"
+                    min="1"
+                    value="1" />
+                </div>
+                <div class="field">
+                  <label class="field-label">Licence / Numéro de série</label>
+                  <input
+                    type="text"
+                    class="field-input"
+                    id="licence"
+                    placeholder="Ex: WIN-XXXXX-XXXXX" />
+                </div>
+              </div>
+              <div class="divider"></div>
+              <div class="section-label"> Dates</div>
+              <div class="form-grid2">
+                <div class="field">
+                  <label class="field-label">Date de licence</label>
+                  <input type="date" class="field-input" id="dateLicence" />
+                </div>
+                <div class="field">
+                  <label class="field-label">Date d'expiration</label>
+                  <input type="date" class="field-input" id="dateExpiration" />
+                </div>
+              </div>
+              <div class="divider"></div>
+              <div class="section-label"> Description</div>
+              <div class="field">
+                <textarea
+                  class="field-input"
+                  id="description"
+                  rows="3"
+                  placeholder="Caractéristiques techniques, notes..."></textarea>
+              </div>
+              <div class="form-actions">
+                <button
+                  type="button"
+                  class="btn-cancel"
+                  onclick="window.location.href = '/materiels-list'">
+                  Annuler
+                </button>
+                <button
+                  type="button"
+                  class="btn-submit"
+                  onclick="saveMateriel()">
+                  ✓ Valider
+                </button>
+              </div>
+            </div>
+
+            <!-- TAB 2: Import Excel -->
+            <div id="tab-excel" class="tab-panel">
+              <div class="template-box">
+                <div class="template-icon"></div>
+                <div class="template-info">
+                  <div class="template-title">Modèle Excel à compléter</div>
+                  <div class="template-sub">
+                    Colonnes : nom · référence · bureau · service · état ·
+                    statut · quantité · licence · dateLicence · dateExpiration ·
+                    description
+                  </div>
+                  <div
+                    class="template-sub"
+                    style="margin-top: 4px; color: #b06000">
+                    États : NEUF · BON_ETAT · USAGE · EN_PANNE &nbsp;|&nbsp;
+                    Statuts : DISPONIBLE · EN_UTILISATION · EN_REPARATION ·
+                    HORS_SERVICE
+                  </div>
+                </div>
+                <button class="btn-download" onclick="downloadTemplateMat()">
+                  ⬇ Télécharger le modèle
+                </button>
+              </div>
+
+              <div class="upload-zone" id="uploadZoneMat">
+                <input
+                  type="file"
+                  id="excelFileMat"
+                  accept=".xlsx,.xls"
+                  onchange="handleFileSelectMat(this.files[0])" />
+                <div class="upload-icon"></div>
+                <div class="upload-title">Glissez votre fichier Excel ici</div>
+                <div class="upload-sub">
+                  ou cliquez pour sélectionner un fichier .xlsx
+                </div>
+              </div>
+
+              <div id="excelMessageMat"></div>
+
+              <div
+                class="preview-section"
+                id="previewSectionMat"
+                style="display: none">
+                <div class="preview-header">
+                  <div class="preview-title" id="previewTitleMat"></div>
+                  <div class="preview-stats" id="previewStatsMat"></div>
+                </div>
+                <div class="preview-table-wrap">
+                  <table class="preview-table">
+                    <thead>
+                      <tr>
+                        <th>#</th>
+                        <th>Nom</th>
+                        <th>Référence</th>
+                        <th>Bureau</th>
+                        <th>Service</th>
+                        <th>État</th>
+                        <th>Statut</th>
+                        <th>Qté</th>
+                        <th>Résultat</th>
+                      </tr>
+                    </thead>
+                    <tbody id="previewBodyMat"></tbody>
+                  </table>
+                </div>
+                <div
+                  class="confirm-bar"
+                  id="confirmBarMat"
+                  style="display: none">
+                  <div class="confirm-info" id="confirmInfoMat"></div>
+                  <div style="display: flex; gap: 10px">
+                    <button class="btn-reset" onclick="resetImportMat()">
+                      ↺ Changer de fichier
+                    </button>
+                    <button
+                      class="btn-confirm"
+                      id="btnConfirmMat"
+                      onclick="confirmImportMat()">
+                      ✓ Créer les matériels
+                    </button>
+                  </div>
+                </div>
+                <div id="importResultMat"></div>
+              </div>
             </div>
           </div>
         </div>
@@ -272,22 +677,24 @@
 
     <script th:src="@{/js/sidebar-badge-loader.js}"></script>
     <script th:src="@{/js/auth.js}"></script>
+    <script th:src="@{/js/materiel-import.js}"></script>
     <script>
-      // ── Load for edit mode ────────────────────────────────────────────────
       async function loadForEdit() {
         const parts = window.location.pathname.split("/");
         const idx = parts.indexOf("edit");
-        if (idx === -1) return; // create mode
+        if (idx === -1) return;
         const id = parts[idx + 1];
         if (!id) return;
-
+        document.getElementById("pageTitle").textContent =
+          "Modifier un matériel";
+        const tabBtn = document.getElementById("tabExcelBtn");
+        if (tabBtn) tabBtn.style.display = "none";
         try {
-          const res = await fetch(`/api/materiels/${id}`, {
+          const res = await fetch("/api/materiels/" + id, {
             headers: getAuthHeaders(),
           });
           if (!res.ok) return;
           const m = await res.json();
-
           document.getElementById("materielId").value = m.id || "";
           document.getElementById("nom").value = m.nom || "";
           document.getElementById("reference").value =
@@ -297,39 +704,33 @@
           document.getElementById("etat").value = m.etat || "";
           document.getElementById("statut").value = m.statut || "";
           document.getElementById("quantite").value = m.quantite || 1;
+          document.getElementById("licence").value = m.licence || "";
           document.getElementById("dateLicence").value = m.dateLicence || "";
           document.getElementById("dateExpiration").value =
             m.dateExpiration || "";
           document.getElementById("description").value = m.description || "";
-          document.getElementById("pageTitle").textContent =
-            "Modifier : " + m.nom;
         } catch (e) {
-          console.error("Error loading materiel:", e);
+          console.error("Erreur chargement:", e);
         }
       }
 
-      // ── Save (create or update) ───────────────────────────────────────────
       async function saveMateriel() {
         const id = document.getElementById("materielId").value;
         const nom = document.getElementById("nom").value.trim();
         const etat = document.getElementById("etat").value;
         const statut = document.getElementById("statut").value;
-
-        // ── Validation ──
         if (!nom) {
-          showMsg("Le nom est obligatoire", "err");
+          showMsg("Le nom est obligatoire.", "err");
           return;
         }
         if (!etat) {
-          showMsg("L'état est obligatoire", "err");
+          showMsg("L'état est obligatoire.", "err");
           return;
         }
         if (!statut) {
-          showMsg("Le statut est obligatoire", "err");
+          showMsg("Le statut est obligatoire.", "err");
           return;
         }
-
-        // ✅ Only read IDs that actually exist in the HTML
         const body = {
           nom,
           reference: document.getElementById("reference").value || null,
@@ -338,14 +739,14 @@
           etat,
           statut,
           quantite: parseInt(document.getElementById("quantite").value) || 1,
+          licence: document.getElementById("licence").value || null,
           dateLicence: document.getElementById("dateLicence").value || null,
           dateExpiration:
             document.getElementById("dateExpiration").value || null,
           description: document.getElementById("description").value || null,
         };
-
         try {
-          const url = id ? `/api/materiels/${id}` : "/api/materiels";
+          const url = id ? "/api/materiels/" + id : "/api/materiels";
           const method = id ? "PUT" : "POST";
           const res = await fetch(url, {
             method,
@@ -355,9 +756,8 @@
             },
             body: JSON.stringify(body),
           });
-
           if (res.ok) {
-            showMsg("✅ Matériel sauvegardé !", "suc");
+            showMsg("Matériel sauvegardé !", "suc");
             setTimeout(() => (window.location.href = "/materiels-list"), 900);
           } else {
             const err = await res.json().catch(() => ({}));
@@ -370,7 +770,11 @@
 
       function showMsg(msg, type) {
         document.getElementById("msgArea").innerHTML =
-          `<div class="msg ${type}">${msg}</div>`;
+          '<div class="alert ' +
+          (type === "suc" ? "alert-success" : "alert-error") +
+          '">' +
+          msg +
+          "</div>";
         window.scrollTo({ top: 0, behavior: "smooth" });
       }
 
