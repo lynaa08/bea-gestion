@@ -35,7 +35,15 @@ public class User implements UserDetails {
 
     private String telephone;
 
-    // Getters and Setters
+    @Column(name = "push_token")
+    private String pushToken;
+
+    // ✅ nullable so SQLite can add this column to existing rows without crashing
+    // NULL is treated as false — existing admin/chef accounts are unaffected
+    @Column(name = "must_change_password")
+    private Boolean mustChangePassword = false;
+
+    // ── Getters & Setters ──────────────────────────────────────────────────
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
 
@@ -60,22 +68,25 @@ public class User implements UserDetails {
     public String getTelephone() { return telephone; }
     public void setTelephone(String telephone) { this.telephone = telephone; }
 
+    public String getPushToken() { return pushToken; }
+    public void setPushToken(String pushToken) { this.pushToken = pushToken; }
+
+    // ✅ NULL-safe: existing rows have NULL → treated as false (no forced change)
+    public boolean isMustChangePassword() {
+        return Boolean.TRUE.equals(mustChangePassword);
+    }
+    public void setMustChangePassword(boolean mustChangePassword) {
+        this.mustChangePassword = mustChangePassword;
+    }
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return List.of(new SimpleGrantedAuthority("ROLE_" + role.name()));
     }
 
-    @Override
-    public String getUsername() { return matricule; }
-
+    @Override public String getUsername() { return matricule; }
     @Override public boolean isAccountNonExpired() { return true; }
     @Override public boolean isAccountNonLocked() { return true; }
     @Override public boolean isCredentialsNonExpired() { return true; }
     @Override public boolean isEnabled() { return true; }
-    // Après le champ "telephone" existant, ajouter :
-@Column(name = "push_token")
-private String pushToken;
-
-public String getPushToken() { return pushToken; }
-public void setPushToken(String pushToken) { this.pushToken = pushToken; }
 }

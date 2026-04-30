@@ -1,0 +1,849 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" type="image/png" href="/favicon.png" />
+    <title>Réservations Matériels - BEA</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}" />
+    <style>
+      /* ── Stats row ── */
+      .stats-row {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 12px;
+        margin-bottom: 20px;
+      }
+      .stat-card {
+        background: #fff;
+        border-radius: 12px;
+        padding: 14px 18px;
+        border: 0.5px solid #d8e6f2;
+        text-align: center;
+      }
+      .stat-num {
+        font-size: 28px;
+        font-weight: 800;
+        color: #0d2b6e;
+      }
+      .stat-label {
+        font-size: 11px;
+        color: #8a9fbf;
+        margin-top: 2px;
+      }
+      .stat-card.attente {
+        border-top: 3px solid #f59e0b;
+      }
+      .stat-card.active {
+        border-top: 3px solid #22c55e;
+      }
+      .stat-card.terminee {
+        border-top: 3px solid #5bb8e8;
+      }
+
+      /* ── Priority rank badge ── */
+      .rank-badge {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 26px;
+        height: 26px;
+        border-radius: 50%;
+        font-size: 11px;
+        font-weight: 800;
+      }
+      .rank-1 {
+        background: #fef3c7;
+        color: #b45309;
+        border: 1.5px solid #f59e0b;
+      }
+      .rank-2 {
+        background: #f1f5f9;
+        color: #475569;
+        border: 1.5px solid #cbd5e1;
+      }
+      .rank-3 {
+        background: #fdf2f8;
+        color: #9d174d;
+        border: 1.5px solid #f9a8d4;
+      }
+      .rank-n {
+        background: #f8fafc;
+        color: #94a3b8;
+        border: 1.5px solid #e2e8f0;
+      }
+
+      /* ── Score pill ── */
+      .score-pill {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        background: #f0f4ff;
+        border-radius: 20px;
+        padding: 3px 10px;
+        font-size: 12px;
+        font-weight: 700;
+        color: #0d2b6e;
+      }
+      .score-bar-wrap {
+        background: #dce7f7;
+        border-radius: 10px;
+        height: 5px;
+        width: 44px;
+      }
+      .score-bar {
+        height: 5px;
+        border-radius: 10px;
+        background: linear-gradient(90deg, #5bb8e8, #0d2b6e);
+        transition: width 0.4s;
+      }
+
+      /* ── Priority factors ── */
+      .factor-tag {
+        display: inline-block;
+        padding: 1px 7px;
+        border-radius: 10px;
+        font-size: 10px;
+        font-weight: 600;
+        margin-right: 3px;
+        margin-bottom: 2px;
+      }
+      .factor-critique {
+        background: #fee2e2;
+        color: #b91c1c;
+      }
+      .factor-haute {
+        background: #fff7ed;
+        color: #c2410c;
+      }
+      .factor-moyenne {
+        background: #fef9c3;
+        color: #a16207;
+      }
+      .factor-basse {
+        background: #f0fdf4;
+        color: #15803d;
+      }
+      .factor-deadline {
+        background: #ede9fe;
+        color: #6d28d9;
+      }
+      .factor-attente {
+        background: #e0f2fe;
+        color: #0369a1;
+      }
+
+      /* ── Action buttons ── */
+      .btn-accept {
+        background: #16a34a;
+        color: #fff;
+        border: none;
+        padding: 6px 13px;
+        border-radius: 7px;
+        font-size: 11px;
+        font-weight: 700;
+        cursor: pointer;
+        transition: background 0.15s;
+        white-space: nowrap;
+      }
+      .btn-accept:hover {
+        background: #15803d;
+      }
+      .btn-reject {
+        background: #fee2e2;
+        color: #b91c1c;
+        border: none;
+        padding: 6px 10px;
+        border-radius: 7px;
+        font-size: 11px;
+        font-weight: 700;
+        cursor: pointer;
+        margin-left: 5px;
+        transition: background 0.15s;
+        white-space: nowrap;
+      }
+      .btn-reject:hover {
+        background: #fecaca;
+      }
+      .btn-done {
+        background: #e0f2fe;
+        color: #0369a1;
+        border: none;
+        padding: 6px 10px;
+        border-radius: 7px;
+        font-size: 11px;
+        font-weight: 700;
+        cursor: pointer;
+        margin-left: 5px;
+        transition: background 0.15s;
+      }
+      .btn-done:hover {
+        background: #bae6fd;
+      }
+
+      /* ── Chef banner ── */
+      .chef-banner {
+        background: linear-gradient(135deg, #0d2b6e 0%, #1e40af 100%);
+        color: #fff;
+        border-radius: 12px;
+        padding: 14px 20px;
+        margin-bottom: 18px;
+        display: flex;
+        align-items: flex-start;
+        gap: 14px;
+        font-size: 13px;
+        line-height: 1.5;
+      }
+
+      /* ── How-score works tooltip card ── */
+      .score-legend {
+        background: #f8faff;
+        border: 1px solid #d8e6f2;
+        border-radius: 10px;
+        padding: 12px 16px;
+        margin-bottom: 16px;
+        font-size: 11px;
+        color: #4a6080;
+        display: flex;
+        gap: 24px;
+        flex-wrap: wrap;
+      }
+      .score-legend strong {
+        color: #0d2b6e;
+      }
+
+      .search-bar {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 12px 20px 0;
+        flex-wrap: wrap;
+      }
+      .search-input-r {
+        padding: 8px 14px;
+        border: 1.5px solid #d8e6f2;
+        border-radius: 8px;
+        font-size: 13px;
+        outline: none;
+        width: 230px;
+      }
+      .search-input-r:focus {
+        border-color: #5bb8e8;
+      }
+      .filter-select {
+        padding: 8px 12px;
+        border: 1.5px solid #d8e6f2;
+        border-radius: 8px;
+        font-size: 12px;
+        outline: none;
+        color: #1a2d5a;
+      }
+
+      /* ── Row highlights ── */
+      tr.row-top1 {
+        background: #fffbeb !important;
+      }
+      tr.row-top2 {
+        background: #fafafa !important;
+      }
+      tr.row-active {
+        background: #f0fdf4 !important;
+      }
+      tr.row-done {
+        opacity: 0.65;
+      }
+
+      @media (max-width: 700px) {
+        .stats-row {
+          grid-template-columns: repeat(2, 1fr);
+        }
+        .score-legend {
+          flex-direction: column;
+          gap: 8px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="app-shell">
+      <!-- Topbar -->
+      <div class="topbar">
+        <div class="topbar-brand">
+          <img
+            th:src="@{/images/logo_sidebar.svg}"
+            alt="Logo BEA"
+            style="height: 40px; width: auto" />
+        </div>
+        <div class="topbar-right">
+          <div
+            class="notif-btn"
+            id="remarqueBtnTopbar"
+            title="Remarques"
+            style="cursor: pointer; margin-right: 2px">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none">
+              <path
+                d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"
+                stroke="#4A6A9E"
+                stroke-width="1.8"
+                fill="none" />
+            </svg>
+            <div
+              class="notif-dot remarque-dot"
+              id="remarqueDot"
+              style="display: none"></div>
+          </div>
+          <div class="notif-btn" id="notifBellBtn">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none">
+              <path
+                d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9M13.73 21a2 2 0 01-3.46 0"
+                stroke="#4A6A9E"
+                stroke-width="1.8"
+                stroke-linecap="round" />
+            </svg>
+            <div class="notif-dot"></div>
+          </div>
+          <div class="user-chip">
+            <div class="user-chip-avatar"></div>
+            <div class="user-chip-info">
+              <div class="user-chip-name"></div>
+              <div class="user-chip-role"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="body">
+        <div th:replace="~{fragments/sidebar :: sidebar}"></div>
+
+        <div class="main">
+          <!-- ── Stats ── -->
+          <div class="stats-row">
+            <div class="stat-card attente">
+              <div class="stat-num" id="st-attente">0</div>
+              <div class="stat-label">⏳ En attente</div>
+            </div>
+            <div class="stat-card active">
+              <div class="stat-num" id="st-active">0</div>
+              <div class="stat-label">✅ Acceptées</div>
+            </div>
+            <div class="stat-card terminee">
+              <div class="stat-num" id="st-terminee">0</div>
+              <div class="stat-label">✔ Terminées / Annulées</div>
+            </div>
+          </div>
+
+          
+
+          <!-- ── Score legend ── -->
+          <div class="score-legend">
+            <div>📊 <strong>Comment le score est calculé :</strong></div>
+            <div>
+              🔴 CRITIQUE <strong>+40</strong> · HAUTE <strong>+30</strong> ·
+              MOYENNE <strong>+20</strong> · BASSE <strong>+10</strong>
+            </div>
+            <div>
+              📅 Deadline dépassée <strong>+35</strong> · ≤7j
+              <strong>+30</strong> · ≤14j <strong>+20</strong> · ≤30j
+              <strong>+10</strong>
+            </div>
+            <div>⏳ Temps d'attente pris en compte comme tiebreak</div>
+          </div>
+
+          <!-- ── Table card ── -->
+          <div class="table-card">
+            <div
+              style="
+                padding: 16px 20px 0;
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                flex-wrap: wrap;
+                gap: 10px;
+              ">
+              <div class="page-title">Demandes de réservation</div>
+              <button
+                onclick="window.location.href = '/materiels-list'"
+                style="
+                  background: #f0f4ff;
+                  border: 1.5px solid #c7d7f0;
+                  color: #0d2b6e;
+                  padding: 7px 16px;
+                  border-radius: 8px;
+                  cursor: pointer;
+                  font-size: 12px;
+                  font-weight: 600;
+                  display: flex;
+                  align-items: center;
+                  gap: 7px;
+                ">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none">
+                  <path
+                    d="M19 12H5M12 5l-7 7 7 7"
+                    stroke="#0d2b6e"
+                    stroke-width="2.2"
+                    stroke-linecap="round" />
+                </svg>
+                Retour matériels
+              </button>
+            </div>
+
+            <div class="search-bar">
+              <input
+                class="search-input-r"
+                type="text"
+                id="searchInput"
+                placeholder="Rechercher matériel, responsable, projet…"
+                oninput="filterAndRender()" />
+              <select
+                class="filter-select"
+                id="filterStatut"
+                onchange="filterAndRender()">
+                <option value="EN_ATTENTE">⏳ En attente seulement</option>
+                <option value="">Tous les statuts</option>
+                <option value="ACTIVE">✅ Acceptées</option>
+                <option value="TERMINEE">✔ Terminées</option>
+                <option value="ANNULEE">✕ Annulées / Rejetées</option>
+              </select>
+              <select
+                class="filter-select"
+                id="filterMateriel"
+                onchange="filterAndRender()">
+                <option value="">Tous les matériels</option>
+              </select>
+            </div>
+
+            <div style="overflow-x: auto; padding-bottom: 8px">
+              <table class="data-table" style="margin-top: 10px">
+                <thead>
+                  <tr>
+                    <th style="width: 36px; text-align: center">Rang</th>
+                    <th>Matériel</th>
+                    <th>Responsable</th>
+                    <th>Projet &amp; Priorité</th>
+                    <th>Deadline projet</th>
+                    <th>Date demandée</th>
+                    <th>Score priorité</th>
+                    <th>Facteurs</th>
+                    <th>Statut</th>
+                    <th id="actionsHeader">Actions Chef</th>
+                  </tr>
+                </thead>
+                <tbody id="resaBody">
+                  <tr>
+                    <td
+                      colspan="10"
+                      style="text-align: center; padding: 50px; color: #b0bdd0">
+                      Chargement…
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+        <!-- /main -->
+      </div>
+      <!-- /body -->
+    </div>
+    <!-- /app-shell -->
+
+    <script th:src="@{/js/sidebar-badge-loader.js}"></script>
+    <script th:src="@{/js/auth.js}"></script>
+    <script>
+      // ════════════════════════════════════════════════════════════════════
+      //  State
+      // ════════════════════════════════════════════════════════════════════
+      let allReservations = [];
+      let currentUserRole = "";
+
+      // ════════════════════════════════════════════════════════════════════
+      //  Boot
+      // ════════════════════════════════════════════════════════════════════
+      document.addEventListener("DOMContentLoaded", async () => {
+        // Decode role from JWT
+        try {
+          const token = localStorage.getItem("token");
+          if (token) {
+            const payload = JSON.parse(atob(token.split(".")[1]));
+            currentUserRole = String(payload.role || payload.authorities || "");
+          }
+        } catch {}
+
+        if (isChef()) {
+          const banner = document.getElementById("chefBanner");
+          if (banner) banner.style.display = "flex";
+        } else {
+          // Non-chef: hide actions column header label
+          document.getElementById("actionsHeader").textContent = "";
+        }
+
+        await loadReservations();
+      });
+
+      function isChef() {
+        return (
+          currentUserRole.includes("CHEF_DEPARTEMENT") ||
+          currentUserRole.includes("ADMIN") ||
+          currentUserRole.includes("DIRECTEUR")
+        );
+      }
+
+      // ════════════════════════════════════════════════════════════════════
+      //  Load reservations
+      // ════════════════════════════════════════════════════════════════════
+      async function loadReservations() {
+        try {
+          const res = await fetch("/api/reservations/all", {
+            headers: getAuthHeaders(),
+          });
+          if (!res.ok) throw new Error("HTTP " + res.status);
+          allReservations = await res.json();
+          buildMaterielFilter();
+          updateStats();
+          filterAndRender();
+        } catch (e) {
+          document.getElementById("resaBody").innerHTML =
+            `<tr><td colspan="10" style="text-align:center;padding:50px;color:#ef4444">
+               Erreur de chargement : ${e.message}
+             </td></tr>`;
+        }
+      }
+
+      // ════════════════════════════════════════════════════════════════════
+      //  Stats counters
+      // ════════════════════════════════════════════════════════════════════
+      function updateStats() {
+        let attente = 0,
+          active = 0,
+          termine = 0;
+        allReservations.forEach((r) => {
+          if (r.statut === "EN_ATTENTE") attente++;
+          else if (r.statut === "ACTIVE") active++;
+          else termine++;
+        });
+        document.getElementById("st-attente").textContent = attente;
+        document.getElementById("st-active").textContent = active;
+        document.getElementById("st-terminee").textContent = termine;
+      }
+
+      // ════════════════════════════════════════════════════════════════════
+      //  Materiel filter options
+      // ════════════════════════════════════════════════════════════════════
+      function buildMaterielFilter() {
+        const seen = new Set();
+        const sel = document.getElementById("filterMateriel");
+        // remove old options except first
+        while (sel.options.length > 1) sel.remove(1);
+        allReservations.forEach((r) => {
+          if (r.materielNom && !seen.has(r.materielId)) {
+            seen.add(r.materielId);
+            const o = document.createElement("option");
+            o.value = r.materielId;
+            o.textContent = r.materielNom;
+            sel.appendChild(o);
+          }
+        });
+      }
+
+      // ════════════════════════════════════════════════════════════════════
+      //  Filter + render
+      // ════════════════════════════════════════════════════════════════════
+      function filterAndRender() {
+        const q = document
+          .getElementById("searchInput")
+          .value.toLowerCase()
+          .trim();
+        const statut = document.getElementById("filterStatut").value;
+        const matId = document.getElementById("filterMateriel").value;
+
+        let list = allReservations;
+        if (statut) list = list.filter((r) => r.statut === statut);
+        if (matId) list = list.filter((r) => String(r.materielId) === matId);
+        if (q)
+          list = list.filter(
+            (r) =>
+              (r.materielNom || "").toLowerCase().includes(q) ||
+              (r.responsableNom || "").toLowerCase().includes(q) ||
+              (r.responsablePrenom || "").toLowerCase().includes(q) ||
+              (r.projetNom || "").toLowerCase().includes(q),
+          );
+
+        renderTable(list);
+      }
+
+      // ════════════════════════════════════════════════════════════════════
+      //  Render table
+      //  All EN_ATTENTE already sorted by score desc (server-side via getAllReservations)
+      //  We also do client-side tiebreak on wait time so it stays correct after filter
+      // ════════════════════════════════════════════════════════════════════
+      function renderTable(list) {
+        const tbody = document.getElementById("resaBody");
+        if (!list.length) {
+          tbody.innerHTML =
+            '<tr><td colspan="10" style="text-align:center;padding:50px;color:#b0bdd0">Aucune réservation trouvée</td></tr>';
+          return;
+        }
+
+        // Rank only within EN_ATTENTE subset visible in current filter
+        const attentes = list.filter((r) => r.statut === "EN_ATTENTE");
+        // sort attentes: score desc → dateCreation asc (longer wait = higher tie-priority)
+        attentes.sort((a, b) => {
+          const sd = (b.scoresPriorite || 0) - (a.scoresPriorite || 0);
+          if (sd !== 0) return sd;
+          return new Date(a.dateCreation || 0) - new Date(b.dateCreation || 0);
+        });
+        // rank map: id → rank (1-based)
+        const rankMap = {};
+        attentes.forEach((r, i) => (rankMap[r.id] = i + 1));
+
+        tbody.innerHTML = list.map((r) => buildRow(r, rankMap[r.id])).join("");
+      }
+
+      // ════════════════════════════════════════════════════════════════════
+      //  Build a single <tr>
+      // ════════════════════════════════════════════════════════════════════
+      function buildRow(r, rank) {
+        // ── Rank badge ──
+        let rankHtml = '<span style="color:#cbd5e1;font-size:11px">—</span>';
+        if (r.statut === "EN_ATTENTE" && rank) {
+          const cls =
+            rank === 1
+              ? "rank-1"
+              : rank === 2
+                ? "rank-2"
+                : rank === 3
+                  ? "rank-3"
+                  : "rank-n";
+          const icon =
+            rank === 1 ? "🥇" : rank === 2 ? "🥈" : rank === 3 ? "🥉" : rank;
+          rankHtml = `<span class="rank-badge ${cls}">${icon}</span>`;
+        }
+
+        // ── Score bar ──
+        const score = r.scoresPriorite || 0;
+        const scoreHtml = `
+          <span class="score-pill">
+            ${score}
+            <span class="score-bar-wrap">
+              <span class="score-bar" style="width:${Math.min(score, 100)}%"></span>
+            </span>
+          </span>`;
+
+        // ── Priority factors tags ──
+        let factors = "";
+        if (r.projetPriorite) {
+          const p = r.projetPriorite.toUpperCase();
+          const cls =
+            p === "CRITIQUE"
+              ? "factor-critique"
+              : p === "HAUTE"
+                ? "factor-haute"
+                : p === "MOYENNE"
+                  ? "factor-moyenne"
+                  : "factor-basse";
+          factors += `<span class="factor-tag ${cls}">${r.projetPriorite}</span>`;
+        }
+        if (r.projetDateFin) {
+          const days = Math.floor(
+            (new Date(r.projetDateFin) - Date.now()) / 86400000,
+          );
+          if (days < 0)
+            factors += `<span class="factor-tag factor-deadline">⚠ ${Math.abs(days)}j retard</span>`;
+          else if (days <= 7)
+            factors += `<span class="factor-tag factor-deadline">📅 ${days}j restants</span>`;
+          else if (days <= 14)
+            factors += `<span class="factor-tag factor-deadline">📅 ${days}j</span>`;
+          else if (days <= 30)
+            factors += `<span class="factor-tag factor-deadline">📅 ${days}j</span>`;
+        }
+        if (r.dateCreation) {
+          const waitDays = Math.floor(
+            (Date.now() - new Date(r.dateCreation)) / 86400000,
+          );
+          if (waitDays > 0)
+            factors += `<span class="factor-tag factor-attente">⏳ ${waitDays}j attente</span>`;
+        }
+        if (!factors)
+          factors = `<span style="color:#cbd5e1;font-size:10px">—</span>`;
+
+        // ── Deadline display ──
+        const deadlineHtml = r.projetDateFin
+          ? (() => {
+              const days = Math.floor(
+                (new Date(r.projetDateFin) - Date.now()) / 86400000,
+              );
+              const label = new Date(r.projetDateFin).toLocaleDateString(
+                "fr-FR",
+              );
+              const color =
+                days < 0 ? "#ef4444" : days <= 7 ? "#f59e0b" : "#4a6080";
+              return `<span style="font-size:12px;font-weight:600;color:${color}">${label}</span>
+                      <div style="font-size:10px;color:${color}">${days < 0 ? "⚠ Dépassée" : days + "j restants"}</div>`;
+            })()
+          : '<span style="color:#cbd5e1;font-size:11px">—</span>';
+
+        // ── Date demandée ──
+        const dateResa = r.dateReservation
+          ? new Date(r.dateReservation).toLocaleDateString("fr-FR")
+          : '<span style="color:#cbd5e1">—</span>';
+
+        // ── Statut badge ──
+        const badges = {
+          EN_ATTENTE: {
+            bg: "#fff7ed",
+            color: "#c2410c",
+            label: "⏳ En attente",
+          },
+          ACTIVE: { bg: "#f0fdf4", color: "#15803d", label: "✅ Acceptée" },
+          TERMINEE: { bg: "#eff6ff", color: "#1d4ed8", label: "✔ Terminée" },
+          ANNULEE: { bg: "#fff1f2", color: "#be123c", label: "✕ Annulée" },
+        };
+        const b = badges[r.statut] || {
+          bg: "#f4f4f4",
+          color: "#666",
+          label: r.statut,
+        };
+        const statutHtml = `<span style="background:${b.bg};color:${b.color};
+          padding:3px 10px;border-radius:20px;font-size:11px;font-weight:700;
+          white-space:nowrap">${b.label}</span>`;
+
+        // ── Actions (chef only) ──
+        let actions = "";
+        if (isChef()) {
+          if (r.statut === "EN_ATTENTE") {
+            actions =
+              `<button class="btn-accept" onclick="accepter(${r.id})">✔ Accepter</button>` +
+              `<button class="btn-reject" onclick="rejeter(${r.id})">✕ Rejeter</button>`;
+          } else if (r.statut === "ACTIVE") {
+            actions = `<button class="btn-done" onclick="terminer(${r.id})">✔ Terminer</button>`;
+          } else {
+            actions = `<span style="color:#cbd5e1;font-size:11px">—</span>`;
+          }
+        }
+
+        // ── Row CSS class ──
+        let rowClass = "";
+        if (r.statut === "EN_ATTENTE") {
+          rowClass = rank === 1 ? "row-top1" : rank === 2 ? "row-top2" : "";
+        } else if (r.statut === "ACTIVE") {
+          rowClass = "row-active";
+        } else {
+          rowClass = "row-done";
+        }
+
+        return `<tr class="${rowClass}">
+          <td style="text-align:center">${rankHtml}</td>
+          <td>
+            <div style="font-weight:700;color:#0d2b6e;font-size:13px">${r.materielNom || "—"}</div>
+            ${r.materielReference ? `<div style="font-size:10px;color:#8a9fbf">${r.materielReference}</div>` : ""}
+          </td>
+          <td>
+            <div style="font-weight:600;font-size:13px;color:#1a2d5a">
+              ${r.responsablePrenom || ""} ${r.responsableNom || ""}
+            </div>
+            <div style="font-size:10px;color:#8a9fbf">${r.responsableMatricule || ""}</div>
+          </td>
+          <td>
+            ${
+              r.projetNom
+                ? `<div style="font-weight:600;font-size:12px;color:#1a2d5a">${r.projetNom}</div>`
+                : `<span style="color:#cbd5e1;font-size:11px">Sans projet</span>`
+            }
+          </td>
+          <td>${deadlineHtml}</td>
+          <td style="font-size:12px;color:#4a6080">${dateResa}</td>
+          <td>${scoreHtml}</td>
+          <td style="max-width:180px">${factors}</td>
+          <td>${statutHtml}</td>
+          <td style="white-space:nowrap">${actions}</td>
+        </tr>`;
+      }
+
+      // ════════════════════════════════════════════════════════════════════
+      //  API actions
+      // ════════════════════════════════════════════════════════════════════
+      async function accepter(id) {
+        if (!confirm("Accepter cette réservation et attribuer le matériel ?"))
+          return;
+        const res = await apiCall(`/api/reservations/${id}/accepter`, "PATCH");
+        if (res) {
+          toast("✅ Réservation acceptée — matériel attribué !", "success");
+          await loadReservations();
+        }
+      }
+
+      async function rejeter(id) {
+        if (!confirm("Rejeter cette demande de réservation ?")) return;
+        const res = await apiCall(`/api/reservations/${id}/rejeter`, "PATCH");
+        if (res) {
+          toast("Demande rejetée.", "warn");
+          await loadReservations();
+        }
+      }
+
+      async function terminer(id) {
+        if (
+          !confirm(
+            "Marquer cette réservation comme terminée et libérer le matériel ?",
+          )
+        )
+          return;
+        const res = await apiCall(`/api/reservations/${id}/terminer`, "PATCH");
+        if (res) {
+          toast("Réservation terminée — matériel libéré.", "success");
+          await loadReservations();
+        }
+      }
+
+      async function apiCall(url, method) {
+        try {
+          const res = await fetch(url, { method, headers: getAuthHeaders() });
+          if (!res.ok) {
+            toast("Erreur serveur : " + res.status, "error");
+            return null;
+          }
+          return res;
+        } catch (e) {
+          toast("Erreur réseau : " + e.message, "error");
+          return null;
+        }
+      }
+
+      // ════════════════════════════════════════════════════════════════════
+      //  Toast
+      // ════════════════════════════════════════════════════════════════════
+      function toast(msg, type) {
+        const old = document.getElementById("resa-toast");
+        if (old) old.remove();
+        const bg =
+          type === "success"
+            ? "#16a34a"
+            : type === "warn"
+              ? "#d97706"
+              : "#dc2626";
+        const el = document.createElement("div");
+        el.id = "resa-toast";
+        Object.assign(el.style, {
+          position: "fixed",
+          bottom: "28px",
+          right: "28px",
+          zIndex: "9999",
+          background: bg,
+          color: "#fff",
+          padding: "12px 22px",
+          borderRadius: "10px",
+          fontSize: "13px",
+          fontWeight: "600",
+          boxShadow: "0 8px 30px rgba(0,0,0,0.18)",
+          animation: "toastIn .25s ease",
+        });
+        el.textContent = msg;
+        document.body.appendChild(el);
+        setTimeout(() => el.remove(), 3500);
+      }
+      const _s = document.createElement("style");
+      _s.textContent = `@keyframes toastIn{from{transform:translateY(16px);opacity:0}to{transform:translateY(0);opacity:1}}`;
+      document.head.appendChild(_s);
+    </script>
+  </body>
+</html>

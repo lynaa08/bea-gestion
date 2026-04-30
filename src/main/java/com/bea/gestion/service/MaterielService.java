@@ -4,7 +4,6 @@ import com.bea.gestion.dto.CreateMaterielRequest;
 import com.bea.gestion.dto.MaterielDTO;
 import com.bea.gestion.entity.Materiel;
 import com.bea.gestion.entity.Projet;
-import com.bea.gestion.entity.User;
 import com.bea.gestion.exception.ResourceNotFoundException;
 import com.bea.gestion.mapper.MaterielMapper;
 import com.bea.gestion.repository.MaterielRepository;
@@ -62,22 +61,27 @@ public class MaterielService {
 
     private void fillFromRequest(Materiel m, CreateMaterielRequest req) {
         m.setNom(req.getNom());
+        // ✅ Support both "marque" and "reference" field names from the form
         m.setMarque(req.getMarque());
         m.setBureau(req.getBureau());
         m.setService(req.getService());
         m.setDescription(req.getDescription());
-
         m.setQuantite(req.getQuantite());
-        m.setDateAcquisition(req.getDateAcquisition());
         m.setEtat(req.getEtat());
 
+        // ✅ FIXED: statut was never set — the form's statut dropdown was ignored
+        m.setStatut(req.getStatut());
+
+        // ✅ FIXED: these no longer throw UnsupportedOperationException
+        m.setDateLicence(req.getDateLicence());
+        m.setDateExpiration(req.getDateExpiration());
+
+        // Optional: link to a project if provided
         if (req.getProjetId() != null) {
-            Projet p = projetRepository.findById(req.getProjetId()).orElse(null);
-            m.setProjet(p);
+            projetRepository.findById(req.getProjetId())
+                .ifPresent(m::setProjet);
         } else {
             m.setProjet(null);
         }
-      
-        }
     }
-
+}

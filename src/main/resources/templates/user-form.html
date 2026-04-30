@@ -8,7 +8,7 @@
     <link rel="stylesheet" th:href="@{/css/style.css}" />
     <style>
       .form-card {
-        max-width: 760px;
+        max-width: 860px;
         margin: 0 auto;
       }
       .form-grid2 {
@@ -42,6 +42,7 @@
         outline: none;
         transition: border-color 0.15s;
         background: #fff;
+        box-sizing: border-box;
       }
       .field-input:focus,
       .field-select:focus {
@@ -50,9 +51,6 @@
       .matricule-highlight {
         border-color: #0d2b6e !important;
         background: #f0f4ff !important;
-      }
-      .matricule-highlight:focus {
-        border-color: #5bb8e8 !important;
       }
       .badge-primary {
         display: inline-block;
@@ -109,21 +107,282 @@
       .btn-submit:hover {
         background: #1a3f8f;
       }
-      .error-message {
-        background: #fee;
-        color: #c00;
-        padding: 10px;
+
+      /* ── Tabs ── */
+      .tabs {
+        display: flex;
+        gap: 0;
+        border-bottom: 2px solid #e0eaf5;
+        margin-bottom: 24px;
+      }
+      .tab-btn {
+        padding: 11px 22px;
+        font-size: 13px;
+        font-weight: 600;
+        color: #8a9fbf;
+        border: none;
+        background: none;
+        cursor: pointer;
+        border-bottom: 2px solid transparent;
+        margin-bottom: -2px;
+        transition: all 0.15s;
+        border-radius: 8px 8px 0 0;
+      }
+      .tab-btn.active {
+        color: #0d2b6e;
+        border-bottom-color: #0d2b6e;
+        background: #f0f4ff;
+      }
+      .tab-panel {
+        display: none;
+      }
+      .tab-panel.active {
+        display: block;
+      }
+
+      /* ── Excel Upload Zone ── */
+      .upload-zone {
+        border: 2px dashed #5bb8e8;
+        border-radius: 14px;
+        padding: 40px;
+        text-align: center;
+        cursor: pointer;
+        transition: all 0.2s;
+        background: #f7fbff;
+        position: relative;
+      }
+      .upload-zone:hover,
+      .upload-zone.drag-over {
+        border-color: #0d2b6e;
+        background: #eef4ff;
+      }
+      .upload-zone input[type="file"] {
+        position: absolute;
+        inset: 0;
+        opacity: 0;
+        cursor: pointer;
+        width: 100%;
+        height: 100%;
+      }
+      .upload-icon {
+        font-size: 48px;
+        margin-bottom: 12px;
+      }
+      .upload-title {
+        font-size: 16px;
+        font-weight: 700;
+        color: #0d2b6e;
+        margin-bottom: 6px;
+      }
+      .upload-sub {
+        font-size: 13px;
+        color: #8a9fbf;
+      }
+
+      /* ── Template download ── */
+      .template-box {
+        background: #f0f7ff;
+        border: 1px solid #c2d8f0;
+        border-radius: 10px;
+        padding: 14px 18px;
+        margin-bottom: 20px;
+        display: flex;
+        align-items: center;
+        gap: 14px;
+      }
+      .template-icon {
+        font-size: 28px;
+      }
+      .template-info {
+        flex: 1;
+      }
+      .template-title {
+        font-weight: 700;
+        color: #0d2b6e;
+        font-size: 13px;
+      }
+      .template-sub {
+        font-size: 12px;
+        color: #6a8ab0;
+        margin-top: 2px;
+      }
+      .btn-download {
+        padding: 8px 16px;
+        background: #0d2b6e;
+        color: #fff;
+        border: none;
         border-radius: 8px;
-        margin-bottom: 15px;
+        cursor: pointer;
+        font-size: 12px;
+        font-weight: 600;
+        white-space: nowrap;
+      }
+      .btn-download:hover {
+        background: #1a3f8f;
+      }
+
+      /* ── Preview table ── */
+      .preview-section {
+        margin-top: 24px;
+      }
+      .preview-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 10px;
+      }
+      .preview-title {
+        font-size: 14px;
+        font-weight: 700;
+        color: #1a2d5a;
+      }
+      .preview-stats {
+        font-size: 12px;
+        color: #8a9fbf;
+      }
+      .preview-table-wrap {
+        overflow-x: auto;
+        border-radius: 10px;
+        border: 1px solid #e0eaf5;
+      }
+      table.preview-table {
+        width: 100%;
+        border-collapse: collapse;
         font-size: 12px;
       }
-      .success-message {
-        background: #efe;
-        color: #0a0;
-        padding: 10px;
+      .preview-table th {
+        background: #f0f4ff;
+        color: #4a6080;
+        padding: 8px 12px;
+        text-align: left;
+        font-weight: 700;
+        font-size: 11px;
+        text-transform: uppercase;
+        border-bottom: 1px solid #e0eaf5;
+        white-space: nowrap;
+      }
+      .preview-table td {
+        padding: 8px 12px;
+        border-bottom: 1px solid #f0f4ff;
+        color: #1a2d5a;
+      }
+      .preview-table tr:last-child td {
+        border-bottom: none;
+      }
+      .preview-table tr:hover td {
+        background: #f8fbff;
+      }
+      .badge-ok {
+        display: inline-block;
+        background: #e6f9ee;
+        color: #1a7a40;
+        padding: 2px 8px;
+        border-radius: 10px;
+        font-size: 11px;
+        font-weight: 600;
+      }
+      .badge-err {
+        display: inline-block;
+        background: #fee;
+        color: #b00;
+        padding: 2px 8px;
+        border-radius: 10px;
+        font-size: 11px;
+        font-weight: 600;
+      }
+      .badge-role {
+        display: inline-block;
+        background: #e8eeff;
+        color: #0d2b6e;
+        padding: 2px 8px;
+        border-radius: 10px;
+        font-size: 11px;
+        font-weight: 600;
+      }
+
+      /* ── Alerts ── */
+      .alert {
+        padding: 12px 16px;
+        border-radius: 10px;
+        margin-bottom: 16px;
+        font-size: 13px;
+      }
+      .alert-success {
+        background: #e6f9ee;
+        color: #1a7a40;
+        border: 1px solid #b8e8cb;
+      }
+      .alert-error {
+        background: #fee;
+        color: #b00;
+        border: 1px solid #f5c0c0;
+      }
+      .alert-info {
+        background: #f0f7ff;
+        color: #1a5080;
+        border: 1px solid #c2d8f0;
+      }
+
+      /* ── Confirm bar ── */
+      .confirm-bar {
+        background: #f0f7ff;
+        border: 1px solid #c2d8f0;
+        border-radius: 10px;
+        padding: 14px 18px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-top: 16px;
+        gap: 14px;
+      }
+      .confirm-info {
+        font-size: 13px;
+        color: #1a5080;
+      }
+      .confirm-info strong {
+        color: #0d2b6e;
+      }
+      .btn-confirm {
+        padding: 10px 22px;
+        background: #27ae60;
+        color: #fff;
+        border: none;
         border-radius: 8px;
-        margin-bottom: 15px;
-        font-size: 12px;
+        cursor: pointer;
+        font-size: 13px;
+        font-weight: 700;
+      }
+      .btn-confirm:hover {
+        background: #219150;
+      }
+      .btn-confirm:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+      }
+      .btn-reset {
+        padding: 10px 16px;
+        background: #f5f5f5;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        cursor: pointer;
+        font-size: 13px;
+      }
+
+      .loading {
+        display: inline-block;
+        width: 14px;
+        height: 14px;
+        border: 2px solid #fff;
+        border-top-color: transparent;
+        border-radius: 50%;
+        animation: spin 0.7s linear infinite;
+        vertical-align: middle;
+        margin-right: 6px;
+      }
+      @keyframes spin {
+        to {
+          transform: rotate(360deg);
+        }
       }
     </style>
   </head>
@@ -151,10 +410,6 @@
                 stroke-linejoin="round"
                 fill="none" />
             </svg>
-            <div
-              class="notif-dot remarque-dot"
-              id="remarqueDot"
-              style="display: none; background: #0d2b6e"></div>
           </div>
           <div class="notif-btn" style="position: relative; cursor: pointer">
             <svg width="15" height="15" viewBox="0 0 24 24" fill="none">
@@ -177,7 +432,6 @@
 
       <div class="body">
         <div th:replace="~{fragments/sidebar :: sidebar}"></div>
-
         <div class="main">
           <div class="form-card">
             <div class="page-heading">
@@ -201,130 +455,233 @@
                     stroke-linecap="round" />
                 </svg>
               </div>
-              <div class="page-title" id="pageTitle">Créer un utilisateur</div>
+              <div class="page-title">Gestion des utilisateurs</div>
             </div>
             <div class="page-sub">
-              Renseignez les informations pour créer un nouvel accès.
+              Créez un utilisateur manuellement ou importez plusieurs
+              utilisateurs depuis un fichier Excel.
             </div>
 
-            <div id="messageArea"></div>
+            <!-- ══ TABS ══ -->
+            <div class="tabs">
+              <button class="tab-btn active" onclick="switchTab('manual')">
+                 Saisie manuelle
+              </button>
+              <button class="tab-btn" onclick="switchTab('excel')">
+                 Import Excel (plusieurs utilisateurs)
+              </button>
+            </div>
 
-            <form id="userForm" onsubmit="handleUserSubmit(event)">
-              <input type="hidden" id="userId" />
-
-              <div class="section-label">
-                Matricule
-                <span class="badge-primary">Identifiant principal</span>
-              </div>
-              <div class="field">
-                <label class="field-label"
-                  >Matricule <span class="req">*</span></label
-                >
-                <input
-                  type="text"
-                  class="field-input matricule-highlight"
-                  id="matricule"
-                  placeholder="Ex: DEV001, PMO001, CDEP001"
-                  required
-                  style="
-                    font-size: 16px;
-                    font-weight: 600;
-                    letter-spacing: 0.05em;
-                  " />
-                <small
-                  style="
-                    color: #8a9fbf;
-                    font-size: 10px;
-                    margin-top: 4px;
-                    display: block;
-                  ">
-                  Le matricule sert d'identifiant de connexion. Il doit être
-                  unique.
-                </small>
-              </div>
-
-              <div class="divider"></div>
-
-              <div class="section-label">Identité</div>
-              <div class="form-grid2">
-                <div class="field">
-                  <label class="field-label"
-                    >Nom <span class="req">*</span></label
-                  >
-                  <input type="text" class="field-input" id="nom" required />
+            <!-- ══ TAB 1 : Formulaire individuel ══ -->
+            <div id="tab-manual" class="tab-panel active">
+              <div id="messageArea"></div>
+              <form id="userForm" onsubmit="handleUserSubmit(event)">
+                <input type="hidden" id="userId" />
+                <div class="section-label">
+                  Matricule
+                  <span class="badge-primary">Identifiant principal</span>
                 </div>
                 <div class="field">
                   <label class="field-label"
-                    >Prénom <span class="req">*</span></label
-                  >
-                  <input type="text" class="field-input" id="prenom" required />
-                </div>
-                <div class="field">
-                  <label class="field-label">Email</label>
-                  <input
-                    type="email"
-                    class="field-input"
-                    id="email"
-                    placeholder="prenom.nom@bea.dz" />
-                </div>
-                <div class="field">
-                  <label class="field-label">Téléphone</label>
-                  <input type="tel" class="field-input" id="telephone" />
-                </div>
-              </div>
-
-              <div class="divider"></div>
-
-              <div class="section-label">Accès</div>
-              <div class="form-grid2">
-                <div class="field">
-                  <label class="field-label"
-                    >Mot de passe <span class="req">*</span></label
+                    >Matricule <span class="req">*</span></label
                   >
                   <input
-                    type="password"
-                    class="field-input"
-                    id="password"
-                    placeholder="••••••••••" />
-                  <small style="color: #8a9fbf; font-size: 10px"
-                    >Laisser vide pour conserver en modification</small
-                  >
+                    type="text"
+                    class="field-input matricule-highlight"
+                    id="matricule"
+                    placeholder="Ex: DEV001, PMO001, CDEP001"
+                    required
+                    style="
+                      font-size: 16px;
+                      font-weight: 600;
+                      letter-spacing: 0.05em;
+                    " />
+                  <small
+                    style="
+                      color: #8a9fbf;
+                      font-size: 10px;
+                      margin-top: 4px;
+                      display: block;
+                    ">
+                    Le matricule sert d'identifiant de connexion. Il doit être
+                    unique.
+                  </small>
                 </div>
-                <div class="field">
-                  <label class="field-label"
-                    >Rôle <span class="req">*</span></label
-                  >
-                  <select class="field-select" id="role" required>
-                    <option value="">-- Sélectionner --</option>
-                    <option value="DIRECTEUR">Directeur</option>
-                    <option value="CHEF_DEPARTEMENT">
-                      Chef de département
-                    </option>
-                    <option value="ADMIN">Administrateur</option>
-                    <option value="INGENIEUR_ETUDE_PMO">
-                      Ingénieur d'étude (PMO)
-                    </option>
-                    <option value="DEVELOPPEUR">Développeur</option>
-                  </select>
+                <div class="divider"></div>
+                <div class="section-label">Identité</div>
+                <div class="form-grid2">
+                  <div class="field">
+                    <label class="field-label"
+                      >Nom <span class="req">*</span></label
+                    >
+                    <input type="text" class="field-input" id="nom" required />
+                  </div>
+                  <div class="field">
+                    <label class="field-label"
+                      >Prénom <span class="req">*</span></label
+                    >
+                    <input
+                      type="text"
+                      class="field-input"
+                      id="prenom"
+                      required />
+                  </div>
+                  <div class="field">
+                    <label class="field-label">Email</label>
+                    <input
+                      type="email"
+                      class="field-input"
+                      id="email"
+                      placeholder="prenom.nom@bea.dz" />
+                  </div>
+                  <div class="field">
+                    <label class="field-label">Téléphone</label>
+                    <input type="tel" class="field-input" id="telephone" />
+                  </div>
                 </div>
-              </div>
+                <div class="divider"></div>
+                <div class="section-label">Accès</div>
+                <div class="form-grid2">
+                  <div class="field">
+                    <label class="field-label"
+                      >Mot de passe <span class="req">*</span></label
+                    >
+                    <input
+                      type="password"
+                      class="field-input"
+                      id="password"
+                      placeholder="••••••••••" />
+                    <small style="color: #8a9fbf; font-size: 10px"
+                      >Laisser vide pour conserver en modification</small
+                    >
+                  </div>
+                  <div class="field">
+                    <label class="field-label"
+                      >Rôle <span class="req">*</span></label
+                    >
+                    <select class="field-select" id="role" required>
+                      <option value="">-- Sélectionner --</option>
+                      <option value="DIRECTEUR">Directeur</option>
+                      <option value="CHEF_DEPARTEMENT">
+                        Chef de département
+                      </option>
+                      <option value="ADMIN">Administrateur</option>
+                      <option value="INGENIEUR_ETUDE_PMO">
+                        Ingénieur d'étude (PMO)
+                      </option>
+                      <option value="DEVELOPPEUR">Développeur</option>
+                    </select>
+                  </div>
+                </div>
+                <div class="form-actions">
+                  <button
+                    type="button"
+                    class="btn-cancel"
+                    onclick="window.location.href = '/users-list'">
+                    Annuler
+                  </button>
+                  <button type="submit" class="btn-submit">✓ Valider</button>
+                </div>
+              </form>
+            </div>
 
-              <div class="form-actions">
-                <button
-                  type="button"
-                  class="btn-cancel"
-                  onclick="window.location.href = '/users-list'">
-                  Annuler
+            <!-- ══ TAB 2 : Import Excel ══ -->
+            <div id="tab-excel" class="tab-panel">
+              <!-- Télécharger le modèle -->
+              <div class="template-box">
+              
+                <div class="template-info">
+                  <div class="template-title">Télécharger le modèle Excel</div>
+                  <div class="template-sub">
+                    Colonnes : Matricule | Nom | Prénom | Email | Téléphone |
+                    Rôle | Mot de passe
+                  </div>
+                  <div
+                    class="template-sub"
+                    style="margin-top: 4px; color: #8a9fbf">
+                    Rôles acceptés : DIRECTEUR, CHEF_DEPARTEMENT, ADMIN,
+                    INGENIEUR_ETUDE_PMO, DEVELOPPEUR
+                  </div>
+                </div>
+                <button class="btn-download" onclick="downloadTemplate()">
+                  ⬇ Modèle Excel
                 </button>
-                <button type="submit" class="btn-submit">✓ Valider</button>
               </div>
-            </form>
+
+              <!-- Zone de dépôt -->
+              <div class="upload-zone" id="uploadZone">
+                <input
+                  type="file"
+                  id="excelFile"
+                  accept=".xlsx,.xls"
+                  onchange="handleFileSelect(this.files[0])" />
+            
+                <div class="upload-title">Glissez votre fichier Excel ici</div>
+                <div class="upload-sub">
+                  ou cliquez pour sélectionner un fichier .xlsx
+                </div>
+              </div>
+
+              <!-- Zone message -->
+              <div id="excelMessage"></div>
+
+              <!-- Preview table -->
+              <div
+                id="previewSection"
+                class="preview-section"
+                style="display: none">
+                <div class="preview-header">
+                  <div class="preview-title" id="previewTitle">
+                    Aperçu du fichier
+                  </div>
+                  <div class="preview-stats" id="previewStats"></div>
+                </div>
+                <div class="preview-table-wrap">
+                  <table class="preview-table">
+                    <thead>
+                      <tr>
+                        <th>#</th>
+                        <th>Matricule</th>
+                        <th>Nom</th>
+                        <th>Prénom</th>
+                        <th>Email</th>
+                        <th>Rôle</th>
+                        <th>Mot de passe</th>
+                        <th>Statut</th>
+                      </tr>
+                    </thead>
+                    <tbody id="previewBody"></tbody>
+                  </table>
+                </div>
+
+                <!-- Barre de confirmation -->
+                <div class="confirm-bar" id="confirmBar" style="display: none">
+                  <div class="confirm-info" id="confirmInfo"></div>
+                  <div style="display: flex; gap: 10px">
+                    <button class="btn-reset" onclick="resetImport()">
+                      ↺ Recommencer
+                    </button>
+                    <button
+                      class="btn-confirm"
+                      id="btnConfirm"
+                      onclick="confirmImport()">
+                      ✓ Créer les utilisateurs
+                    </button>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Résultat import -->
+              <div id="importResult" style="margin-top: 16px"></div>
+            </div>
           </div>
         </div>
       </div>
     </div>
+
     <script th:src="@{/js/sidebar-badge-loader.js}"></script>
     <script th:src="@{/js/auth.js}"></script>
     <script th:src="@{/js/users.js}"></script>
+    <script th:src="@{/js/user-import.js}"></script>
   </body>
 </html>

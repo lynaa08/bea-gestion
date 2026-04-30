@@ -56,6 +56,8 @@ public class UserService {
         user.setTelephone(request.getTelephone());
         user.setMatricule(request.getMatricule());
         user.setRole(request.getRole());
+        // ✅ Force password change on first login
+        user.setMustChangePassword(true);
 
         User saved = userRepository.save(user);
         notificationService.notifyUserCreated(saved, plainPassword);
@@ -70,6 +72,8 @@ public class UserService {
         user.setEmail(request.getEmail());
         if (request.getPassword() != null && !request.getPassword().isEmpty()) {
             user.setPassword(passwordEncoder.encode(request.getPassword()));
+            // Admin manually reset the password → force change again
+            user.setMustChangePassword(true);
         }
         user.setTelephone(request.getTelephone());
         user.setMatricule(request.getMatricule());
@@ -90,5 +94,15 @@ public class UserService {
 
     public User findByMatricule(String matricule) {
         return userRepository.findByMatricule(matricule).orElse(null);
+    }
+
+    // ✅ NEW: called after the user sets their new password in the modal
+    public void changePasswordFirstLogin(String matricule, String newPassword) {
+        User user = userRepository.findByMatricule(matricule)
+                .orElseThrow(() -> new ResourceNotFoundException("User not found: " + matricule));
+        user.setPassword(passwordEncoder.encode(newPassword));
+        // ✅ Clear the flag — next login goes straight to dashboard
+        user.setMustChangePassword(false);
+        userRepository.save(user);
     }
 }

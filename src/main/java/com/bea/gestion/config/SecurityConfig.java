@@ -63,7 +63,7 @@ public class SecurityConfig {
                     "/users-list", "/users/new", "/users/edit/**",
                     "/agenda", "/problemes", "/remarques",
                     "/materiels-list", "/materiels/new", "/materiels/edit/**",
-                    "/css/**", "/js/**", "/images/**", "favicon.png",
+                    "/css/**", "/js/**", "/images/**", "favicon.png", "/reservations-list",
                     "/error"
                 ).permitAll()
                 // ✅ Endpoints auth publics

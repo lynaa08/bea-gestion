@@ -196,7 +196,7 @@
                 class="filter-select"
                 id="filterStatut"
                 onchange="filterMateriels()">
-                <option value="">Tous les Etat</option>
+                <option value="">Tous les États</option>
                 <option value="NEUF">Neuf</option>
                 <option value="BON_ETAT">Bon état</option>
                 <option value="USAGE">Usagé</option>
@@ -204,9 +204,9 @@
               </select>
               <select
                 class="filter-select"
-                id="filterzEtat"
+                id="filterStatutDispo"
                 onchange="filterMateriels()">
-                <option value="">Tous les Statut</option>
+                <option value="">Tous les Statuts</option>
                 <option value="Disponible">Disponible</option>
                 <option value="En utilisation">En utilisation</option>
                 <option value="En réparation">En réparation</option>
@@ -223,15 +223,14 @@
                   <th>Service</th>
                   <th>État</th>
                   <th>Quantité</th>
-                  <th>Responsable</th>
-                  <th>Projet</th>
+
                   <th>Actions</th>
                 </tr>
               </thead>
               <tbody id="materielsBody">
                 <tr>
                   <td
-                    colspan="10"
+                    colspan="9"
                     style="text-align: center; padding: 40px; color: #b0bdd0">
                     Chargement...
                   </td>
@@ -244,7 +243,11 @@
     </div>
 
     <script th:src="@{/js/sidebar-badge-loader.js}"></script>
+    <script
+      th:src="@{/js/R
+    eservation.js}"></script>
     <script th:src="@{/js/auth.js}"></script>
+    <script th:src="@{/js/Reservation.js}"></script>
     <script>
       const ETAT_LABEL = {
         NEUF: "Neuf",
@@ -280,7 +283,7 @@
       function updateStats() {
         const counts = { NEUF: 0, BON_ETAT: 0, USAGE: 0, EN_PANNE: 0 };
         allMateriels.forEach((m) => {
-          if (counts[m.etat] !== undefined) counts[m.etat]++; // ← m.etat pas m.statut
+          if (counts[m.etat] !== undefined) counts[m.etat]++;
         });
         document.getElementById("st-neuf").textContent = counts.NEUF;
         document.getElementById("st-bon").textContent = counts.BON_ETAT;
@@ -291,7 +294,8 @@
       function filterMateriels() {
         const q = document.getElementById("searchInput").value.toLowerCase();
         const etat = document.getElementById("filterStatut").value;
-        const statut = document.getElementById("filterzEtat").value; // ← filterzEtat avec z
+        const statut = document.getElementById("filterStatutDispo").value;
+
         let list = allMateriels;
         if (q)
           list = list.filter(
@@ -310,42 +314,52 @@
           renderEmpty();
           return;
         }
+
         tbody.innerHTML = list
           .map((m) => {
             const color = ETAT_COLOR[m.etat] || "#8a9fbf";
             const label = ETAT_LABEL[m.etat] || m.etat || "—";
-            return `<tr>
-      <td style="font-weight:700;color:#0d2b6e">${m.marque || "—"}</td>
-      <td style="font-weight:600;color:#1a2d5a">${m.nom || "—"}</td>
-      <td><span style="background:#eef4ff;color:#4a6a9e;font-size:11px;padding:2px 8px;border-radius:10px;font-weight:600">${m.bureau || "—"}</span></td>
-      <td><span style="background:#eef4ff;color:#4a6a9e;font-size:11px;padding:2px 8px;border-radius:10px;font-weight:600">${m.service || "—"}</span></td>
-      <td><span style="background:${color}22;color:${color};padding:3px 10px;border-radius:20px;font-size:11px;font-weight:700">${label}</span></td>
-      <td style="text-align:center;font-weight:600">${m.quantite ?? "—"}</td>
-      <td style="font-size:12px;color:#6a80a0">${m.projetNom || "—"}</td>
-      <td>
-  <span style="
-    background:#f4f7ff;
-    color:#0d2b6e;
-    padding:4px 10px;
-    border-radius:20px;
-    font-size:11px;
-    font-weight:700">
-    ${m.responsable || "—"}
-  </span>
-</td>
 
-      <td>
-        <button onclick="window.location.href='/materiels/edit/${m.id}'" style="background:#eef4ff;border:none;padding:5px 12px;border-radius:6px;cursor:pointer;font-size:11px;color:#0d2b6e;font-weight:600">Modifier</button>
-        <button onclick="deleteMateriel(${m.id})" style="background:#fee;border:none;padding:5px 12px;border-radius:6px;cursor:pointer;font-size:11px;color:#c00;font-weight:600;margin-left:4px">Supprimer</button>
-      </td>
-    </tr>`;
+            // ✅ Badge "Réservé" si EN_UTILISATION — défini DANS le .map()
+            const resaBadge =
+              m.statut === "EN_UTILISATION"
+                ? `<span style="background:#fff3cd;color:#856404;padding:2px 7px;
+                border-radius:10px;font-size:10px;font-weight:700;
+                margin-left:6px;border:1px solid #ffc107">🔒 Réservé</span>`
+                : "";
+
+            return `<tr>
+            <td style="font-weight:700;color:#0d2b6e">${m.marque || "—"}</td>
+            
+            <td style="font-weight:600;color:#1a2d5a">${m.nom || "—"} ${resaBadge}</td>
+            <td><span style="background:#eef4ff;color:#4a6a9e;font-size:11px;padding:2px 8px;border-radius:10px;font-weight:600">${m.bureau || "—"}</span></td>
+            <td><span style="background:#eef4ff;color:#4a6a9e;font-size:11px;padding:2px 8px;border-radius:10px;font-weight:600">${m.service || "—"}</span></td>
+            <td><span style="background:${color}22;color:${color};padding:3px 10px;border-radius:20px;font-size:11px;font-weight:700">${label}</span></td>
+            <td style="text-align:center;font-weight:600">${m.quantite ?? "—"}</td>
+
+           
+            <td style="white-space:nowrap">
+              <button onclick="window.location.href='/materiels/edit/${m.id}'"
+                style="background:#eef4ff;border:none;padding:5px 10px;border-radius:6px;
+                       cursor:pointer;font-size:11px;color:#0d2b6e;font-weight:600">
+                Modifier
+              </button>
+            
+              <button onclick="deleteMateriel(${m.id})"
+                style="background:#fee;border:none;padding:5px 10px;border-radius:6px;
+                       cursor:pointer;font-size:11px;color:#c00;font-weight:600;margin-left:4px">
+                Supprimer
+              </button>
+              
+            </td>
+          </tr>`;
           })
           .join("");
       }
 
       function renderEmpty() {
         document.getElementById("materielsBody").innerHTML =
-          '<tr><td colspan="10" style="text-align:center;padding:40px;color:#b0bdd0">Aucun matériel trouvé</td></tr>';
+          '<tr><td colspan="9" style="text-align:center;padding:40px;color:#b0bdd0">Aucun matériel trouvé</td></tr>';
       }
 
       async function deleteMateriel(id) {
