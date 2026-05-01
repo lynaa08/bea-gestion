@@ -1,5 +1,5 @@
 const API_BASE = "/api";
-
+ 
 // ---- Statut maps (nouveaux états) ----
 const STATUT_LABEL = {
   EN_COURS: "Projet en cours",
@@ -18,32 +18,20 @@ const STATUT_COLOR = {
   EN_ATTENTE: "#f59e0b",
   TERMINE: "#22c55e",
 };
-
+ 
 // ---- Multi-select state ----
 let allUsers = [];
 let selectedMembresIds = new Set();
-
+ 
 async function loadUsersForSelects() {
   try {
     const res = await fetch(`${API_BASE}/users`, { headers: getAuthHeaders() });
     if (!res.ok) return;
     allUsers = await res.json();
-    populateChefSelect();
     renderMembresDropdown();
   } catch (e) {}
 }
-
-function populateChefSelect() {
-  const sel = document.getElementById("chefProjetSelect");
-  if (!sel) return;
-  allUsers.forEach((u) => {
-    const opt = document.createElement("option");
-    opt.value = u.id;
-    opt.textContent = `${u.matricule} — ${u.prenom || ""} ${u.nom || ""}`;
-    sel.appendChild(opt);
-  });
-}
-
+ 
 function renderMembresDropdown(filter = "") {
   const dd = document.getElementById("membresDropdown");
   if (!dd) return;
@@ -69,7 +57,7 @@ function renderMembresDropdown(filter = "") {
     })
     .join("");
 }
-
+ 
 function toggleMembre(userId) {
   if (selectedMembresIds.has(userId)) {
     selectedMembresIds.delete(userId);
@@ -79,7 +67,7 @@ function toggleMembre(userId) {
   renderMembresChips();
   renderMembresDropdown(document.getElementById("membresSearch")?.value || "");
 }
-
+ 
 function renderMembresChips() {
   const chipsEl = document.getElementById("membresChips");
   const searchEl = document.getElementById("membresSearch");
@@ -95,37 +83,32 @@ function renderMembresChips() {
     chipsEl.insertBefore(chip, searchEl);
   });
 }
-
+ 
 function filterMembresDropdown() {
   const q = document.getElementById("membresSearch")?.value || "";
   renderMembresDropdown(q);
 }
-
+ 
 function showMembresDropdown() {
   const dd = document.getElementById("membresDropdown");
   if (dd) dd.style.display = "block";
 }
-
+ 
 function hideMembresDropdown() {
   const dd = document.getElementById("membresDropdown");
   if (dd) dd.style.display = "none";
 }
-
+ 
 // Close dropdown when clicking outside
 document.addEventListener("click", (e) => {
   const wrapper = document.getElementById("membresWrapper");
   if (wrapper && !wrapper.contains(e.target)) hideMembresDropdown();
 });
-
+ 
 async function handleProjectSubmit(event) {
   event.preventDefault();
   const id = document.getElementById("projectId").value;
-
-  // Chef via select dropdown
-  const chefSelect = document.getElementById("chefProjetSelect");
-  const chefProjetId =
-    chefSelect && chefSelect.value ? parseInt(chefSelect.value) : null;
-
+ 
   const body = {
     nom: document.getElementById("nom").value,
     statut: document.getElementById("statut").value,
@@ -133,12 +116,10 @@ async function handleProjectSubmit(event) {
     priorite: document.getElementById("priorite").value,
     dateDebut: document.getElementById("dateDebut").value || null,
     deadline: document.getElementById("deadline").value || null,
-    dateCreation: document.getElementById("dateCreation").value || null,
     description: document.getElementById("description").value,
-    chefProjetId,
     membresIds: Array.from(selectedMembresIds),
   };
-
+ 
   try {
     const url = id ? `${API_BASE}/projets/${id}` : `${API_BASE}/projets`;
     const method = id ? "PUT" : "POST";
@@ -158,19 +139,19 @@ async function handleProjectSubmit(event) {
     showFormMsg("Erreur réseau", "err");
   }
 }
-
+ 
 function showFormMsg(msg, type) {
   const el =
     document.getElementById("msgArea") ||
     document.getElementById("messageArea");
   if (el) el.innerHTML = `<div class="${type}">${msg}</div>`;
 }
-
+ 
 // ---- Projet list page ----
 let allProjets = [];
 let currentFilter = "Tous";
 let currentSearch = "";
-
+ 
 async function loadProjects() {
   try {
     const res = await fetch(`${API_BASE}/projets/all`, {
@@ -186,7 +167,7 @@ async function loadProjects() {
     renderEmpty();
   }
 }
-
+ 
 function filterProjects(f) {
   currentFilter = f;
   document
@@ -195,17 +176,17 @@ function filterProjects(f) {
   event.target.classList.add("active");
   renderProjects();
 }
-
+ 
 function searchProjects() {
   currentSearch =
     document.querySelector(".search-input")?.value?.toLowerCase() || "";
   renderProjects();
 }
-
+ 
 function renderProjects() {
   const tbody = document.querySelector(".data-table tbody");
   if (!tbody) return;
-
+ 
   const statutMap = {
     Tous: null,
     "En cours": "EN_COURS",
@@ -214,7 +195,7 @@ function renderProjects() {
     "Pas de visibilité": "PAS_DE_VISIBILITE",
   };
   let list = allProjets;
-
+ 
   if (currentFilter && currentFilter !== "Tous") {
     list = list.filter((p) => p.statut === statutMap[currentFilter]);
   }
@@ -223,13 +204,13 @@ function renderProjects() {
       (p.nom || "").toLowerCase().includes(currentSearch),
     );
   }
-
+ 
   if (list.length === 0) {
     tbody.innerHTML =
-      '<tr><td colspan="7" style="text-align:center;padding:40px;color:#b0bdd0">Aucun projet trouvé</td></tr>';
+      '<tr><td colspan="6" style="text-align:center;padding:40px;color:#b0bdd0">Aucun projet trouvé</td></tr>';
     return;
   }
-
+ 
   tbody.innerHTML = list
     .map((p) => {
       const color = STATUT_COLOR[p.statut] || "#8a9fbf";
@@ -244,7 +225,6 @@ function renderProjects() {
       <td>${p.dateDebut || "—"}</td>
       <td><span style="background:${color}22;color:${color};padding:3px 10px;border-radius:20px;font-size:11px;font-weight:700">${label}</span></td>
       <td>${p.type || "—"}</td>
-      <td>${p.chefProjetNom || (p.chefProjet ? p.chefProjet.prenom + " " + p.chefProjet.nom : "—")}</td>
       <td style="font-size:11px;color:#6a80a0;max-width:160px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap" title="${membres}">${membres}</td>
       <td>
         <button onclick="editProjet(${p.id})" style="background:#eef4ff;border:none;padding:5px 12px;border-radius:6px;cursor:pointer;font-size:11px;color:#0d2b6e;font-weight:600">Modifier</button>
@@ -254,18 +234,18 @@ function renderProjects() {
     })
     .join("");
 }
-
+ 
 function renderEmpty() {
   const tbody = document.querySelector(".data-table tbody");
   if (tbody)
     tbody.innerHTML =
-      '<tr><td colspan="7" style="text-align:center;padding:40px;color:#b0bdd0">Aucun projet</td></tr>';
+      '<tr><td colspan="6" style="text-align:center;padding:40px;color:#b0bdd0">Aucun projet</td></tr>';
 }
-
+ 
 function editProjet(id) {
   window.location.href = "/projets/edit/" + id;
 }
-
+ 
 async function deleteProjet(id) {
   if (!confirm("Supprimer ce projet ?")) return;
   try {
@@ -279,7 +259,7 @@ async function deleteProjet(id) {
     alert("Erreur réseau");
   }
 }
-
+ 
 // Load project data when on edit page
 async function loadProjectForEdit() {
   const parts = window.location.pathname.split("/");
@@ -287,7 +267,7 @@ async function loadProjectForEdit() {
   if (idx === -1) return;
   const id = parts[idx + 1];
   if (!id) return;
-
+ 
   try {
     const res = await fetch(`${API_BASE}/projets/${id}`, {
       headers: getAuthHeaders(),
@@ -300,28 +280,21 @@ async function loadProjectForEdit() {
     document.getElementById("type").value = p.type || "";
     document.getElementById("priorite").value = p.priorite || "";
     document.getElementById("dateDebut").value = p.dateDebut || "";
-    document.getElementById("dateCreation").value = p.dateCreation || "";
     document.getElementById("deadline").value = p.deadline || "";
     document.getElementById("description").value = p.description || "";
-
-    // Chef select
-    if (p.chefProjetId) {
-      const chefSel = document.getElementById("chefProjetSelect");
-      if (chefSel) chefSel.value = p.chefProjetId;
-    }
-
+ 
     // Membres multi-select
     if (p.membresIds && p.membresIds.length > 0) {
       p.membresIds.forEach((id) => selectedMembresIds.add(id));
       renderMembresChips();
       renderMembresDropdown();
     }
-
+ 
     const title = document.getElementById("pageTitle");
     if (title) title.textContent = "Modifier le projet : " + p.nom;
   } catch (e) {}
 }
-
+ 
 document.addEventListener("DOMContentLoaded", () => {
   const path = window.location.pathname;
   if (path.includes("projets-list")) {

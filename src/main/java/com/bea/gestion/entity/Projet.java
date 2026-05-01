@@ -1,14 +1,14 @@
 package com.bea.gestion.entity;
-
+ 
 import com.bea.gestion.enums.StatutProjet;
 import com.bea.gestion.enums.TypeProjet;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-
+ 
 import jakarta.persistence.*;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
-
+ 
 @Entity
 @Table(name = "projets")
 public class Projet {
@@ -26,7 +26,6 @@ public class Projet {
     private LocalDate dateCreation;
     private LocalDate dateDebut;
     private LocalDate deadline;
-   
     
     @Enumerated(EnumType.STRING)
     private StatutProjet statut;
@@ -35,11 +34,7 @@ public class Projet {
     private TypeProjet type;
     
     private String priorite;
-    
-    @ManyToOne
-    @JoinColumn(name = "chef_projet_id")
-    private User chefProjet;
-
+ 
     @ManyToMany
     @JoinTable(
         name = "projet_membres",
@@ -47,9 +42,11 @@ public class Projet {
         inverseJoinColumns = @JoinColumn(name = "user_id")
     )
     private List<User> membres = new ArrayList<>();
+ 
     @JsonIgnore
-@OneToMany(mappedBy = "projet")
-private List<Materiel> materiels;
+    @OneToMany(mappedBy = "projet")
+    private List<Materiel> materiels;
+ 
     // Getters and Setters
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
@@ -77,10 +74,7 @@ private List<Materiel> materiels;
     
     public String getPriorite() { return priorite; }
     public void setPriorite(String priorite) { this.priorite = priorite; }
-    
-    public User getChefProjet() { return chefProjet; }
-    public void setChefProjet(User chefProjet) { this.chefProjet = chefProjet; }
-
+ 
     public List<User> getMembres() { return membres; }
     public void setMembres(List<User> membres) { this.membres = membres; }
 }
