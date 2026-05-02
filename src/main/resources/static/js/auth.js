@@ -5,7 +5,33 @@ function checkAuth() {
     return false;
   }
   loadUserInfo();
+  applyRoleUI();
   return true;
+}
+
+function applyRoleUI() {
+  try {
+    const userStr = localStorage.getItem("user");
+    if (!userStr) return;
+    const user = JSON.parse(userStr);
+    const role = user.role;
+
+    if (role === "DEVELOPPEUR") {
+      // ── Cacher les items non pertinents pour un DEV ──
+      ["nav-projets-new", "nav-materiels-new",
+       "nav-users", "nav-users-new"].forEach(function (id) {
+        var el = document.getElementById(id);
+        if (el) el.style.display = "none";
+      });
+
+      // ── Afficher "Mes Tâches" ──
+      var tacheItem    = document.getElementById("nav-mes-taches");
+      var tacheSection = document.getElementById("nav-section-taches");
+      if (tacheItem)    tacheItem.style.display    = "flex";
+      if (tacheSection) tacheSection.style.display = "block";
+
+    }
+  } catch (e) {}
 }
 
 function getAuthHeaders() {
@@ -35,21 +61,13 @@ function loadUserInfo() {
       DEVELOPPEUR: "Développeur",
     };
     const label = roleDisplay[user.role] || user.role || "";
-    document
-      .querySelectorAll(".user-chip-name")
-      .forEach(
-        (el) => (el.textContent = `${user.prenom || ""} ${user.nom || ""}`),
-      );
-    document
-      .querySelectorAll(".user-chip-role")
+    document.querySelectorAll(".user-chip-name")
+      .forEach((el) => (el.textContent = `${user.prenom || ""} ${user.nom || ""}`));
+    document.querySelectorAll(".user-chip-role")
       .forEach((el) => (el.textContent = label));
-    document
-      .querySelectorAll(".sidebar-name")
-      .forEach(
-        (el) => (el.textContent = `${user.prenom || ""} ${user.nom || ""}`),
-      );
-    document
-      .querySelectorAll(".sidebar-role")
+    document.querySelectorAll(".sidebar-name")
+      .forEach((el) => (el.textContent = `${user.prenom || ""} ${user.nom || ""}`));
+    document.querySelectorAll(".sidebar-role")
       .forEach((el) => (el.textContent = label));
   } catch (e) {}
 }
@@ -98,11 +116,11 @@ function timeAgo(dateStr) {
 
 function getTypeInfo(type) {
   const map = {
-    PROJET_CREE: { icon: "🆕", bg: "#EEF4FF" },
-    PROJET_MODIFIE: { icon: "✏️", bg: "#FFF4E0" },
-    PROJET_TERMINE: { icon: "✅", bg: "#E6F7EE" },
+    PROJET_CREE:      { icon: "🆕", bg: "#EEF4FF" },
+    PROJET_MODIFIE:   { icon: "✏️", bg: "#FFF4E0" },
+    PROJET_TERMINE:   { icon: "✅", bg: "#E6F7EE" },
     PROBLEME_SIGNALE: { icon: "⚠️", bg: "#FFF0F0" },
-    USER_CREE: { icon: "👤", bg: "#F0F8FF" },
+    USER_CREE:        { icon: "👤", bg: "#F0F8FF" },
   };
   return map[type] || { icon: "🔔", bg: "#F4F7FC" };
 }
@@ -129,9 +147,7 @@ async function loadNotifPanel() {
   list.innerHTML =
     '<div style="padding:30px;text-align:center;color:#B0BDD0;font-size:12px;">Chargement...</div>';
   try {
-    const res = await fetch("/api/notifications/me", {
-      headers: getAuthHeaders(),
-    });
+    const res = await fetch("/api/notifications/me", { headers: getAuthHeaders() });
     if (!res.ok) {
       list.innerHTML =
         '<div style="padding:30px;text-align:center;color:#ef4444;font-size:12px;">Erreur chargement</div>';
@@ -143,24 +159,21 @@ async function loadNotifPanel() {
         '<div style="padding:40px;text-align:center;color:#B0BDD0;font-size:12px;">🔔<br><br>Aucune notification</div>';
       return;
     }
-    list.innerHTML = notifs
-      .slice(0, 20)
-      .map((n) => {
-        const t = getTypeInfo(n.type);
-        return `<div onclick="handleNotifClick(${n.id},${n.projetId || "null"})"
-              style="display:flex;gap:10px;padding:12px 16px;border-bottom:.5px solid #F4F7FC;cursor:pointer;background:${n.lue ? "#fff" : "#EEF6FF"};"
-              onmouseover="this.style.background='${n.lue ? "#F8FAFD" : "#E5F0FF"}'"
-              onmouseout="this.style.background='${n.lue ? "#fff" : "#EEF6FF"}'">
-                <div style="width:32px;height:32px;border-radius:8px;background:${t.bg};display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0;">${t.icon}</div>
-                <div style="flex:1;min-width:0;">
-                    <div style="font-size:12px;font-weight:600;color:#1A2D5A;margin-bottom:2px;">${escapeHtmlSafe(n.titre)}</div>
-                    <div style="font-size:11px;color:#6A80A0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${escapeHtmlSafe(n.message)}</div>
-                    <div style="font-size:10px;color:#B0BDD0;margin-top:2px;">${timeAgo(n.dateCreation)}${n.projetNom ? " · " + escapeHtmlSafe(n.projetNom) : ""}</div>
-                </div>
-                ${!n.lue ? '<div style="width:7px;height:7px;border-radius:50%;background:#5BB8E8;margin-top:5px;flex-shrink:0;"></div>' : ""}
-            </div>`;
-      })
-      .join("");
+    list.innerHTML = notifs.slice(0, 20).map((n) => {
+      const t = getTypeInfo(n.type);
+      return `<div onclick="handleNotifClick(${n.id},${n.projetId || "null"})"
+        style="display:flex;gap:10px;padding:12px 16px;border-bottom:.5px solid #F4F7FC;cursor:pointer;background:${n.lue ? "#fff" : "#EEF6FF"};"
+        onmouseover="this.style.background='${n.lue ? "#F8FAFD" : "#E5F0FF"}'"
+        onmouseout="this.style.background='${n.lue ? "#fff" : "#EEF6FF"}'">
+          <div style="width:32px;height:32px;border-radius:8px;background:${t.bg};display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0;">${t.icon}</div>
+          <div style="flex:1;min-width:0;">
+            <div style="font-size:12px;font-weight:600;color:#1A2D5A;margin-bottom:2px;">${escapeHtmlSafe(n.titre)}</div>
+            <div style="font-size:11px;color:#6A80A0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${escapeHtmlSafe(n.message)}</div>
+            <div style="font-size:10px;color:#B0BDD0;margin-top:2px;">${timeAgo(n.dateCreation)}${n.projetNom ? " · " + escapeHtmlSafe(n.projetNom) : ""}</div>
+          </div>
+          ${!n.lue ? '<div style="width:7px;height:7px;border-radius:50%;background:#5BB8E8;margin-top:5px;flex-shrink:0;"></div>' : ""}
+        </div>`;
+    }).join("");
   } catch (e) {
     list.innerHTML =
       '<div style="padding:30px;text-align:center;color:#ef4444;font-size:12px;">Erreur de connexion</div>';
@@ -174,13 +187,8 @@ async function handleNotifClick(notifId, projetId) {
       headers: getAuthHeaders(),
     });
   } catch (e) {}
-
   closeNotifPanel();
-
-  // 👉 redirection vers le projet concerné
-  if (projetId) {
-    window.location.href = `/projets/edit/${projetId}`;
-  }
+  if (projetId) window.location.href = `/projets/edit/${projetId}`;
 }
 
 async function markAllRead() {
@@ -215,22 +223,17 @@ function closeNotifPanel() {
 
 function outsideNotifClick(e) {
   const panel = document.getElementById("notif-panel");
-  const btn = document.getElementById("notifBellBtn");
+  const btn   = document.getElementById("notifBellBtn");
   if (panel && !panel.contains(e.target) && btn && !btn.contains(e.target)) {
     closeNotifPanel();
   }
 }
 
 function injectNotifPanel() {
-  // Find the bell notification button by its specific ID
   const notifBtn = document.getElementById("notifBellBtn");
   if (!notifBtn) return;
-  // Wire click even if panel already exists (for all pages)
   notifBtn.style.cursor = "pointer";
-  notifBtn.onclick = (e) => {
-    e.stopPropagation();
-    toggleNotifPanel();
-  };
+  notifBtn.onclick = (e) => { e.stopPropagation(); toggleNotifPanel(); };
   if (document.getElementById("notif-panel")) return;
 
   const dot = notifBtn.querySelector(".notif-dot");
@@ -239,22 +242,26 @@ function injectNotifPanel() {
   const badge = document.createElement("span");
   badge.id = "notif-count-badge";
   badge.style.cssText =
-    "position:absolute;top:-5px;right:-5px;min-width:16px;height:16px;border-radius:8px;background:#E05A2B;color:#fff;font-size:9px;font-weight:700;display:none;align-items:center;justify-content:center;padding:0 3px;border:2px solid #fff;";
+    "position:absolute;top:-5px;right:-5px;min-width:16px;height:16px;border-radius:8px;" +
+    "background:#E05A2B;color:#fff;font-size:9px;font-weight:700;display:none;" +
+    "align-items:center;justify-content:center;padding:0 3px;border:2px solid #fff;";
   notifBtn.appendChild(badge);
 
   const panel = document.createElement("div");
   panel.id = "notif-panel";
   panel.style.cssText =
-    "display:none;position:fixed;top:56px;right:16px;width:360px;max-height:480px;background:#fff;border-radius:14px;border:.5px solid #D8E6F0;box-shadow:0 12px 40px rgba(13,43,110,0.14);z-index:9000;flex-direction:column;overflow:hidden;";
+    "display:none;position:fixed;top:56px;right:16px;width:360px;max-height:480px;" +
+    "background:#fff;border-radius:14px;border:.5px solid #D8E6F0;" +
+    "box-shadow:0 12px 40px rgba(13,43,110,0.14);z-index:9000;flex-direction:column;overflow:hidden;";
   panel.innerHTML = `
-        <div style="display:flex;align-items:center;justify-content:space-between;padding:14px 16px 12px;border-bottom:.5px solid #EEF2F8;flex-shrink:0;">
-            <span style="font-size:13px;font-weight:700;color:#0D2B6E;">🔔 Notifications</span>
-            <span onclick="markAllRead()" style="font-size:10px;color:#5BB8E8;cursor:pointer;font-weight:500;">Tout marquer lu</span>
-        </div>
-        <div id="notif-panel-list" style="overflow-y:auto;flex:1;"></div>
-        <div style="padding:10px 16px;border-top:.5px solid #EEF2F8;text-align:center;flex-shrink:0;">
-            <span onclick="closeNotifPanel()" style="font-size:11px;color:#5BB8E8;cursor:pointer;font-weight:500;">Fermer ✕</span>
-        </div>`;
+    <div style="display:flex;align-items:center;justify-content:space-between;padding:14px 16px 12px;border-bottom:.5px solid #EEF2F8;flex-shrink:0;">
+      <span style="font-size:13px;font-weight:700;color:#0D2B6E;">🔔 Notifications</span>
+      <span onclick="markAllRead()" style="font-size:10px;color:#5BB8E8;cursor:pointer;font-weight:500;">Tout marquer lu</span>
+    </div>
+    <div id="notif-panel-list" style="overflow-y:auto;flex:1;"></div>
+    <div style="padding:10px 16px;border-top:.5px solid #EEF2F8;text-align:center;flex-shrink:0;">
+      <span onclick="closeNotifPanel()" style="font-size:11px;color:#5BB8E8;cursor:pointer;font-weight:500;">Fermer ✕</span>
+    </div>`;
   document.body.appendChild(panel);
 }
 
@@ -262,7 +269,6 @@ document.addEventListener("DOMContentLoaded", () => {
   const path = window.location.pathname;
   if (!path.includes("/login")) {
     checkAuth();
-    // Wire panels immediately and also after short delay (for th:replace fragments)
     injectNotifPanel();
     injectRemarquePanel();
     setTimeout(() => {
@@ -271,8 +277,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }, 200);
     loadNotifCount();
     setInterval(loadNotifCount, 30000);
-    // Badges sidebar (statuts + remarques)
-    if (typeof loadSidebarBadges === "function") loadSidebarBadges();
+    if (typeof loadSidebarBadges  === "function") loadSidebarBadges();
     if (typeof loadRemarquesBadge === "function") loadRemarquesBadge();
   }
 });
@@ -282,19 +287,9 @@ document.addEventListener("DOMContentLoaded", () => {
 function injectRemarquePanel() {
   const rBtn = document.getElementById("remarqueBtnTopbar");
   if (!rBtn) return;
-  // Wire click every time (works across all pages)
   rBtn.style.cursor = "pointer";
-  rBtn.onclick = (e) => {
-    e.stopPropagation();
-    toggleRemarquePanel();
-  };
+  rBtn.onclick = (e) => { e.stopPropagation(); toggleRemarquePanel(); };
   if (document.getElementById("remarque-panel")) return;
-
-  rBtn.style.cursor = "pointer";
-  rBtn.onclick = (e) => {
-    e.stopPropagation();
-    toggleRemarquePanel();
-  };
 
   const panel = document.createElement("div");
   panel.id = "remarque-panel";
@@ -320,40 +315,24 @@ async function loadRemarquePanel() {
   list.innerHTML =
     '<div style="padding:30px;text-align:center;color:#B0BDD0;font-size:12px;">Chargement...</div>';
   try {
-    const projRes = await fetch("/api/projets/all", {
-      headers: getAuthHeaders(),
-    });
+    const projRes = await fetch("/api/projets/all", { headers: getAuthHeaders() });
     if (!projRes.ok) {
       list.innerHTML =
         '<div style="padding:30px;text-align:center;color:#ef4444;font-size:12px;">Erreur</div>';
       return;
     }
     const projets = await projRes.json();
-
-    // Fetch remarques for all projects in parallel
     const all = await Promise.all(
       projets.map(async (p) => {
         try {
-          const r = await fetch(`/api/projets/${p.id}/remarques`, {
-            headers: getAuthHeaders(),
-          });
+          const r = await fetch(`/api/projets/${p.id}/remarques`, { headers: getAuthHeaders() });
           const items = r.ok ? await r.json() : [];
-          return items.map((rq) => ({
-            ...rq,
-            projetId: p.id,
-            projetNom: p.nom,
-          }));
-        } catch {
-          return [];
-        }
-      }),
+          return items.map((rq) => ({ ...rq, projetId: p.id, projetNom: p.nom }));
+        } catch { return []; }
+      })
     );
-
-    const flat = all
-      .flat()
-      .sort(
-        (a, b) => new Date(b.dateCreation || 0) - new Date(a.dateCreation || 0),
-      )
+    const flat = all.flat()
+      .sort((a, b) => new Date(b.dateCreation || 0) - new Date(a.dateCreation || 0))
       .slice(0, 15);
 
     if (flat.length === 0) {
@@ -361,28 +340,14 @@ async function loadRemarquePanel() {
         '<div style="padding:40px;text-align:center;color:#B0BDD0;font-size:12px;">💬<br><br>Aucune remarque</div>';
       return;
     }
-
-    list.innerHTML = flat
-      .map((r) => {
-        const auteur =
-          r.auteurNom ||
-          (r.auteur ? r.auteur.prenom + " " + r.auteur.nom : "—");
-        const initiales = auteur
-          .split(" ")
-          .map((w) => w[0] || "")
-          .join("")
-          .substring(0, 2)
-          .toUpperCase();
-        const date = r.dateCreation
-          ? new Date(r.dateCreation).toLocaleDateString("fr-FR", {
-              day: "2-digit",
-              month: "short",
-            })
-          : "";
-        const contenu =
-          (r.contenu || "").substring(0, 80) +
-          ((r.contenu || "").length > 80 ? "…" : "");
-        return `<div onclick="window.location.href='/projets/edit/${r.projetId}'"
+    list.innerHTML = flat.map((r) => {
+      const auteur = r.auteurNom || (r.auteur ? r.auteur.prenom + " " + r.auteur.nom : "—");
+      const initiales = auteur.split(" ").map((w) => w[0] || "").join("").substring(0, 2).toUpperCase();
+      const date = r.dateCreation
+        ? new Date(r.dateCreation).toLocaleDateString("fr-FR", { day: "2-digit", month: "short" })
+        : "";
+      const contenu = (r.contenu || "").substring(0, 80) + ((r.contenu || "").length > 80 ? "…" : "");
+      return `<div onclick="window.location.href='/projets/edit/${r.projetId}'"
         style="display:flex;gap:10px;padding:11px 16px;border-bottom:.5px solid #F4F7FC;cursor:pointer;transition:background 0.1s;"
         onmouseover="this.style.background='#F8FAFD'" onmouseout="this.style.background='#fff'">
         <div style="width:32px;height:32px;border-radius:50%;background:linear-gradient(135deg,#0d2b6e,#5bb8e8);
@@ -394,8 +359,7 @@ async function loadRemarquePanel() {
         </div>
         <div style="font-size:10px;color:#5BB8E8;font-weight:600;white-space:nowrap;align-self:center;">Voir →</div>
       </div>`;
-      })
-      .join("");
+    }).join("");
   } catch (e) {
     list.innerHTML =
       '<div style="padding:30px;text-align:center;color:#ef4444;font-size:12px;">Erreur de connexion</div>';
@@ -410,10 +374,7 @@ function toggleRemarquePanel() {
   } else {
     panel.style.display = "flex";
     loadRemarquePanel();
-    setTimeout(
-      () => document.addEventListener("click", outsideRemarqueClick),
-      50,
-    );
+    setTimeout(() => document.addEventListener("click", outsideRemarqueClick), 50);
   }
 }
 
@@ -425,7 +386,7 @@ function closeRemarquePanel() {
 
 function outsideRemarqueClick(e) {
   const panel = document.getElementById("remarque-panel");
-  const btn = document.getElementById("remarqueBtnTopbar");
+  const btn   = document.getElementById("remarqueBtnTopbar");
   if (panel && !panel.contains(e.target) && btn && !btn.contains(e.target)) {
     closeRemarquePanel();
   }
