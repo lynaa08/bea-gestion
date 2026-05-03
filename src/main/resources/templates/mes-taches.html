@@ -1,0 +1,410 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" type="image/png" href="/favicon.png" />
+    <title>Mes Tâches - BEA</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}" />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              bea: {
+                900: "#0a1f54",
+                800: "#0d2b6e",
+                700: "#1a3d8f",
+                600: "#1a4a9e",
+                400: "#5bb8e8",
+                100: "#eef4ff",
+                50:  "#f5f8fd",
+              },
+            },
+          },
+        },
+      };
+    </script>
+    <style>
+      /* ── DRAWER ─────────────────────────────── */
+      .drawer {
+        position: fixed; top: 0; right: 0;
+        width: 440px; max-width: 96vw; height: 100vh;
+        background: #fff; z-index: 901;
+        box-shadow: -8px 0 50px rgba(10,20,80,0.16);
+        transform: translateX(100%);
+        transition: transform 0.3s cubic-bezier(0.4,0,0.2,1);
+        display: flex; flex-direction: column; overflow: hidden;
+      }
+      .drawer.open { transform: translateX(0); }
+ 
+      .drawer-overlay {
+        display: none; position: fixed; inset: 0;
+        background: rgba(10,20,60,0.35); z-index: 900;
+        backdrop-filter: blur(2px);
+      }
+      .drawer-overlay.open { display: block; }
+ 
+      /* ── GROUPE PROJET ───────────────────────── */
+      .projet-group {
+        background: #fff; border-radius: 14px;
+        border: 0.5px solid #d8e6f0; overflow: hidden;
+        margin-bottom: 14px;
+        box-shadow: 0 2px 10px rgba(13,43,110,0.05);
+      }
+      .projet-header {
+        display: flex; align-items: center; justify-content: space-between;
+        padding: 13px 18px;
+        background: linear-gradient(135deg, #0d2b6e 0%, #1a4a9e 100%);
+        cursor: pointer; user-select: none; transition: filter 0.15s;
+      }
+      .projet-header:hover { filter: brightness(1.1); }
+      .projet-header-left { display: flex; align-items: center; gap: 10px; }
+      .projet-icon {
+        width: 32px; height: 32px; border-radius: 8px;
+        background: rgba(255,255,255,0.15);
+        display: flex; align-items: center; justify-content: center; font-size: 15px;
+      }
+      .projet-name  { font-size: 13px; font-weight: 700; color: #fff; }
+      .projet-count {
+        font-size: 11px; font-weight: 600;
+        background: rgba(255,255,255,0.18); color: rgba(255,255,255,0.9);
+        padding: 2px 9px; border-radius: 20px;
+      }
+      .projet-chevron { color: rgba(255,255,255,0.6); font-size: 11px; transition: transform 0.25s; }
+      .projet-chevron.rotated { transform: rotate(180deg); }
+ 
+      /* ── TACHE ROW ───────────────────────────── */
+      .tache-row {
+        display: flex; align-items: center; gap: 12px;
+        padding: 12px 18px; border-bottom: 0.5px solid #eef2f8;
+        cursor: pointer; transition: background 0.12s;
+      }
+      .tache-row:last-child { border-bottom: none; }
+      .tache-row:hover { background: #f5f8fd; }
+ 
+      .tache-checkbox {
+        width: 22px; height: 22px; border-radius: 6px;
+        border: 2px solid #d8e6f2; flex-shrink: 0;
+        display: flex; align-items: center; justify-content: center;
+        font-size: 12px; font-weight: bold; color: #fff; transition: all 0.15s;
+      }
+      .tache-checkbox.done    { background: #22c55e; border-color: #22c55e; }
+      .tache-checkbox.encours { background: #f59e0b; border-color: #f59e0b; }
+      .tache-checkbox.bloquee { background: #ef4444; border-color: #ef4444; }
+ 
+      .tache-info { flex: 1; min-width: 0; }
+      .tache-titre {
+        font-size: 13px; font-weight: 600; color: #1a2d5a;
+        white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+      }
+      .tache-titre.done { text-decoration: line-through; color: #94a3b8; }
+      .tache-meta { display: flex; align-items: center; gap: 8px; margin-top: 3px; flex-wrap: wrap; }
+      .tache-meta-item { font-size: 11px; color: #8a9fbf; }
+ 
+      .statut-pill {
+        display: inline-flex; align-items: center; gap: 4px;
+        padding: 3px 9px; border-radius: 10px;
+        font-size: 10px; font-weight: 700; white-space: nowrap; flex-shrink: 0;
+      }
+ 
+      /* ── STAT CARDS ──────────────────────────── */
+      .stat-card {
+        background: #fff; border-radius: 12px; border: 0.5px solid #d8e6f0;
+        padding: 14px 16px; flex: 1; border-top-width: 3px;
+      }
+      .stat-value { font-size: 26px; font-weight: 800; color: #0d2b6e; line-height: 1; }
+      .stat-label  { font-size: 11px; color: #8a9fbf; margin-top: 3px; font-weight: 500; }
+ 
+      /* ── DRAWER SECTIONS ─────────────────────── */
+      .d-section {
+        font-size: 10px; font-weight: 700; color: #8a9fbf;
+        text-transform: uppercase; letter-spacing: 0.6px;
+        display: flex; align-items: center; gap: 8px;
+      }
+      .d-section::after { content: ""; flex: 1; height: 1px; background: #e8f0f8; }
+ 
+      .progress-bar-bg   { height: 6px; background: #eef2f8; border-radius: 3px; overflow: hidden; }
+      .progress-bar-fill { height: 100%; border-radius: 3px; transition: width 0.6s cubic-bezier(0.4,0,0.2,1); }
+ 
+      /* ── SOUS-TACHES ─────────────────────────── */
+      .st-row {
+        display: flex; align-items: center; gap: 10px;
+        padding: 10px 0; border-bottom: 0.5px solid #eef2f8;
+      }
+      .st-row:last-child { border-bottom: none; }
+      .st-checkbox {
+        width: 20px; height: 20px; border-radius: 5px;
+        border: 2px solid #d8e6f2; flex-shrink: 0;
+        display: flex; align-items: center; justify-content: center;
+        cursor: pointer; transition: all 0.15s;
+        font-size: 11px; color: #fff; font-weight: bold;
+      }
+      .st-checkbox.done { background: #22c55e; border-color: #22c55e; }
+      .st-checkbox:hover:not(.done) { border-color: #5bb8e8; background: #eef9ff; }
+      .st-titre      { font-size: 12px; color: #2a3d5e; flex: 1; }
+      .st-titre.done { text-decoration: line-through; color: #94a3b8; }
+ 
+      /* ── STATUT DROPDOWN ─────────────────────── */
+      .statut-btn {
+        display: inline-flex; align-items: center; gap: 6px;
+        padding: 5px 13px; border-radius: 20px;
+        font-size: 12px; font-weight: 700; cursor: pointer;
+        border: none; transition: filter 0.15s;
+      }
+      .statut-btn:hover { filter: brightness(0.92); }
+      .statut-dropdown {
+        position: absolute; top: calc(100% + 4px); left: 0; z-index: 50;
+        background: #fff; border: 1px solid #d8e6f2;
+        border-radius: 10px; box-shadow: 0 8px 24px rgba(13,43,110,0.12);
+        min-width: 160px; overflow: hidden;
+      }
+      .statut-opt {
+        display: flex; align-items: center; gap: 8px;
+        padding: 10px 14px; font-size: 12px; font-weight: 600;
+        cursor: pointer; transition: background 0.1s; color: #1a2d5a;
+      }
+      .statut-opt:hover { background: #f5f8fd; }
+      .statut-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+ 
+      /* ── EMPTY STATE ─────────────────────────── */
+      .empty-state {
+        display: flex; flex-direction: column; align-items: center;
+        justify-content: center; padding: 60px 24px;
+        color: #c0cce0; text-align: center;
+        background: #fff; border-radius: 14px; border: 0.5px solid #d8e6f0;
+      }
+ 
+      /* deadline colors */
+      .dl-retard { color: #ef4444; }
+      .dl-proche  { color: #f59e0b; }
+      .dl-ok      { color: #22c55e; }
+      .dl-aucune  { color: #94a3b8; }
+    </style>
+  </head>
+  <body>
+    <div class="app-shell">
+ 
+      <!-- ── TOPBAR ── -->
+      <div class="topbar">
+        <div class="topbar-brand">
+          <img th:src="@{/images/logo_sidebar.svg}" alt="Logo BEA" style="height:40px;width:auto" />
+        </div>
+        <div class="topbar-right">
+          <div class="notif-btn" id="remarqueBtnTopbar" title="Remarques" style="cursor:pointer;margin-right:2px">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none">
+              <path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"
+                stroke="#4A6A9E" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+            </svg>
+            <div class="notif-dot remarque-dot" id="remarqueDot" style="display:none;background:#0d2b6e"></div>
+          </div>
+          <div class="notif-btn" id="notifBellBtn" style="cursor:pointer">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none">
+              <path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9M13.73 21a2 2 0 01-3.46 0"
+                stroke="#4A6A9E" stroke-width="1.8" stroke-linecap="round"/>
+            </svg>
+            <div class="notif-dot"></div>
+          </div>
+          <div class="user-chip">
+            <div class="user-chip-avatar"></div>
+            <div class="user-chip-info">
+              <div class="user-chip-name"></div>
+              <div class="user-chip-role"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+ 
+      <div class="body">
+        <!-- ── SIDEBAR ── -->
+        <div th:replace="~{fragments/sidebar :: sidebar}"></div>
+ 
+        <!-- ── MAIN ── -->
+        <div class="main">
+ 
+          <!-- En-tête page -->
+          <div class="flex items-center gap-3 mb-5">
+            <div class="flex items-center justify-center w-10 h-10 rounded-xl"
+              style="background:#eef4ff;border:1px solid #c8d8f0">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+                <rect x="3" y="5" width="18" height="16" rx="2" stroke="#0d2b6e" stroke-width="1.8" fill="none"/>
+                <path d="M8 9h8M8 13h5M8 17h3" stroke="#0d2b6e" stroke-width="1.8" stroke-linecap="round"/>
+              </svg>
+            </div>
+            <div>
+              <h1 class="text-lg font-bold text-bea-800">Mes Tâches</h1>
+              <p class="text-xs text-slate-400 mt-0.5">Consultez et validez vos tâches assignées</p>
+            </div>
+          </div>
+ 
+          <!-- Stats -->
+          <div class="flex gap-3 mb-5">
+            <div class="stat-card" style="border-top-color:#0d2b6e">
+              <div class="stat-value" id="statTotal">—</div>
+              <div class="stat-label">Total</div>
+            </div>
+            <div class="stat-card" style="border-top-color:#8a9fbf">
+              <div class="stat-value" style="color:#8a9fbf" id="statAFaire">—</div>
+              <div class="stat-label">À faire</div>
+            </div>
+            <div class="stat-card" style="border-top-color:#f59e0b">
+              <div class="stat-value" style="color:#f59e0b" id="statEnCours">—</div>
+              <div class="stat-label">En cours</div>
+            </div>
+            <div class="stat-card" style="border-top-color:#ef4444">
+              <div class="stat-value" style="color:#ef4444" id="statBloquee">—</div>
+              <div class="stat-label">Bloquées</div>
+            </div>
+            <div class="stat-card" style="border-top-color:#22c55e">
+              <div class="stat-value" style="color:#22c55e" id="statTerminee">—</div>
+              <div class="stat-label">Terminées</div>
+            </div>
+          </div>
+ 
+          <!-- Toolbar filtres -->
+          <div class="flex items-center gap-3 mb-4 flex-wrap">
+            <div class="flex items-center gap-2 bg-white border border-slate-200 rounded-xl px-4 py-2.5 flex-1 min-w-[180px] max-w-xs shadow-sm">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" class="shrink-0">
+                <circle cx="11" cy="11" r="8" stroke="#94a3b8" stroke-width="1.8"/>
+                <path d="M21 21l-4.35-4.35" stroke="#94a3b8" stroke-width="1.8" stroke-linecap="round"/>
+              </svg>
+              <input id="searchInput" oninput="applyFilters()"
+                class="border-none outline-none text-xs text-slate-700 w-full bg-transparent placeholder-slate-400"
+                placeholder="Rechercher une tâche…" />
+            </div>
+ 
+            <select id="projetFilter" onchange="applyFilters()"
+              class="bg-white border border-slate-200 rounded-xl px-3 py-2.5 text-xs text-slate-700 outline-none cursor-pointer shadow-sm">
+              <option value=""> Tous les projets</option>
+            </select>
+ 
+            <div class="flex gap-1.5 bg-slate-100 rounded-xl p-1">
+              <button class="ftab active px-3 py-1.5 rounded-lg text-xs font-semibold"
+                onclick="setStatutFilter('Tous',this)">Tous</button>
+              <button class="ftab px-3 py-1.5 rounded-lg text-xs font-semibold text-slate-500"
+                onclick="setStatutFilter('A_FAIRE',this)">À faire</button>
+              <button class="ftab px-3 py-1.5 rounded-lg text-xs font-semibold text-slate-500"
+                onclick="setStatutFilter('EN_COURS',this)">En cours</button>
+              <button class="ftab px-3 py-1.5 rounded-lg text-xs font-semibold text-slate-500"
+                onclick="setStatutFilter('BLOQUEE',this)">Bloquée</button>
+              <button class="ftab px-3 py-1.5 rounded-lg text-xs font-semibold text-slate-500"
+                onclick="setStatutFilter('TERMINEE',this)">Terminée</button>
+            </div>
+ 
+            <div class="ml-auto text-xs text-slate-400 font-medium" id="countInfo"></div>
+          </div>
+ 
+          <!-- Tâches groupées -->
+          <div id="tachesContainer">
+            <div class="empty-state">
+              <svg width="44" height="44" viewBox="0 0 24 24" fill="none" style="margin-bottom:12px;opacity:0.35">
+                <rect x="3" y="5" width="18" height="16" rx="2" stroke="#94a3b8" stroke-width="1.5" fill="none"/>
+                <path d="M8 9h8M8 13h5M8 17h3" stroke="#94a3b8" stroke-width="1.5" stroke-linecap="round"/>
+              </svg>
+              <p style="font-size:14px">Chargement des tâches...</p>
+            </div>
+          </div>
+ 
+        </div><!-- /main -->
+      </div>
+    </div>
+ 
+    <!-- OVERLAY -->
+    <div class="drawer-overlay" id="drawerOverlay" onclick="closeDrawer()"></div>
+ 
+    <!-- DRAWER DÉTAIL -->
+    <div class="drawer" id="drawer">
+      <div style="background:linear-gradient(135deg,#0d2b6e 0%,#1a4a9e 100%)" class="px-5 py-5 flex-shrink-0">
+        <div class="flex items-start justify-between gap-3">
+          <div class="min-w-0 flex-1">
+            <p class="text-xs font-semibold mb-1" style="color:#7ab4e8" id="d-projet">Projet —</p>
+            <h2 class="text-lg font-bold text-white mb-3 leading-snug" id="d-titre">—</h2>
+            <div class="relative inline-block" id="statutWrapper">
+              <button class="statut-btn" id="d-statutBtn" onclick="toggleStatutDropdown(event)">
+                <span id="d-statutText">—</span>
+                <span style="font-size:10px;opacity:0.7">▾</span>
+              </button>
+              <div class="statut-dropdown" id="statutDropdown" style="display:none">
+                <div class="statut-opt" onclick="changerStatut('A_FAIRE')">
+                  <span class="statut-dot" style="background:#8a9fbf"></span>À faire
+                </div>
+                <div class="statut-opt" onclick="changerStatut('EN_COURS')">
+                  <span class="statut-dot" style="background:#f59e0b"></span>En cours
+                </div>
+                <div class="statut-opt" onclick="changerStatut('TERMINEE')">
+                  <span class="statut-dot" style="background:#22c55e"></span>Terminée
+                </div>
+                <div class="statut-opt" onclick="changerStatut('BLOQUEE')">
+                  <span class="statut-dot" style="background:#ef4444"></span>Bloquée
+                </div>
+              </div>
+            </div>
+          </div>
+          <button onclick="closeDrawer()"
+            class="w-8 h-8 rounded-full flex items-center justify-center text-white text-sm font-bold flex-shrink-0 mt-0.5"
+            style="background:rgba(255,255,255,0.15)"
+            onmouseover="this.style.background='rgba(255,255,255,0.28)'"
+            onmouseout="this.style.background='rgba(255,255,255,0.15)'">✕</button>
+        </div>
+      </div>
+ 
+      
+      <div class="flex-1 overflow-y-auto p-5 space-y-5">
+
+        <div>
+          <div class="d-section mb-3">Sous-tâches</div>
+          <div id="d-sousTachesList">
+            <div class="text-xs text-slate-300 text-center py-6">Chargement...</div>
+          </div>
+        </div>
+
+        <div id="d-progressSection" style="display:none">
+          <div class="d-section mb-3">Progression sous-tâches</div>
+          <div class="bg-slate-50 border border-slate-100 rounded-xl p-4">
+            <div class="flex justify-between items-center mb-2">
+              <span class="text-xs font-semibold text-slate-600">Complétées</span>
+              <span class="text-xs text-slate-400" id="d-progressText">0/0</span>
+            </div>
+            <div class="progress-bar-bg">
+              <div class="progress-bar-fill" id="d-progressBar" style="width:0%;background:#5bb8e8"></div>
+            </div>
+            <div class="text-right text-xs font-bold mt-1" style="color:#0d2b6e" id="d-progressPct">0%</div>
+          </div>
+        </div>
+
+        <div>
+          <div class="d-section mb-3">Informations</div>
+          <div class="grid grid-cols-2 gap-2.5">
+            <div class="bg-slate-50 border border-slate-100 rounded-xl p-3">
+              <p class="text-xs text-slate-400 uppercase tracking-wide font-semibold mb-1">Priorité</p>
+              <p class="text-sm font-bold" id="d-priorite">—</p>
+            </div>
+            <div class="bg-slate-50 border border-slate-100 rounded-xl p-3">
+              <p class="text-xs text-slate-400 uppercase tracking-wide font-semibold mb-1">Assigné à</p>
+              <p class="text-sm font-semibold text-bea-800" id="d-assigne">—</p>
+            </div>
+            <div class="bg-slate-50 border border-slate-100 rounded-xl p-3 col-span-2">
+              <p class="text-xs text-slate-400 uppercase tracking-wide font-semibold mb-1">Deadline</p>
+              <p class="text-sm font-semibold" id="d-deadline">—</p>
+            </div>
+          </div>
+        </div>
+
+        <div>
+          <div class="d-section mb-3">Description</div>
+          <div class="bg-slate-50 border border-slate-100 rounded-xl p-4 text-sm text-slate-500 leading-relaxed whitespace-pre-wrap min-h-[60px]"
+            id="d-desc">—</div>
+        </div>
+
+      </div>
+          
+ 
+       
+ 
+ 
+    <script th:src="@{/js/sidebar-badge-loader.js}"></script>
+    <script th:src="@{/js/auth.js}"></script>
+    <script th:src="@{/js/mes-taches.js}"></script>
+  </body>
+</html>

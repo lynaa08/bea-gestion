@@ -1,10 +1,10 @@
 package com.bea.gestion.dto;
-
+ 
 import com.bea.gestion.enums.StatutProjet;
 import com.bea.gestion.enums.TypeProjet;
 import java.time.LocalDate;
 import java.util.List;
-
+ 
 public class ProjetDTO {
     private Long id;
     private String nom;
@@ -15,13 +15,10 @@ public class ProjetDTO {
     private StatutProjet statut;
     private TypeProjet type;
     private String priorite;
-    private Long chefProjetId;
-    private String chefProjetNom;
-    private String chefProjetMatricule;
     private List<Long> membresIds;
     private List<String> membresMatricules;
     private List<String> membresNoms;
-
+ 
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
     public String getNom() { return nom; }
@@ -40,12 +37,6 @@ public class ProjetDTO {
     public void setType(TypeProjet type) { this.type = type; }
     public String getPriorite() { return priorite; }
     public void setPriorite(String priorite) { this.priorite = priorite; }
-    public Long getChefProjetId() { return chefProjetId; }
-    public void setChefProjetId(Long chefProjetId) { this.chefProjetId = chefProjetId; }
-    public String getChefProjetNom() { return chefProjetNom; }
-    public void setChefProjetNom(String chefProjetNom) { this.chefProjetNom = chefProjetNom; }
-    public String getChefProjetMatricule() { return chefProjetMatricule; }
-    public void setChefProjetMatricule(String chefProjetMatricule) { this.chefProjetMatricule = chefProjetMatricule; }
     public List<Long> getMembresIds() { return membresIds; }
     public void setMembresIds(List<Long> membresIds) { this.membresIds = membresIds; }
     public List<String> getMembresMatricules() { return membresMatricules; }
