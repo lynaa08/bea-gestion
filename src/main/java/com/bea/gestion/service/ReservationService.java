@@ -145,15 +145,22 @@ public class ReservationService {
         resa.setStatut(StatutReservation.TERMINEE);
         reservationRepo.save(resa);
 
-        // Libérer le matériel → plus personne en file → DISPONIBLE
-        List<ReservationMateriel> file = reservationRepo
+        // Vérifier la file d'attente EN_ATTENTE pour ce matériel
+        List<ReservationMateriel> fileAttente = reservationRepo
                 .findByMaterielAndStatutOrderByScoresPrioriteDesc(
-                        resa.getMateriel(), StatutReservation.ACTIVE);
+                        resa.getMateriel(), StatutReservation.EN_ATTENTE);
 
-        if (file.isEmpty()) {
+        if (fileAttente.isEmpty()) {
+            // Personne en attente → matériel redevient DISPONIBLE
             Materiel m = resa.getMateriel();
             m.setStatut(StatutMateriel.DISPONIBLE);
             materielRepo.save(m);
+        } else {
+            // Promouvoir la réservation EN_ATTENTE la plus prioritaire → ACTIVE
+            ReservationMateriel prochaine = fileAttente.get(0);
+            prochaine.setStatut(StatutReservation.ACTIVE);
+            reservationRepo.save(prochaine);
+            // Le matériel reste EN_UTILISATION
         }
     }
 

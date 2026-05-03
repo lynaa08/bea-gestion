@@ -422,6 +422,18 @@
       let currentFilter = "Tous";
       let searchVal = "";
       let activeRow = null;
+      let currentUserRole = "";
+
+      // Decode role from JWT
+      (function () {
+        try {
+          const token = localStorage.getItem("token");
+          if (token) {
+            const payload = JSON.parse(atob(token.split(".")[1]));
+            currentUserRole = String(payload.role || payload.authorities || "");
+          }
+        } catch (e) {}
+      })();
 
       const statutLabel = {
         EN_COURS: "Projet en cours",
@@ -538,7 +550,10 @@
               <circle cx="12" cy="12" r="3" stroke="#0d2b6e" stroke-width="1.8"/>
             </svg>
           </button>
-           <button onclick="openReservationModal(${p.id}, '${p.nom.replace(/'/g, "\\\'")}')"
+           ${
+             currentUserRole.includes("DEVELOPPEUR")
+               ? `
+          <button onclick="openReservationModal(${p.id}, '${p.nom.replace(/'/g, "\\\'")}')"
              title="Réserver un matériel pour ce projet"
              class="inline-flex items-center justify-center w-8 h-8 rounded-lg bg-amber-50 border border-amber-200 hover:bg-amber-100 hover:border-amber-400 transition-all">
              <svg width="14" height="14" viewBox="0 0 24 24" fill="none">
@@ -546,7 +561,9 @@
              <path d="M16 7V5a2 2 0 00-2-2h-4a2 2 0 00-2 2v2" stroke="#d97706" stroke-width="1.8" stroke-linecap="round"/>
              <path d="M12 12v4M10 14h4" stroke="#d97706" stroke-width="1.8" stroke-linecap="round"/>
              </svg>
-          </button>
+          </button>`
+               : ""
+           }
 
           <button onclick="window.location.href='/projets/edit/${p.id}'"
             class="inline-flex items-center gap-1 px-3 py-1.5 rounded-lg bg-bea-50 border border-bea-100 hover:bg-bea-100 text-bea-800 text-xs font-semibold transition-all">
