@@ -49,11 +49,8 @@ public class NotificationService {
         }
     }
 
-    // ─── Projet créé avec statut EN_COURS → email à tous les membres ─────────
+    // ─── Projet créé → email à tous les membres (tous les statuts) ───────────
     public void notifyProjetCreated(Projet projet) {
-
-        // ✅ Sécurité : on envoie seulement si EN_COURS
-        if (projet.getStatut() != StatutProjet.EN_COURS) return;
 
         if (projet.getMembres() == null || projet.getMembres().isEmpty()) return;
 
@@ -71,54 +68,35 @@ public class NotificationService {
             String html = buildHtml(
                     "Projet affecté",
                     "Bonjour " + dev.getPrenom() + " " + dev.getNom() + ",",
-                    "Un projet vous a été affecté et est maintenant en cours.",
+                    "Un projet vous a été affecté.",
                     new String[][]{
                             {"Nom",      projet.getNom()},
+                            {"Statut",   str(projet.getStatut())},
                             {"Type",     str(projet.getType())},
                             {"Priorité", str(projet.getPriorite())},
                             {"Deadline", str(projet.getDeadline())}
                     },
-                    "Veuillez vous connecter à la plateforme pour commencer le travail."
+                    "Veuillez vous connecter à la plateforme pour plus de détails."
             );
 
             sendEmail(dev, "[BEA] Projet affecté : " + projet.getNom(), html);
         }
     }
 
-    // ─── Changement statut NON_COMMENCE → EN_COURS → email aux membres ───────
+    // ─── Changement statut → notification interne uniquement (pas d'email) ───
     public void notifyStatutChanged(Projet projet, StatutProjet ancienStatut) {
 
-        if (ancienStatut == StatutProjet.NON_COMMENCE
-                && projet.getStatut() == StatutProjet.EN_COURS) {
+        if (projet.getMembres() == null || projet.getMembres().isEmpty()) return;
 
-            if (projet.getMembres() == null || projet.getMembres().isEmpty()) return;
-
-            for (User dev : projet.getMembres()) {
-
-                // ✅ Notification interne
-                save(dev,
-                        "Projet validé",
-                        "Le projet \"" + projet.getNom() + "\" est maintenant en cours.",
-                        "PROJET_VALIDE",
-                        projet.getId(),
-                        projet.getNom());
-
-                // ✅ Email HTML
-                String html = buildHtml(
-                        "Projet validé",
-                        "Bonjour " + dev.getPrenom() + " " + dev.getNom() + ",",
-                        "Un projet vous a été affecté et validé.",
-                        new String[][]{
-                                {"Nom",      projet.getNom()},
-                                {"Type",     str(projet.getType())},
-                                {"Priorité", str(projet.getPriorite())},
-                                {"Deadline", str(projet.getDeadline())}
-                        },
-                        "Vous pouvez commencer le travail."
-                );
-
-                sendEmail(dev, "[BEA] Projet validé : " + projet.getNom(), html);
-            }
+        for (User dev : projet.getMembres()) {
+            save(dev,
+                    "Statut du projet mis à jour",
+                    "Le projet \"" + projet.getNom() + "\" est passé de "
+                            + ancienStatut + " à " + projet.getStatut(),
+                    "PROJET_STATUT_CHANGE",
+                    projet.getId(),
+                    projet.getNom());
+            // ❌ Pas d'email ici
         }
     }
 
@@ -175,7 +153,6 @@ public class NotificationService {
 
     public void deleteNotification(Long id, User user) {
         notificationRepository.findById(id).ifPresent(n -> {
-            // Only delete if it belongs to this user
             if (n.getUser() != null && n.getUser().getId().equals(user.getId())) {
                 notificationRepository.deleteById(id);
             }
