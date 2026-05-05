@@ -272,25 +272,29 @@
           <img
             th:src="@{/images/logo_sidebar.svg}"
             alt="Logo BEA"
-            style="height: 40px; width: auto" />
+            style="height: 40px; width: auto"
+          />
         </div>
         <div class="topbar-right">
           <div
             class="notif-btn"
             id="remarqueBtnTopbar"
             title="Remarques"
-            style="cursor: pointer; margin-right: 2px">
+            style="cursor: pointer; margin-right: 2px"
+          >
             <svg width="15" height="15" viewBox="0 0 24 24" fill="none">
               <path
                 d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"
                 stroke="#4A6A9E"
                 stroke-width="1.8"
-                fill="none" />
+                fill="none"
+              />
             </svg>
             <div
               class="notif-dot remarque-dot"
               id="remarqueDot"
-              style="display: none"></div>
+              style="display: none"
+            ></div>
           </div>
           <div class="notif-btn" id="notifBellBtn">
             <svg width="15" height="15" viewBox="0 0 24 24" fill="none">
@@ -298,7 +302,8 @@
                 d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9M13.73 21a2 2 0 01-3.46 0"
                 stroke="#4A6A9E"
                 stroke-width="1.8"
-                stroke-linecap="round" />
+                stroke-linecap="round"
+              />
             </svg>
             <div class="notif-dot"></div>
           </div>
@@ -332,8 +337,6 @@
             </div>
           </div>
 
-          
-
           <!-- ── Score legend ── -->
           <div class="score-legend">
             <div>📊 <strong>Comment le score est calculé :</strong></div>
@@ -359,7 +362,8 @@
                 align-items: center;
                 flex-wrap: wrap;
                 gap: 10px;
-              ">
+              "
+            >
               <div class="page-title">Demandes de réservation</div>
               <button
                 onclick="window.location.href = '/materiels-list'"
@@ -375,13 +379,15 @@
                   display: flex;
                   align-items: center;
                   gap: 7px;
-                ">
+                "
+              >
                 <svg width="13" height="13" viewBox="0 0 24 24" fill="none">
                   <path
                     d="M19 12H5M12 5l-7 7 7 7"
                     stroke="#0d2b6e"
                     stroke-width="2.2"
-                    stroke-linecap="round" />
+                    stroke-linecap="round"
+                  />
                 </svg>
                 Retour matériels
               </button>
@@ -393,21 +399,24 @@
                 type="text"
                 id="searchInput"
                 placeholder="Rechercher matériel, responsable, projet…"
-                oninput="filterAndRender()" />
+                oninput="filterAndRender()"
+              />
               <select
                 class="filter-select"
                 id="filterStatut"
-                onchange="filterAndRender()">
-                <option value="EN_ATTENTE">⏳ En attente seulement</option>
+                onchange="filterAndRender()"
+              >
+                <option value="EN_ATTENTE">En attente seulement</option>
                 <option value="">Tous les statuts</option>
-                <option value="ACTIVE">✅ Acceptées</option>
+                <option value="ACTIVE">Acceptées</option>
                 <option value="TERMINEE">✔ Terminées</option>
                 <option value="ANNULEE">✕ Annulées / Rejetées</option>
               </select>
               <select
                 class="filter-select"
                 id="filterMateriel"
-                onchange="filterAndRender()">
+                onchange="filterAndRender()"
+              >
                 <option value="">Tous les matériels</option>
               </select>
             </div>
@@ -432,7 +441,8 @@
                   <tr>
                     <td
                       colspan="10"
-                      style="text-align: center; padding: 50px; color: #b0bdd0">
+                      style="text-align: center; padding: 50px; color: #b0bdd0"
+                    >
                       Chargement…
                     </td>
                   </tr>
@@ -767,7 +777,7 @@
           return;
         const res = await apiCall(`/api/reservations/${id}/accepter`, "PATCH");
         if (res) {
-          toast("✅ Réservation acceptée — matériel attribué !", "success");
+          toast(" Réservation acceptée — matériel attribué !", "success");
           await loadReservations();
         }
       }
