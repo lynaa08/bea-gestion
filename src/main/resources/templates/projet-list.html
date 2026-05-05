@@ -282,7 +282,7 @@
                     </th>
                     <th
                       class="text-left px-5 py-3 text-xs font-semibold text-white/80 uppercase tracking-wider">
-                      Chef de projet
+                      Membres
                     </th>
                     <th
                       class="text-left px-5 py-3 text-xs font-semibold text-white/80 uppercase tracking-wider">
@@ -399,6 +399,14 @@
               </p>
               <p class="text-sm font-semibold" id="d-deadline">—</p>
             </div>
+          </div>
+        </div>
+
+        <!-- Section : Membres -->
+        <div>
+          <div class="d-section mb-3">Membres du projet</div>
+          <div id="d-membres" class="flex flex-wrap gap-2">
+            <span class="text-slate-400 text-sm">Aucun membre</span>
           </div>
         </div>
 
@@ -520,9 +528,23 @@
             const sc = statutColor[p.statut] || "#8a9fbf";
             const sbg = statutBg[p.statut] || "#f0f4ff";
             const sl = statutLabel[p.statut] || p.statut || "—";
-            const chefInfo = p.chefProjetMatricule
-              ? `<span class="font-semibold text-bea-800 text-xs">${p.chefProjetMatricule}</span><br><span class="text-slate-400 text-xs">${p.chefProjetNom || ""}</span>`
-              : `<span class="text-slate-400 text-xs">${p.chefProjetNom || "—"}</span>`;
+            const membres = p.membresMatricules || [];
+            const membresNoms = p.membresNoms || [];
+            let membresInfo;
+            if (membres.length === 0) {
+              membresInfo = `<span class="text-slate-400 text-xs">Aucun membre</span>`;
+            } else {
+              const visible = membres.slice(0, 3);
+              const rest = membres.length - 3;
+              membresInfo = visible
+                .map(
+                  (m, i) =>
+                    `<span class="inline-flex items-center gap-1 bg-bea-50 border border-bea-100 rounded-lg px-2 py-0.5 text-xs font-semibold text-bea-800 mr-1 mb-1">${m}${membresNoms[i] ? `<span class='text-slate-400 font-normal'>${membresNoms[i]}</span>` : ""}</span>`,
+                )
+                .join("");
+              if (rest > 0)
+                membresInfo += `<span class="text-xs text-slate-400">+${rest} autre(s)</span>`;
+            }
 
             const rowBg = i % 2 === 0 ? "" : "bg-slate-50/50";
 
@@ -540,7 +562,7 @@
       <td class="px-5 py-3.5">
         <span class="bg-slate-100 text-slate-600 text-xs font-semibold px-2.5 py-1 rounded-lg">${p.type || "—"}</span>
       </td>
-      <td class="px-5 py-3.5">${chefInfo}</td>
+      <td class="px-5 py-3.5"><div class="flex flex-wrap">${membresInfo}</div></td>
       <td class="px-5 py-3.5">
         <div class="flex items-center gap-1.5">
           <button onclick="openDrawer(${p.id})" title="Voir les détails"
@@ -662,6 +684,25 @@
 
         document.getElementById("d-desc").textContent =
           p.description || "Aucune description renseignée.";
+
+        // Membres
+        const dMembres = document.getElementById("d-membres");
+        const mats = p.membresMatricules || [];
+        const noms = p.membresNoms || [];
+        if (mats.length === 0) {
+          dMembres.innerHTML =
+            '<span class="text-slate-400 text-sm">Aucun membre assigné</span>';
+        } else {
+          dMembres.innerHTML = mats
+            .map(
+              (m, i) =>
+                `<span class="inline-flex flex-col bg-bea-50 border border-bea-100 rounded-xl px-3 py-2">
+               <span class="text-xs font-bold text-bea-800">${m}</span>
+               ${noms[i] ? `<span class="text-xs text-slate-400">${noms[i]}</span>` : ""}
+             </span>`,
+            )
+            .join("");
+        }
 
         // Ouvrir
         document.getElementById("drawer").classList.add("open");
