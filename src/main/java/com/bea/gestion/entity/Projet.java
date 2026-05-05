@@ -28,7 +28,7 @@ public class Projet {
     private LocalDate deadline;
     
     @Enumerated(EnumType.STRING)
-    private StatutProjet statut;
+    private StatutProjet statut = StatutProjet.NON_COMMENCE;
     
     @Enumerated(EnumType.STRING)
     private TypeProjet type;

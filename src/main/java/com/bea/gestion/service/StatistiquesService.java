@@ -24,11 +24,19 @@ public class StatistiquesService {
 
     public Map<String, Long> getProjetStats() {
         Map<String, Long> stats = new HashMap<>();
-        stats.put("EN_COURS",          projetRepository.countByStatut(StatutProjet.EN_COURS));
-        stats.put("NON_COMMENCE",      projetRepository.countByStatut(StatutProjet.NON_COMMENCE));
-        stats.put("CLOTURE",           projetRepository.countByStatut(StatutProjet.CLOTURE));
-        stats.put("PAS_DE_VISIBILITE", projetRepository.countByStatut(StatutProjet.PAS_DE_VISIBILITE));
-        stats.put("TOTAL",             projetRepository.count());
+        long enCours      = projetRepository.countByStatut(StatutProjet.EN_COURS);
+        long nonCommence  = projetRepository.countByStatut(StatutProjet.NON_COMMENCE);
+        long cloture      = projetRepository.countByStatut(StatutProjet.CLOTURE);
+        long pasVisi      = projetRepository.countByStatut(StatutProjet.PAS_DE_VISIBILITE);
+        long total        = projetRepository.count();
+        // Projets avec statut null → comptés dans NON_COMMENCE
+        long nullStatut   = total - enCours - nonCommence - cloture - pasVisi;
+        if (nullStatut > 0) nonCommence += nullStatut;
+        stats.put("EN_COURS",          enCours);
+        stats.put("NON_COMMENCE",      nonCommence);
+        stats.put("CLOTURE",           cloture);
+        stats.put("PAS_DE_VISIBILITE", pasVisi);
+        stats.put("TOTAL",             total);
         return stats;
     }
 

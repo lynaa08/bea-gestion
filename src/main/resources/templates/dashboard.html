@@ -6,24 +6,409 @@
     <link rel="icon" type="image/png" href="/favicon.png" />
     <title>Tableau de bord - BEA Gestion Projets</title>
     <link rel="stylesheet" th:href="@{/css/style.css}" />
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <style>
+      /* ── Dashboard layout ── */
+      .dash-kpi-row {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 14px;
+        margin-bottom: 20px;
+      }
+      .kpi-card {
+        background: #fff;
+        border-radius: 16px;
+        padding: 20px 22px;
+        border: 1px solid #e8f0f8;
+        box-shadow: 0 2px 8px rgba(13, 43, 110, 0.04);
+        cursor: pointer;
+        transition:
+          transform 0.15s,
+          box-shadow 0.15s;
+        position: relative;
+        overflow: hidden;
+      }
+      .kpi-card:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(13, 43, 110, 0.1);
+      }
+      .kpi-card::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 4px;
+        border-radius: 16px 16px 0 0;
+      }
+      .kpi-card.encours::before {
+        background: #5bb8e8;
+      }
+      .kpi-card.noncommence::before {
+        background: #f59e0b;
+      }
+      .kpi-card.cloture::before {
+        background: #22c55e;
+      }
+      .kpi-card.pasvisibilite::before {
+        background: #8a9fbf;
+      }
+      .kpi-top {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 12px;
+      }
+      .kpi-icon {
+        width: 36px;
+        height: 36px;
+        border-radius: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      .kpi-card.encours .kpi-icon {
+        background: #e8f5ff;
+        color: #5bb8e8;
+      }
+      .kpi-card.noncommence .kpi-icon {
+        background: #fff7ed;
+        color: #f59e0b;
+      }
+      .kpi-card.cloture .kpi-icon {
+        background: #e8faf0;
+        color: #22c55e;
+      }
+      .kpi-card.pasvisibilite .kpi-icon {
+        background: #f4f7fc;
+        color: #8a9fbf;
+      }
+      .kpi-trend {
+        font-size: 11px;
+        font-weight: 600;
+        padding: 3px 8px;
+        border-radius: 20px;
+        background: #f0f4ff;
+        color: #5a78aa;
+      }
+      .kpi-num {
+        font-size: 36px;
+        font-weight: 800;
+        color: #0d2b6e;
+        line-height: 1;
+        margin-bottom: 4px;
+        letter-spacing: -1px;
+      }
+      .kpi-label {
+        font-size: 12px;
+        color: #8a9fbf;
+        font-weight: 500;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+      }
+      .kpi-bar {
+        margin-top: 12px;
+        height: 4px;
+        background: #eef2f8;
+        border-radius: 4px;
+        overflow: hidden;
+      }
+      .kpi-bar-fill {
+        height: 100%;
+        border-radius: 4px;
+        width: 0%;
+        transition: width 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+      }
+      .kpi-card.encours .kpi-bar-fill {
+        background: #5bb8e8;
+      }
+      .kpi-card.noncommence .kpi-bar-fill {
+        background: #f59e0b;
+      }
+      .kpi-card.cloture .kpi-bar-fill {
+        background: #22c55e;
+      }
+      .kpi-card.pasvisibilite .kpi-bar-fill {
+        background: #8a9fbf;
+      }
+
+      /* ── Charts row ── */
+      .charts-row {
+        display: grid;
+        grid-template-columns: 340px 1fr;
+        gap: 16px;
+        margin-bottom: 16px;
+      }
+      .chart-card {
+        background: #fff;
+        border-radius: 16px;
+        padding: 22px 24px;
+        border: 1px solid #e8f0f8;
+        box-shadow: 0 2px 8px rgba(13, 43, 110, 0.04);
+      }
+      .chart-title {
+        font-size: 13px;
+        font-weight: 700;
+        color: #1a2d5a;
+        margin-bottom: 4px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+      .chart-sub {
+        font-size: 11px;
+        color: #b0bdd0;
+        margin-bottom: 18px;
+      }
+      .donut-wrap {
+        position: relative;
+        width: 200px;
+        height: 200px;
+        margin: 0 auto 16px;
+      }
+      .donut-center {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        text-align: center;
+        pointer-events: none;
+      }
+      .donut-center-num {
+        font-size: 30px;
+        font-weight: 800;
+        color: #0d2b6e;
+        line-height: 1;
+      }
+      .donut-center-label {
+        font-size: 10px;
+        color: #8a9fbf;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+      }
+      .donut-legend {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+        margin-top: 4px;
+      }
+      .legend-item {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 8px;
+        font-size: 12px;
+      }
+      .legend-dot {
+        width: 10px;
+        height: 10px;
+        border-radius: 3px;
+        flex-shrink: 0;
+      }
+      .legend-name {
+        flex: 1;
+        color: #4a6080;
+        font-weight: 500;
+      }
+      .legend-val {
+        font-weight: 700;
+        color: #1a2d5a;
+        min-width: 24px;
+        text-align: right;
+      }
+      .legend-pct {
+        font-size: 10px;
+        color: #b0bdd0;
+        min-width: 30px;
+        text-align: right;
+      }
+
+      /* Bar chart card */
+      .bar-chart-wrap {
+        height: 220px;
+        position: relative;
+      }
+
+      /* ── Bottom row ── */
+      .bottom-row {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 16px;
+      }
+
+      /* Recent projects */
+      .recent-item {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 10px 0;
+        border-bottom: 1px solid #f0f4fa;
+        cursor: pointer;
+        transition: background 0.12s;
+        border-radius: 6px;
+        padding-left: 6px;
+      }
+      .recent-item:last-child {
+        border-bottom: none;
+      }
+      .recent-item:hover {
+        background: #f5f9ff;
+      }
+      .recent-dot {
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        flex-shrink: 0;
+      }
+      .recent-name {
+        flex: 1;
+        font-size: 13px;
+        font-weight: 600;
+        color: #1a2d5a;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+      .recent-date {
+        font-size: 11px;
+        color: #b0bdd0;
+        white-space: nowrap;
+      }
+      .recent-badge {
+        font-size: 10px;
+        font-weight: 700;
+        padding: 2px 9px;
+        border-radius: 20px;
+        white-space: nowrap;
+      }
+
+      /* Type cards */
+      .type-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+        gap: 12px;
+      }
+      .type-card {
+        background: #f8fafd;
+        border-radius: 12px;
+        padding: 14px 16px;
+        border: 0.5px solid #d8e6f2;
+      }
+      .type-card-name {
+        font-size: 12px;
+        font-weight: 700;
+        color: #0d2b6e;
+        margin-bottom: 2px;
+      }
+      .type-card-total {
+        font-size: 26px;
+        font-weight: 800;
+        color: #1a4ba8;
+        margin-bottom: 10px;
+        line-height: 1.1;
+      }
+      .type-bar-row {
+        margin-bottom: 6px;
+      }
+      .type-bar-label {
+        display: flex;
+        justify-content: space-between;
+        font-size: 10px;
+        color: #4a6080;
+        margin-bottom: 3px;
+      }
+      .type-bar-bg {
+        height: 5px;
+        background: #eef2f8;
+        border-radius: 3px;
+        overflow: hidden;
+      }
+      .type-bar-fill {
+        height: 100%;
+        border-radius: 3px;
+        transition: width 0.8s;
+      }
+
+      /* Section header */
+      .section-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 16px;
+      }
+      .section-title {
+        font-size: 13px;
+        font-weight: 700;
+        color: #1a2d5a;
+      }
+      .section-link {
+        font-size: 11px;
+        color: #5bb8e8;
+        cursor: pointer;
+        font-weight: 600;
+        text-decoration: none;
+      }
+      .section-link:hover {
+        color: #0d2b6e;
+      }
+
+      /* Loading shimmer */
+      .shimmer {
+        background: linear-gradient(
+          90deg,
+          #f0f4fa 25%,
+          #e8eef8 50%,
+          #f0f4fa 75%
+        );
+        background-size: 200% 100%;
+        animation: shimmer 1.4s infinite;
+        border-radius: 8px;
+        height: 16px;
+      }
+      @keyframes shimmer {
+        0% {
+          background-position: 200% 0;
+        }
+        100% {
+          background-position: -200% 0;
+        }
+      }
+
+      @media (max-width: 1100px) {
+        .charts-row {
+          grid-template-columns: 1fr;
+        }
+        .dash-kpi-row {
+          grid-template-columns: repeat(2, 1fr);
+        }
+      }
+      @media (max-width: 700px) {
+        .dash-kpi-row {
+          grid-template-columns: 1fr 1fr;
+        }
+        .bottom-row {
+          grid-template-columns: 1fr;
+        }
+      }
+    </style>
   </head>
   <body>
     <div class="app-shell">
-
       <!-- TOPBAR -->
       <div class="topbar">
         <div class="topbar-brand">
-          <img th:src="@{/images/logo_sidebar.svg}"
-              alt="Logo BEA"
-              style="height: 40px; width: auto;" />
+          <img
+            th:src="@{/images/logo_sidebar.svg}"
+            alt="Logo BEA"
+            style="height: 40px; width: auto" />
         </div>
         <div class="topbar-right">
           <div
             class="notif-btn"
             id="remarqueBtnTopbar"
             title="Remarques"
-            style="cursor: pointer; margin-right: 2px"
-          >
+            style="cursor: pointer; margin-right: 2px">
             <svg width="15" height="15" viewBox="0 0 24 24" fill="none">
               <path
                 d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"
@@ -31,14 +416,12 @@
                 stroke-width="1.8"
                 stroke-linecap="round"
                 stroke-linejoin="round"
-                fill="none"
-              />
+                fill="none" />
             </svg>
             <div
               class="notif-dot remarque-dot"
               id="remarqueDot"
-              style="display: none; background: #0d2b6e"
-            ></div>
+              style="display: none; background: #0d2b6e"></div>
           </div>
           <div class="notif-btn" id="notifBellBtn">
             <svg width="15" height="15" viewBox="0 0 24 24" fill="none">
@@ -46,8 +429,7 @@
                 d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9M13.73 21a2 2 0 01-3.46 0"
                 stroke="#4A6A9E"
                 stroke-width="1.8"
-                stroke-linecap="round"
-              />
+                stroke-linecap="round" />
             </svg>
             <div class="notif-dot"></div>
           </div>
@@ -63,149 +445,642 @@
 
       <!-- BODY -->
       <div class="body">
-        <!-- SIDEBAR -->
         <div th:replace="~{fragments/sidebar :: sidebar}"></div>
 
-        <!-- MAIN CONTENT -->
         <div class="main">
-          <!-- ── Cartes statut ── -->
-          <div class="quick-cards">
+          <!-- ── KPI Cards ── -->
+          <div class="dash-kpi-row">
             <div
-              class="qcard qcard-encours"
-              onclick="window.location.href = '/projets-list?filter=EN_COURS'"
-            >
-              <div class="qcard-icon">
-                <svg viewBox="0 0 24 24" fill="none" width="18" height="18">
-                  <circle
-                    cx="12"
-                    cy="12"
-                    r="9"
-                    stroke="currentColor"
-                    stroke-width="1.8"
-                  />
-                  <path
-                    d="M12 7v5l3 3"
-                    stroke="currentColor"
-                    stroke-width="1.8"
-                    stroke-linecap="round"
-                  />
-                </svg>
+              class="kpi-card encours"
+              onclick="window.location.href = '/projets-list?filter=EN_COURS'">
+              <div class="kpi-top">
+                <div class="kpi-icon">
+                  <svg viewBox="0 0 24 24" fill="none" width="18" height="18">
+                    <circle
+                      cx="12"
+                      cy="12"
+                      r="9"
+                      stroke="currentColor"
+                      stroke-width="1.8" />
+                    <path
+                      d="M12 7v5l3 3"
+                      stroke="currentColor"
+                      stroke-width="1.8"
+                      stroke-linecap="round" />
+                  </svg>
+                </div>
+                <span class="kpi-trend" id="trend-encours">—</span>
               </div>
-              <div class="qcard-num" id="qcard-encours">0</div>
-              <div class="qcard-label">En cours</div>
-              <div class="qcard-bar">
-                <div class="qcard-bar-fill" id="bar-encours"></div>
+              <div class="kpi-num" id="kpi-encours">0</div>
+              <div class="kpi-label">En cours</div>
+              <div class="kpi-bar">
+                <div class="kpi-bar-fill" id="bar-encours"></div>
               </div>
             </div>
+
             <div
-              class="qcard qcard-noncommence"
-              onclick="window.location.href = '/projets-list?filter=NON_COMMENCE'">
-              <div class="qcard-icon">
-                <svg viewBox="0 0 24 24" fill="none" width="18" height="18">
+              class="kpi-card noncommence"
+              onclick="
+                window.location.href = '/projets-list?filter=NON_COMMENCE'
+              ">
+              <div class="kpi-top">
+                <div class="kpi-icon">
+                  <svg viewBox="0 0 24 24" fill="none" width="18" height="18">
+                    <rect
+                      x="3"
+                      y="5"
+                      width="18"
+                      height="16"
+                      rx="2"
+                      stroke="currentColor"
+                      stroke-width="1.8"
+                      fill="none" />
+                    <path
+                      d="M8 3v4M16 3v4M3 11h18"
+                      stroke="currentColor"
+                      stroke-width="1.8"
+                      stroke-linecap="round" />
+                  </svg>
+                </div>
+                <span class="kpi-trend" id="trend-noncommence">—</span>
+              </div>
+              <div class="kpi-num" id="kpi-noncommence">0</div>
+              <div class="kpi-label">Non commencés</div>
+              <div class="kpi-bar">
+                <div class="kpi-bar-fill" id="bar-noncommence"></div>
+              </div>
+            </div>
+
+            <div
+              class="kpi-card cloture"
+              onclick="window.location.href = '/projets-list?filter=CLOTURE'">
+              <div class="kpi-top">
+                <div class="kpi-icon">
+                  <svg viewBox="0 0 24 24" fill="none" width="18" height="18">
+                    <path
+                      d="M20 6L9 17l-5-5"
+                      stroke="currentColor"
+                      stroke-width="1.8"
+                      stroke-linecap="round"
+                      stroke-linejoin="round" />
+                  </svg>
+                </div>
+                <span class="kpi-trend" id="trend-cloture">—</span>
+              </div>
+              <div class="kpi-num" id="kpi-cloture">0</div>
+              <div class="kpi-label">Clôturés</div>
+              <div class="kpi-bar">
+                <div class="kpi-bar-fill" id="bar-cloture"></div>
+              </div>
+            </div>
+
+            <div
+              class="kpi-card pasvisibilite"
+              onclick="
+                window.location.href = '/projets-list?filter=PAS_DE_VISIBILITE'
+              ">
+              <div class="kpi-top">
+                <div class="kpi-icon">
+                  <svg viewBox="0 0 24 24" fill="none" width="18" height="18">
+                    <path
+                      d="M17.94 17.94A10.07 10.07 0 0112 20c-7 0-11-8-11-8a18.45 18.45 0 015.06-5.94M9.9 4.24A9.12 9.12 0 0112 4c7 0 11 8 11 8a18.5 18.5 0 01-2.16 3.19M1 1l22 22"
+                      stroke="currentColor"
+                      stroke-width="1.8"
+                      stroke-linecap="round" />
+                  </svg>
+                </div>
+                <span class="kpi-trend" id="trend-pasvisibilite">—</span>
+              </div>
+              <div class="kpi-num" id="kpi-pasvisibilite">0</div>
+              <div class="kpi-label">Pas de visibilité</div>
+              <div class="kpi-bar">
+                <div class="kpi-bar-fill" id="bar-pasvisibilite"></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- ── Charts row : donut + bar ── -->
+          <div class="charts-row">
+            <!-- Donut — répartition statut -->
+            <div class="chart-card">
+              <div class="chart-title">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none">
+                  <path
+                    d="M21.21 15.89A10 10 0 118 2.83"
+                    stroke="#5bb8e8"
+                    stroke-width="2"
+                    stroke-linecap="round" />
+                  <path
+                    d="M22 12A10 10 0 0012 2v10z"
+                    stroke="#0d2b6e"
+                    stroke-width="2"
+                    stroke-linecap="round" />
+                </svg>
+                Répartition des statuts
+              </div>
+              <div class="chart-sub">Vue globale de l'état du portefeuille</div>
+              <div class="donut-wrap">
+                <canvas id="donutChart"></canvas>
+                <div class="donut-center">
+                  <div class="donut-center-num" id="donut-total">0</div>
+                  <div class="donut-center-label">Projets</div>
+                </div>
+              </div>
+              <div class="donut-legend" id="donut-legend"></div>
+            </div>
+
+            <!-- Bar chart — répartition par type -->
+            <div class="chart-card">
+              <div class="chart-title">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none">
                   <rect
                     x="3"
-                    y="5"
-                    width="18"
-                    height="16"
-                    rx="2"
-                    stroke="currentColor"
-                    stroke-width="1.8"
-                    fill="none"
-                  />
-                  <path
-                    d="M8 3v4M16 3v4M3 11h18"
-                    stroke="currentColor"
-                    stroke-width="1.8"
-                    stroke-linecap="round"
-                  />
+                    y="12"
+                    width="4"
+                    height="9"
+                    rx="1"
+                    fill="#5bb8e8" />
+                  <rect
+                    x="10"
+                    y="7"
+                    width="4"
+                    height="14"
+                    rx="1"
+                    fill="#0d2b6e" />
+                  <rect
+                    x="17"
+                    y="3"
+                    width="4"
+                    height="18"
+                    rx="1"
+                    fill="#22c55e" />
                 </svg>
+                Projets par type
               </div>
-              <div class="qcard-num" id="qcard-noncommence">0</div>
-              <div class="qcard-label">Non commencés</div>
-              <div class="qcard-bar">
-                <div class="qcard-bar-fill" id="bar-noncommence"></div>
+              <div class="chart-sub">
+                Nombre de projets regroupés par catégorie
               </div>
-            </div>
-            <div
-              class="qcard qcard-cloture"
-              onclick="window.location.href = '/projets-list?filter=CLOTURE'"
-            >
-              <div class="qcard-icon">
-                <svg viewBox="0 0 24 24" fill="none" width="18" height="18">
-                  <path
-                    d="M20 6L9 17l-5-5"
-                    stroke="currentColor"
-                    stroke-width="1.8"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                  />
-                </svg>
-              </div>
-              <div class="qcard-num" id="qcard-cloture">0</div>
-              <div class="qcard-label">Clôturés</div>
-              <div class="qcard-bar">
-                <div class="qcard-bar-fill" id="bar-cloture"></div>
-              </div>
-            </div>
-            <div
-              class="qcard qcard-pasvisibilite"
-              onclick="window.location.href = '/projets-list?filter=PAS_DE_VISIBILITE'">
-              <div class="qcard-icon">
-                <svg viewBox="0 0 24 24" fill="none" width="18" height="18">
-                  <path
-                    d="M17.94 17.94A10.07 10.07 0 0112 20c-7 0-11-8-11-8a18.45 18.45 0 015.06-5.94M9.9 4.24A9.12 9.12 0 0112 4c7 0 11 8 11 8a18.5 18.5 0 01-2.16 3.19M1 1l22 22"
-                    stroke="currentColor"
-                    stroke-width="1.8"
-                    stroke-linecap="round"
-                  />
-                </svg>
-              </div>
-              <div class="qcard-num" id="qcard-pasvisibilite">0</div>
-              <div class="qcard-label">Pas de visibilité</div>
-              <div class="qcard-bar">
-                <div class="qcard-bar-fill" id="bar-pasvisibilite"></div>
+              <div class="bar-chart-wrap">
+                <canvas id="barChart"></canvas>
               </div>
             </div>
           </div>
 
-          <!-- ── Deux colonnes ── -->
-          <div class="dash-grid">
-            <!-- Avancement global -->
-            <div class="form-card">
-              <div class="section-label">Avancement global</div>
-              <div id="dash-avancement">
-                <div style="text-align: center; padding: 40px; color: #8a9fbf">
-                  Chargement...
-                </div>
-              </div>
-            </div>
-
+          <!-- ── Bottom row : recent + type detail ── -->
+          <div class="bottom-row">
             <!-- Projets récents -->
-            <div class="form-card">
-              <div class="section-label">Projets récents</div>
-              <div id="dash-recent">
-                <div style="text-align: center; padding: 40px; color: #8a9fbf">
-                  Chargement...
+            <div class="chart-card">
+              <div class="section-header">
+                <div class="chart-title" style="margin-bottom: 0">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none">
+                    <circle
+                      cx="12"
+                      cy="12"
+                      r="9"
+                      stroke="#5bb8e8"
+                      stroke-width="1.8" />
+                    <path
+                      d="M12 7v5l3 3"
+                      stroke="#5bb8e8"
+                      stroke-width="1.8"
+                      stroke-linecap="round" />
+                  </svg>
+                  Projets récents
                 </div>
+                <a class="section-link" href="/projets-list">Voir tous →</a>
+              </div>
+              <div id="dash-recent">
+                <div class="shimmer" style="margin-bottom: 8px"></div>
+                <div
+                  class="shimmer"
+                  style="margin-bottom: 8px; width: 80%"></div>
+                <div class="shimmer" style="width: 65%"></div>
               </div>
             </div>
-          </div>
 
-          <!-- ── Statistiques par type ── -->
-          <div class="form-card" style="margin-top: 16px">
-            <div class="section-label">Répartition par type</div>
-            <div id="stats-by-type">
-              <div style="text-align: center; padding: 40px; color: #8a9fbf">
-                Chargement...
+            <!-- Répartition par type — mini cards -->
+            <div class="chart-card">
+              <div class="section-header">
+                <div class="chart-title" style="margin-bottom: 0">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none">
+                    <rect
+                      x="3"
+                      y="3"
+                      width="7"
+                      height="7"
+                      rx="1.5"
+                      stroke="#5bb8e8"
+                      stroke-width="1.8" />
+                    <rect
+                      x="14"
+                      y="3"
+                      width="7"
+                      height="7"
+                      rx="1.5"
+                      stroke="#5bb8e8"
+                      stroke-width="1.8" />
+                    <rect
+                      x="3"
+                      y="14"
+                      width="7"
+                      height="7"
+                      rx="1.5"
+                      stroke="#5bb8e8"
+                      stroke-width="1.8" />
+                    <rect
+                      x="14"
+                      y="14"
+                      width="7"
+                      height="7"
+                      rx="1.5"
+                      stroke="#5bb8e8"
+                      stroke-width="1.8" />
+                  </svg>
+                  Détail par type
+                </div>
+              </div>
+              <div id="stats-by-type" class="type-grid">
+                <div class="shimmer" style="height: 100px"></div>
+                <div class="shimmer" style="height: 100px"></div>
               </div>
             </div>
           </div>
         </div>
       </div>
     </div>
+
     <script th:src="@{/js/sidebar-badge-loader.js}"></script>
     <script th:src="@{/js/auth.js}"></script>
-    <script th:src="@{/js/dashboard.js}"></script>
     <script th:src="@{/js/projets.js}"></script>
+    <script>
+      // ── Constants ────────────────────────────────────────────────────────
+
+      const TYPE_COLORS = [
+        "#0d2b6e",
+        "#5BB8E8",
+        "#22c55e",
+        "#f59e0b",
+        "#a855f7",
+        "#ef4444",
+        "#06b6d4",
+        "#84cc16",
+      ];
+
+      let donutChartInst = null;
+      let barChartInst = null;
+
+      // ── Boot ─────────────────────────────────────────────────────────────
+      document.addEventListener("DOMContentLoaded", () => {
+        if (!checkAuth()) return;
+        loadUserInfo();
+        loadSidebarBadges();
+        loadDashboard();
+      });
+
+      async function loadDashboard() {
+        await Promise.all([
+          loadStats(),
+          loadRecentProjects(),
+          loadStatsByType(),
+        ]);
+      }
+
+      // ── 1. KPI Cards + Donut ─────────────────────────────────────────────
+      async function loadStats() {
+        try {
+          const res = await fetch("/api/dashboard/stats", {
+            headers: getAuthHeaders(),
+          });
+          if (res.status === 401) {
+            logout();
+            return;
+          }
+          if (!res.ok) return;
+          const stats = await res.json();
+          renderKPIs(stats);
+          renderDonut(stats);
+        } catch (e) {}
+      }
+
+      function renderKPIs(stats) {
+        const total = stats.TOTAL || 0;
+        const keys = [
+          {
+            key: "EN_COURS",
+            id: "kpi-encours",
+            bar: "bar-encours",
+            trend: "trend-encours",
+          },
+          {
+            key: "NON_COMMENCE",
+            id: "kpi-noncommence",
+            bar: "bar-noncommence",
+            trend: "trend-noncommence",
+          },
+          {
+            key: "CLOTURE",
+            id: "kpi-cloture",
+            bar: "bar-cloture",
+            trend: "trend-cloture",
+          },
+          {
+            key: "PAS_DE_VISIBILITE",
+            id: "kpi-pasvisibilite",
+            bar: "bar-pasvisibilite",
+            trend: "trend-pasvisibilite",
+          },
+        ];
+        keys.forEach(({ key, id, bar, trend }) => {
+          const val = stats[key] || 0;
+          const pct = total > 0 ? Math.round((val / total) * 100) : 0;
+          animateNumber(document.getElementById(id), val);
+          setTimeout(() => {
+            const b = document.getElementById(bar);
+            if (b) b.style.width = pct + "%";
+          }, 200);
+          const t = document.getElementById(trend);
+          if (t) {
+            t.textContent = pct + "%";
+          }
+        });
+      }
+
+      function renderDonut(stats) {
+        const total = stats.TOTAL || 0;
+        document.getElementById("donut-total").textContent = total;
+
+        const order = [
+          "EN_COURS",
+          "CLOTURE",
+          "NON_COMMENCE",
+          "PAS_DE_VISIBILITE",
+        ];
+        const labels = order.map((k) => STATUT_LABEL[k]);
+        const data = order.map((k) => stats[k] || 0);
+        const colors = order.map((k) => STATUT_COLOR[k]);
+
+        // Legend
+        const legend = document.getElementById("donut-legend");
+        legend.innerHTML = order
+          .map((k, i) => {
+            const pct = total > 0 ? Math.round((data[i] / total) * 100) : 0;
+            return `<div class="legend-item">
+            <span class="legend-dot" style="background:${colors[i]}"></span>
+            <span class="legend-name">${labels[i]}</span>
+            <span class="legend-val">${data[i]}</span>
+            <span class="legend-pct">${pct}%</span>
+          </div>`;
+          })
+          .join("");
+
+        // Destroy old chart
+        if (donutChartInst) donutChartInst.destroy();
+
+        const ctx = document.getElementById("donutChart").getContext("2d");
+        donutChartInst = new Chart(ctx, {
+          type: "doughnut",
+          data: {
+            labels,
+            datasets: [
+              {
+                data,
+                backgroundColor: colors,
+                borderWidth: 3,
+                borderColor: "#fff",
+                hoverBorderWidth: 4,
+                hoverOffset: 6,
+              },
+            ],
+          },
+          options: {
+            cutout: "70%",
+            responsive: true,
+            maintainAspectRatio: true,
+            plugins: {
+              legend: { display: false },
+              tooltip: {
+                callbacks: {
+                  label: (ctx) =>
+                    ` ${ctx.label}: ${ctx.raw} projet(s) (${total > 0 ? Math.round((ctx.raw / total) * 100) : 0}%)`,
+                },
+                backgroundColor: "#1a2d5a",
+                padding: 10,
+                cornerRadius: 8,
+                titleFont: { size: 11 },
+                bodyFont: { size: 12, weight: "bold" },
+              },
+            },
+            animation: {
+              animateRotate: true,
+              duration: 900,
+              easing: "easeInOutQuart",
+            },
+          },
+        });
+      }
+
+      // ── 2. Bar chart par type ─────────────────────────────────────────────
+      async function loadStatsByType() {
+        try {
+          const res = await fetch("/api/dashboard/stats/by-type", {
+            headers: getAuthHeaders(),
+          });
+          if (!res.ok) return;
+          const stats = await res.json();
+          renderBarChart(stats);
+          renderTypeCards(stats);
+        } catch (e) {}
+      }
+
+      function renderBarChart(stats) {
+        const types = Object.keys(stats);
+        const totals = types.map((t) => stats[t].TOTAL || 0);
+        const enCours = types.map((t) => stats[t].EN_COURS || 0);
+        const cloture = types.map((t) => stats[t].CLOTURE || 0);
+        const nonComm = types.map((t) => stats[t].NON_COMMENCE || 0);
+
+        if (barChartInst) barChartInst.destroy();
+
+        const ctx = document.getElementById("barChart").getContext("2d");
+        barChartInst = new Chart(ctx, {
+          type: "bar",
+          data: {
+            labels: types,
+            datasets: [
+              {
+                label: "En cours",
+                data: enCours,
+                backgroundColor: "#5BB8E8",
+                borderRadius: 4,
+                borderSkipped: false,
+              },
+              {
+                label: "Clôturés",
+                data: cloture,
+                backgroundColor: "#22c55e",
+                borderRadius: 4,
+                borderSkipped: false,
+              },
+              {
+                label: "Non commencés",
+                data: nonComm,
+                backgroundColor: "#f59e0b",
+                borderRadius: 4,
+                borderSkipped: false,
+              },
+              {
+                label: "Pas de visibilité",
+                data: types.map((t) => stats[t].PAS_DE_VISIBILITE || 0),
+                backgroundColor: "#8a9fbf",
+                borderRadius: 4,
+                borderSkipped: false,
+              },
+            ],
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+              legend: {
+                display: true,
+                position: "top",
+                labels: {
+                  boxWidth: 10,
+                  boxHeight: 10,
+                  borderRadius: 3,
+                  useBorderRadius: true,
+                  font: { size: 11 },
+                  color: "#4a6080",
+                  padding: 16,
+                },
+              },
+              tooltip: {
+                backgroundColor: "#1a2d5a",
+                padding: 10,
+                cornerRadius: 8,
+                titleFont: { size: 11 },
+                bodyFont: { size: 12 },
+              },
+            },
+            scales: {
+              x: {
+                stacked: false,
+                grid: { display: false },
+                ticks: { font: { size: 11 }, color: "#8a9fbf" },
+                border: { display: false },
+              },
+              y: {
+                beginAtZero: true,
+                grid: { color: "#f0f4fa", lineWidth: 1 },
+                ticks: { font: { size: 11 }, color: "#8a9fbf", stepSize: 1 },
+                border: { display: false, dash: [4, 4] },
+              },
+            },
+            animation: { duration: 900, easing: "easeInOutQuart" },
+            barPercentage: 0.65,
+            categoryPercentage: 0.75,
+          },
+        });
+      }
+
+      function renderTypeCards(stats) {
+        const container = document.getElementById("stats-by-type");
+        if (!stats || Object.keys(stats).length === 0) {
+          container.innerHTML =
+            '<div style="color:#b0bdd0;font-size:13px;padding:20px 0">Aucune donnée</div>';
+          return;
+        }
+        const statKeys = [
+          { key: "EN_COURS", label: "En cours", color: "#5BB8E8" },
+          { key: "CLOTURE", label: "Clôturés", color: "#22c55e" },
+          { key: "NON_COMMENCE", label: "Non comm.", color: "#f59e0b" },
+          {
+            key: "PAS_DE_VISIBILITE",
+            label: "Pas de visibilité",
+            color: "#8a9fbf",
+          },
+        ];
+        container.innerHTML = Object.entries(stats)
+          .map(([type, data]) => {
+            const total = data.TOTAL || 0;
+            const bars = statKeys
+              .map(({ key, label, color }) => {
+                const val = data[key] || 0;
+                const pct = total > 0 ? Math.round((val / total) * 100) : 0;
+                return `<div class="type-bar-row">
+              <div class="type-bar-label"><span>${label}</span><span style="font-weight:700;color:${color}">${val}</span></div>
+              <div class="type-bar-bg"><div class="type-bar-fill" style="width:${pct}%;background:${color}"></div></div>
+            </div>`;
+              })
+              .join("");
+            return `<div class="type-card">
+            <div class="type-card-name">${type}</div>
+            <div class="type-card-total">${total}</div>
+            ${bars}
+          </div>`;
+          })
+          .join("");
+      }
+
+      // ── 3. Projets récents ────────────────────────────────────────────────
+      async function loadRecentProjects() {
+        const container = document.getElementById("dash-recent");
+        try {
+          const res = await fetch("/api/dashboard/recent?limit=6", {
+            headers: getAuthHeaders(),
+          });
+          if (!res.ok) {
+            container.innerHTML =
+              '<div style="color:#b0bdd0;font-size:12px;text-align:center;padding:20px">Indisponible</div>';
+            return;
+          }
+          const projects = await res.json();
+          if (!projects || projects.length === 0) {
+            container.innerHTML =
+              '<div style="color:#b0bdd0;font-size:13px;text-align:center;padding:30px">Aucun projet récent</div>';
+            return;
+          }
+          container.innerHTML = projects
+            .map((p) => {
+              const color = STATUT_COLOR[p.statut] || "#8a9fbf";
+              const label = STATUT_LABEL[p.statut] || p.statut || "—";
+              const date = p.dateCreation
+                ? new Date(p.dateCreation).toLocaleDateString("fr-FR", {
+                    day: "2-digit",
+                    month: "short",
+                    year: "numeric",
+                  })
+                : "";
+              return `<div class="recent-item" onclick="window.location.href='/projets/edit/${p.id}'">
+              <span class="recent-dot" style="background:${color}"></span>
+              <span class="recent-name" title="${p.nom || ""}">${p.nom || "—"}</span>
+              <span class="recent-date">${date}</span>
+              <span class="recent-badge" style="background:${color}22;color:${color}">${label}</span>
+            </div>`;
+            })
+            .join("");
+        } catch (e) {
+          container.innerHTML =
+            '<div style="color:#ef4444;font-size:12px;text-align:center;padding:20px">Erreur chargement</div>';
+        }
+      }
+
+      // ── Helpers ───────────────────────────────────────────────────────────
+      function animateNumber(el, target) {
+        if (!el) return;
+        let cur = 0;
+        const step = Math.max(1, Math.floor(target / 20));
+        const t = setInterval(() => {
+          cur = Math.min(cur + step, target);
+          el.textContent = cur;
+          if (cur >= target) clearInterval(t);
+        }, 40);
+      }
+
+      // Auto-refresh 60s
+      setInterval(() => {
+        if (window.location.pathname === "/dashboard") loadDashboard();
+      }, 60000);
+    </script>
   </body>
 </html>

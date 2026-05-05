@@ -4,6 +4,7 @@ import com.bea.gestion.entity.Role;
 import com.bea.gestion.entity.User;
 import com.bea.gestion.repository.UserRepository;
 import org.springframework.boot.CommandLineRunner;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
@@ -12,10 +13,14 @@ public class DataInitializer implements CommandLineRunner {
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
+    private final JdbcTemplate jdbcTemplate;
 
-    public DataInitializer(UserRepository userRepository, PasswordEncoder passwordEncoder) {
+    public DataInitializer(UserRepository userRepository,
+                           PasswordEncoder passwordEncoder,
+                           JdbcTemplate jdbcTemplate) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
+        this.jdbcTemplate = jdbcTemplate;
     }
 
     @Override
@@ -25,6 +30,20 @@ public class DataInitializer implements CommandLineRunner {
         createUser("CDEP001", "chefdep@bea.dz",   "cdep123",  "Département", "Chef",        Role.CHEF_DEPARTEMENT);
         createUser("PMO001",  "pmo@bea.dz",       "pmo123",   "Étude",       "Ingénieur",   Role.INGENIEUR_ETUDE_PMO);
         createUser("DEV001",  "dev@bea.dz",       "dev123",   "BEA",         "Développeur", Role.DEVELOPPEUR);
+
+        // ✅ Migration : corriger les projets avec statut ou type NULL
+        try {
+            int fixedStatut = jdbcTemplate.update(
+                "UPDATE projets SET statut = 'NON_COMMENCE' WHERE statut IS NULL OR statut = ''"
+            );
+            int fixedType = jdbcTemplate.update(
+                "UPDATE projets SET type = 'INTERNE' WHERE type IS NULL OR type = ''"
+            );
+            if (fixedStatut > 0) System.out.println("✅ Migration: " + fixedStatut + " projets(s) avec statut NULL → NON_COMMENCE");
+            if (fixedType   > 0) System.out.println("✅ Migration: " + fixedType   + " projets(s) avec type NULL → INTERNE");
+        } catch (Exception e) {
+            System.out.println("⚠️  Migration statut/type skipped: " + e.getMessage());
+        }
 
         System.out.println("✅ Comptes initialisés:");
         System.out.println("   ADM001  / admin123  (Admin)");

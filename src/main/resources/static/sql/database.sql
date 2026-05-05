@@ -84,9 +84,11 @@ UPDATE materiels SET statut = 'EN_UTILISATION' WHERE statut = 'En utilisation';
 UPDATE materiels SET etat = 'BON_ETAT' WHERE etat = 'Bon état';
 -- Vérifier l'insertion
 SELECT * FROM materiels;
-ALTER TABLE materiel ADD responsable VARCHAR(150);
-ALTER TABLE materiel ADD tel_responsable VARCHAR(30);
-ALTER TABLE projet ADD date_creation DATE;
+ALTER TABLE materiels ADD responsable VARCHAR(150);
+ALTER TABLE materiels ADD tel_responsable VARCHAR(30);
+ALTER TABLE projets ADD date_creation DATE;
+UPDATE projets SET statut = 'NON_COMMENCE' WHERE statut IS NULL OR statut = '';
+UPDATE projets SET type = 'INTERNE' WHERE type IS NULL OR type = '';
 -- ============================================================================
 -- 7. ROLLBACK (EN CAS DE PROBLÈME)
 -- ============================================================================
