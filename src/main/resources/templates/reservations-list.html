@@ -615,10 +615,10 @@
         // ── Niveau priorité badge ──
         const niveau = r.niveauPriorite || "BASSE";
         const niveauLabels = {
-          CRITIQUE: "🔴 Critique",
-          HAUTE: "🟠 Haute",
-          MOYENNE: "🟡 Moyenne",
-          BASSE: "🟢 Basse",
+          CRITIQUE: " Critique",
+          HAUTE: " Haute",
+          MOYENNE: " Moyenne",
+          BASSE: " Basse",
         };
         const prioriteHtml =
           r.statut === "EN_ATTENTE" || r.statut === "ACTIVE"
@@ -644,22 +644,22 @@
             (new Date(r.projetDateFin) - Date.now()) / 86400000,
           );
           if (days < 0)
-            details += `<span class="factor-tag factor-deadline">⚠ Deadline dépassée (${Math.abs(days)}j)</span>`;
+            details += `<span class="factor-tag factor-deadline"> Deadline dépassée (${Math.abs(days)}j)</span>`;
           else if (days <= 7)
-            details += `<span class="factor-tag factor-deadline">📅 Deadline dans ${days}j</span>`;
+            details += `<span class="factor-tag factor-deadline"> Deadline dans ${days}j</span>`;
           else if (days <= 30)
-            details += `<span class="factor-tag factor-deadline">📅 ${days}j restants</span>`;
+            details += `<span class="factor-tag factor-deadline"> ${days}j restants</span>`;
         }
         if (r.dateReservation) {
           const days = Math.floor(
             (new Date(r.dateReservation) - Date.now()) / 86400000,
           );
           if (days <= 0)
-            details += `<span class="factor-tag factor-retour">🔄 Retour aujourd'hui/dépassé</span>`;
+            details += `<span class="factor-tag factor-retour"> Retour aujourd'hui/dépassé</span>`;
           else if (days <= 3)
-            details += `<span class="factor-tag factor-retour">🔄 Retour dans ${days}j</span>`;
+            details += `<span class="factor-tag factor-retour"> Retour dans ${days}j</span>`;
           else if (days <= 7)
-            details += `<span class="factor-tag factor-retour">🔄 Retour dans ${days}j</span>`;
+            details += `<span class="factor-tag factor-retour"> Retour dans ${days}j</span>`;
         }
         if (!details)
           details = '<span style="color:#cbd5e1;font-size:10px">—</span>';
@@ -700,11 +700,11 @@
           EN_ATTENTE: {
             bg: "#fff7ed",
             color: "#c2410c",
-            label: "⏳ En attente",
+            label: " En attente",
           },
-          ACTIVE: { bg: "#f0fdf4", color: "#15803d", label: "✅ Acceptée" },
-          TERMINEE: { bg: "#eff6ff", color: "#1d4ed8", label: "✔ Terminée" },
-          ANNULEE: { bg: "#fff1f2", color: "#be123c", label: "✕ Annulée" },
+          ACTIVE: { bg: "#f0fdf4", color: "#15803d", label: " Acceptée" },
+          TERMINEE: { bg: "#eff6ff", color: "#1d4ed8", label: " Terminée" },
+          ANNULEE: { bg: "#fff1f2", color: "#be123c", label: " Annulée" },
         };
         const b = badges[r.statut] || {
           bg: "#f4f4f4",
