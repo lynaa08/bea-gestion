@@ -12,31 +12,27 @@ public class ReservationMateriel {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    // Matériel réservé
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "materiel_id", nullable = false)
     private Materiel materiel;
 
-    // Responsable qui réserve
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "responsable_id", nullable = false)
     private User responsable;
 
-    // Projet lié (pour calcul de priorité)
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "projet_id")
     private Projet projet;
 
-    private LocalDate dateReservation;   // date souhaitée
-    private LocalDateTime dateCreation;  // quand la demande a été faite
+    private LocalDate dateReservation;
+    private LocalDateTime dateCreation;
 
-    // ACTIVE = matériel attribué | EN_ATTENTE = en file d'attente
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private StatutReservation statut = StatutReservation.EN_ATTENTE;
 
-    // Score calculé automatiquement pour la priorité
-    private Integer scoresPriorite = 0;
+    // Niveau de priorité calculé : CRITIQUE | HAUTE | MOYENNE | BASSE
+    private String niveauPriorite = "BASSE";
 
     @Column(length = 500)
     private String note;
@@ -67,8 +63,8 @@ public class ReservationMateriel {
     public StatutReservation getStatut() { return statut; }
     public void setStatut(StatutReservation statut) { this.statut = statut; }
 
-    public Integer getScoresPriorite() { return scoresPriorite; }
-    public void setScoresPriorite(Integer s) { this.scoresPriorite = s; }
+    public String getNiveauPriorite() { return niveauPriorite; }
+    public void setNiveauPriorite(String n) { this.niveauPriorite = n; }
 
     public String getNote() { return note; }
     public void setNote(String note) { this.note = note; }

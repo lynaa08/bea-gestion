@@ -1,33 +1,62 @@
+// ── Helper : décoder le rôle depuis le JWT ────────────────────────────────
+function getUserRoleFromToken() {
+  try {
+    const token = localStorage.getItem("token");
+    if (!token) return "";
+    const payload = JSON.parse(atob(token.split(".")[1]));
+    return String(payload.role || payload.authorities || "");
+  } catch (e) {
+    return "";
+  }
+}
+
 // ── Ouvrir le modal de réservation ────────────────────────────────────────
 async function openReservationModal(projetId = null, projetNom = "") {
+  // Seul le DEVELOPPEUR peut réserver
+  const role = getUserRoleFromToken();
+  if (!role.includes("DEVELOPPEUR")) {
+    alert("Seul un Développeur peut réserver un matériel.");
+    return;
+  }
+
   try {
     const token = localStorage.getItem("token");
     const headers = { Authorization: "Bearer " + token };
 
-    const [resMateriels, resUsers, resProjets] = await Promise.all([
+    const [resMateriels, resUsers, resProjets, resResas] = await Promise.all([
       fetch("/api/materiels", { headers }),
       fetch("/api/users", { headers }),
       fetch("/api/projets/all", { headers }),
+      fetch("/api/reservations/all", { headers }),
     ]);
 
     const materiels = await resMateriels.json();
     const users = await resUsers.json();
     const projets = await resProjets.json();
+    const resas = await resResas.json();
 
-    // ✅ Inclure tous les matériels (DISPONIBLE, EN_UTILISATION, null)
-    const disponibles = materiels.filter(
-      (m) =>
-        m.statut === "DISPONIBLE" ||
-        m.statut === "EN_UTILISATION" ||
-        m.statut == null,
+    // IDs des materiels deja ACTIVE en reservation
+    const reservedIds = new Set(
+      resas.filter((r) => r.statut === "ACTIVE").map((r) => r.materielId),
     );
+
+    // Afficher un materiel si :
+    //   - statut DISPONIBLE ou null => toujours OK
+    //   - statut EN_UTILISATION => seulement si quantite > 1
+    const disponibles = materiels.filter((m) => {
+      if (m.statut === "DISPONIBLE" || m.statut == null) return true;
+      if (m.statut === "EN_UTILISATION") {
+        const qty = m.quantite != null ? m.quantite : 1;
+        return qty > 1 && !reservedIds.has(m.id);
+      }
+      return false;
+    });
 
     buildReservationModal(disponibles, users, projets, projetId, projetNom);
   } catch (e) {
     alert("Erreur chargement données : " + e.message);
   }
 }
-
 // ── Construire et afficher le modal ───────────────────────────────────────
 function buildReservationModal(
   materiels,
@@ -275,153 +304,4 @@ function showResaMsg(type, msg) {
   const bg = type === "success" ? "#e6f9ee" : "#fee";
   const color = type === "success" ? "#1a7a40" : "#b00";
   el.innerHTML = `<div style="background:${bg};color:${color};padding:10px 14px;border-radius:8px;margin-bottom:12px;font-size:13px">${msg}</div>`;
-}
-
-// ══════════════════════════════════════════════════════════════════
-//  voirReservations — appelé depuis materiel-list.html
-// ══════════════════════════════════════════════════════════════════
-async function voirReservations(materielId) {
-  const token = localStorage.getItem("token");
-  const res = await fetch(`/api/reservations/materiel/${materielId}`, {
-    headers: { Authorization: "Bearer " + token },
-  });
-
-  if (!res.ok) {
-    alert(
-      "Erreur lors du chargement des réservations (code " + res.status + ")",
-    );
-    return;
-  }
-
-  const reservations = await res.json();
-
-  const rows = reservations
-    .map((r) => {
-      const statutColor =
-        r.statut === "ACTIVE"
-          ? "#22c55e"
-          : r.statut === "EN_ATTENTE"
-            ? "#f59e0b"
-            : "#94a3b8";
-
-      const statutLabel =
-        r.statut === "ACTIVE"
-          ? "Attribué"
-          : r.statut === "EN_ATTENTE"
-            ? "En attente"
-            : r.statut === "TERMINEE"
-              ? "Terminée"
-              : r.statut === "ANNULEE"
-                ? "Annulée"
-                : r.statut || "—";
-
-      const action =
-        r.statut === "ACTIVE"
-          ? `<button onclick="terminerResa(${r.id})"
-           style="background:#e6f9ee;border:1px solid #86efac;border-radius:6px;
-                  padding:4px 10px;cursor:pointer;font-size:11px;color:#1a7a40;font-weight:600">
-           ✓ Libérer
-         </button>`
-          : r.statut === "EN_ATTENTE"
-            ? `<button onclick="annulerResa(${r.id})"
-           style="background:#fee;border:1px solid #fca5a5;border-radius:6px;
-                  padding:4px 10px;cursor:pointer;font-size:11px;color:#b00;font-weight:600">
-           ✗ Annuler
-         </button>`
-            : "—";
-
-      return `<tr>
-      <td style="padding:8px 12px;border-bottom:1px solid #f0f4ff">
-        ${r.responsablePrenom || ""} ${r.responsableNom || ""}<br>
-        <span style="color:#8a9fbf;font-size:11px">${r.responsableMatricule || ""}</span>
-      </td>
-      <td style="padding:8px 12px;border-bottom:1px solid #f0f4ff;color:#4a6080;font-size:12px">
-        ${r.projetNom || "—"}
-      </td>
-      <td style="padding:8px 12px;border-bottom:1px solid #f0f4ff;text-align:center">
-        <span style="background:${statutColor}22;color:${statutColor};
-                     padding:2px 8px;border-radius:10px;font-size:11px;font-weight:700">
-          ${statutLabel}
-        </span>
-      </td>
-      <td style="padding:8px 12px;border-bottom:1px solid #f0f4ff;
-                 text-align:center;font-weight:700;color:#0d2b6e">
-        ${r.scoresPriorite ?? "—"}
-      </td>
-      <td style="padding:8px 12px;border-bottom:1px solid #f0f4ff;text-align:center">
-        ${action}
-      </td>
-    </tr>`;
-    })
-    .join("");
-
-  const tableContent =
-    reservations.length === 0
-      ? '<div style="text-align:center;padding:30px;color:#8a9fbf;font-size:13px">Aucune réservation pour ce matériel</div>'
-      : `<table style="width:100%;border-collapse:collapse;font-size:13px">
-        <thead>
-          <tr style="background:#f0f4ff">
-            <th style="padding:10px 12px;text-align:left;color:#4a6080;font-size:11px;text-transform:uppercase">Responsable</th>
-            <th style="padding:10px 12px;text-align:left;color:#4a6080;font-size:11px;text-transform:uppercase">Projet</th>
-            <th style="padding:10px 12px;text-align:center;color:#4a6080;font-size:11px;text-transform:uppercase">Statut</th>
-            <th style="padding:10px 12px;text-align:center;color:#4a6080;font-size:11px;text-transform:uppercase">Score priorité</th>
-            <th style="padding:10px 12px;text-align:center;color:#4a6080;font-size:11px;text-transform:uppercase">Action</th>
-          </tr>
-        </thead>
-        <tbody>${rows}</tbody>
-      </table>`;
-
-  // Remove existing modal if open
-  document.getElementById("resaListModal")?.remove();
-
-  const html = `
-  <div id="resaListModal"
-    style="position:fixed;inset:0;z-index:9999;background:rgba(10,20,60,0.45);
-           display:flex;align-items:center;justify-content:center;backdrop-filter:blur(3px)"
-    onclick="if(event.target===this)this.remove()">
-    <div style="background:#fff;border-radius:16px;width:700px;max-width:96vw;
-                max-height:80vh;overflow:auto;box-shadow:0 24px 80px rgba(10,20,80,0.2)">
-      <div style="background:#0d2b6e;padding:16px 20px;border-radius:16px 16px 0 0;
-                  display:flex;justify-content:space-between;align-items:center;
-                  position:sticky;top:0;z-index:1">
-        <div style="color:#fff;font-weight:700;font-size:15px">📦 Réservations du matériel</div>
-        <button onclick="document.getElementById('resaListModal').remove()"
-          style="background:rgba(255,255,255,0.15);border:none;color:#fff;
-                 width:28px;height:28px;border-radius:8px;cursor:pointer;font-size:18px;
-                 display:flex;align-items:center;justify-content:center">×</button>
-      </div>
-      <div style="padding:16px;overflow-x:auto">${tableContent}</div>
-    </div>
-  </div>`;
-
-  document.body.insertAdjacentHTML("beforeend", html);
-}
-
-async function terminerResa(id) {
-  if (
-    !confirm(
-      "Libérer ce matériel ? Le suivant en file d'attente sera attribué automatiquement.",
-    )
-  )
-    return;
-  const token = localStorage.getItem("token");
-  const res = await fetch(`/api/reservations/${id}/terminer`, {
-    method: "PATCH",
-    headers: { Authorization: "Bearer " + token },
-  });
-  document.getElementById("resaListModal")?.remove();
-  if (res.ok) location.reload();
-  else alert("Erreur lors de la libération.");
-}
-
-async function annulerResa(id) {
-  if (!confirm("Annuler cette réservation ?")) return;
-  const token = localStorage.getItem("token");
-  const res = await fetch(`/api/reservations/${id}/annuler`, {
-    method: "PATCH",
-    headers: { Authorization: "Bearer " + token },
-  });
-  document.getElementById("resaListModal")?.remove();
-  if (res.ok) location.reload();
-  else alert("Erreur lors de l'annulation.");
 }
