@@ -411,7 +411,7 @@
                 fill="none" />
             </svg>
           </div>
-          <div class="notif-btn" style="position: relative; cursor: pointer">
+          <div class="notif-btn" id="notifBellBtn" style="position: relative; cursor: pointer">
             <svg width="15" height="15" viewBox="0 0 24 24" fill="none">
               <path
                 d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9M13.73 21a2 2 0 01-3.46 0"
@@ -465,10 +465,10 @@
             <!-- ══ TABS ══ -->
             <div class="tabs">
               <button class="tab-btn active" onclick="switchTab('manual')">
-                 Saisie manuelle
+                        Saisie manuelle
               </button>
               <button class="tab-btn" onclick="switchTab('excel')">
-                 Import Excel (plusieurs utilisateurs)
+                          Import Excel (plusieurs utilisateurs)
               </button>
             </div>
 
@@ -514,7 +514,7 @@
                     <label class="field-label"
                       >Nom <span class="req">*</span></label
                     >
-                    <input type="text" class="field-input" id="nom" required />
+                    <input type="text" class="field-input" id="nom" name="nom" title="Nom" required />
                   </div>
                   <div class="field">
                     <label class="field-label"
@@ -524,6 +524,8 @@
                       type="text"
                       class="field-input"
                       id="prenom"
+                      name="prenom"
+                      title="Prénom"
                       required />
                   </div>
                   <div class="field">
@@ -532,11 +534,18 @@
                       type="email"
                       class="field-input"
                       id="email"
+                      name="email"
+                      title="Email"
                       placeholder="prenom.nom@bea.dz" />
                   </div>
                   <div class="field">
                     <label class="field-label">Téléphone</label>
-                    <input type="tel" class="field-input" id="telephone" />
+                    <input
+                      type="tel"
+                      class="field-input"
+                      id="telephone"
+                      name="telephone"
+                      title="Téléphone" />
                   </div>
                 </div>
                 <div class="divider"></div>
@@ -550,6 +559,7 @@
                       type="password"
                       class="field-input"
                       id="password"
+                      name="password"
                       placeholder="••••••••••" />
                     <small style="color: #8a9fbf; font-size: 10px"
                       >Laisser vide pour conserver en modification</small
@@ -559,7 +569,7 @@
                     <label class="field-label"
                       >Rôle <span class="req">*</span></label
                     >
-                    <select class="field-select" id="role" required>
+                    <select class="field-select" id="role" name="role" title="Rôle" required>
                       <option value="">-- Sélectionner --</option>
                       <option value="DIRECTEUR">Directeur</option>
                       <option value="CHEF_DEPARTEMENT">
@@ -589,7 +599,6 @@
             <div id="tab-excel" class="tab-panel">
               <!-- Télécharger le modèle -->
               <div class="template-box">
-              
                 <div class="template-info">
                   <div class="template-title">Télécharger le modèle Excel</div>
                   <div class="template-sub">
@@ -615,7 +624,6 @@
                   id="excelFile"
                   accept=".xlsx,.xls"
                   onchange="handleFileSelect(this.files[0])" />
-            
                 <div class="upload-title">Glissez votre fichier Excel ici</div>
                 <div class="upload-sub">
                   ou cliquez pour sélectionner un fichier .xlsx

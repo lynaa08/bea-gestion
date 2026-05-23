@@ -384,7 +384,7 @@
                 fill="none" />
             </svg>
           </div>
-          <div class="notif-btn" style="position: relative; cursor: pointer">
+          <div class="notif-btn" id="notifBellBtn" style="position: relative; cursor: pointer">
             <svg width="15" height="15" viewBox="0 0 24 24" fill="none">
               <path
                 d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9M13.73 21a2 2 0 01-3.46 0"
@@ -449,13 +449,13 @@
 
             <div class="tabs">
               <button class="tab-btn active" onclick="switchTabMat('manual')">
-                 Saisie manuelle
+                            Saisie manuelle
               </button>
               <button
                 class="tab-btn"
                 id="tabExcelBtn"
                 onclick="switchTabMat('excel')">
-                 Import Excel (plusieurs matériels)
+                              Import Excel (plusieurs matériels)
               </button>
             </div>
 
@@ -505,10 +505,10 @@
               </div>
               <div class="form-grid2">
                 <div class="field">
-                  <label class="field-label"
+                  <label class="field-label" for="etat"
                     >État <span class="req">*</span></label
                   >
-                  <select class="field-select" id="etat">
+                  <select class="field-select" id="etat" name="etat" title="État">
                     <option value="">-- Sélectionner --</option>
                     <option value="NEUF">Neuf</option>
                     <option value="BON_ETAT">Bon état</option>
@@ -517,10 +517,9 @@
                   </select>
                 </div>
                 <div class="field">
-                  <label class="field-label"
-                    >Statut <span class="req">*</span></label
+                  <label class="field-label" for="statut">Statut <span class="req">*</span></label
                   >
-                  <select class="field-select" id="statut">
+                  <select class="field-select" id="statut" name="statut" title="Statut">
                     <option value="">-- Sélectionner --</option>
                     <option value="DISPONIBLE">Disponible</option>
                     <option value="EN_UTILISATION">En utilisation</option>
@@ -531,20 +530,24 @@
               </div>
               <div class="form-grid2">
                 <div class="field">
-                  <label class="field-label">Quantité</label>
+                  <label class="field-label" for="quantite">Quantité</label>
                   <input
                     type="number"
                     class="field-input"
                     id="quantite"
+                    name="quantite"
+                    title="Quantité"
                     min="1"
                     value="1" />
                 </div>
                 <div class="field">
-                  <label class="field-label">Licence / Numéro de série</label>
+                  <label class="field-label" for="licence">Licence / Numéro de série</label>
                   <input
                     type="text"
                     class="field-input"
                     id="licence"
+                    name="licence"
+                    title="Licence / Numéro de série"
                     placeholder="Ex: WIN-XXXXX-XXXXX" />
                 </div>
               </div>
@@ -552,12 +555,12 @@
               <div class="section-label"> Dates</div>
               <div class="form-grid2">
                 <div class="field">
-                  <label class="field-label">Date de licence</label>
-                  <input type="date" class="field-input" id="dateLicence" />
+                  <label class="field-label" for="dateLicence">Date de licence</label>
+                  <input type="date" class="field-input" id="dateLicence" name="dateLicence" title="Date de licence" />
                 </div>
                 <div class="field">
-                  <label class="field-label">Date d'expiration</label>
-                  <input type="date" class="field-input" id="dateExpiration" />
+                  <label class="field-label" for="dateExpiration">Date d'expiration</label>
+                  <input type="date" class="field-input" id="dateExpiration" name="dateExpiration" title="Date d'expiration" />
                 </div>
               </div>
               <div class="divider"></div>

@@ -42,6 +42,7 @@
       .drawer-overlay {
         display: none; position: fixed; inset: 0;
         background: rgba(10,20,60,0.35); z-index: 900;
+        -webkit-backdrop-filter: blur(2px);
         backdrop-filter: blur(2px);
       }
       .drawer-overlay.open { display: block; }
@@ -57,7 +58,7 @@
         display: flex; align-items: center; justify-content: space-between;
         padding: 13px 18px;
         background: linear-gradient(135deg, #0d2b6e 0%, #1a4a9e 100%);
-        cursor: pointer; user-select: none; transition: filter 0.15s;
+        cursor: pointer; -webkit-user-select: none; user-select: none; transition: filter 0.15s;
       }
       .projet-header:hover { filter: brightness(1.1); }
       .projet-header-left { display: flex; align-items: center; gap: 10px; }
@@ -274,7 +275,7 @@
                 placeholder="Rechercher une tâche…" />
             </div>
  
-            <select id="projetFilter" onchange="applyFilters()"
+            <select id="projetFilter" title="Filtrer par projet" onchange="applyFilters()"
               class="bg-white border border-slate-200 rounded-xl px-3 py-2.5 text-xs text-slate-700 outline-none cursor-pointer shadow-sm">
               <option value=""> Tous les projets</option>
             </select>

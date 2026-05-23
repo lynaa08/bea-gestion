@@ -229,12 +229,11 @@
     <div class="app-shell">
       <div class="topbar">
         <div class="topbar-brand">
-          <img th:src="@{/images/logo_sidebar.svg}" 
-               alt="Logo BEA" 
-               style="height: 40px; width: auto;" />
+          <img th:src="@{/images/logo_sidebar.svg}"
+              alt="Logo BEA"
+              style="height: 40px; width: auto;" />
         </div>
               "
-         
         <div class="topbar-right">
           <div
             class="notif-btn"
@@ -303,8 +302,7 @@
               Déclarer un problème au PMO
             </h3>
             <div class="field">
-              <label class="field-label"
-                >Titre du problème <span class="req">*</span></label
+              <label class="field-label" for="probTitre">Titre du problème <span class="req">*</span></label
               >
               <input
                 type="text"
@@ -316,7 +314,7 @@
             </div>
             <div class="grid2">
               <div class="field">
-                <label class="field-label">Priorité</label>
+                <label class="field-label" for="probPriorite">Priorité</label>
                 <select class="field-select" id="probPriorite">
                   <option value="BASSE">Basse</option>
                   <option value="MOYENNE" selected>Moyenne</option>
@@ -325,14 +323,14 @@
                 </select>
               </div>
               <div class="field">
-                <label class="field-label">Projet concerné</label>
+                <label class="field-label" for="probProjet">Projet concerné</label>
                 <select class="field-select" id="probProjet">
                   <option value="">-- Aucun --</option>
                 </select>
               </div>
             </div>
             <div class="field">
-              <label class="field-label">Description détaillée</label>
+              <label class="field-label" for="probDesc">Description détaillée</label>
               <textarea
                 class="field-input"
                 id="probDesc"
@@ -341,7 +339,7 @@
               ></textarea>
             </div>
             <button class="btn-declare" onclick="declarerProbleme()">
-              📤 Envoyer au PMO
+                Envoyer au PMO
             </button>
           </div>
 

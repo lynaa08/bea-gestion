@@ -37,10 +37,11 @@ function renderMembresDropdown(filter = "") {
   if (!dd) return;
   const q = filter.toLowerCase();
   const filtered = allUsers.filter(
-    (u) =>
-      (u.matricule || "").toLowerCase().includes(q) ||
-      ((u.prenom || "") + " " + (u.nom || "")).toLowerCase().includes(q),
-  );
+  (u) =>
+    u.role === "DEVELOPPEUR" &&  // ← filtre rôle
+    ((u.matricule || "").toLowerCase().includes(q) ||
+    ((u.prenom || "") + " " + (u.nom || "")).toLowerCase().includes(q)),
+);
   if (filtered.length === 0) {
     dd.innerHTML =
       '<div style="padding:12px;color:#b0bdd0;font-size:12px;text-align:center">Aucun utilisateur trouvé</div>';

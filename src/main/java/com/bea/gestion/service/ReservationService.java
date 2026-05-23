@@ -10,7 +10,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
-
+import com.bea.gestion.service.NotificationService;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
@@ -22,19 +22,22 @@ import java.util.stream.Collectors;
 public class ReservationService {
 
     private final ReservationRepository reservationRepo;
-    private final MaterielRepository    materielRepo;
-    private final UserRepository        userRepo;
-    private final ProjetRepository      projetRepo;
+private final MaterielRepository    materielRepo;
+private final UserRepository        userRepo;
+private final ProjetRepository      projetRepo;
+private final NotificationService   notificationService;
 
-    public ReservationService(ReservationRepository reservationRepo,
-                              MaterielRepository materielRepo,
-                              UserRepository userRepo,
-                              ProjetRepository projetRepo) {
-        this.reservationRepo = reservationRepo;
-        this.materielRepo    = materielRepo;
-        this.userRepo        = userRepo;
-        this.projetRepo      = projetRepo;
-    }
+public ReservationService(ReservationRepository reservationRepo,
+            MaterielRepository materielRepo,
+            UserRepository userRepo,
+            ProjetRepository projetRepo,
+            NotificationService notificationService) {
+    this.reservationRepo     = reservationRepo;
+    this.materielRepo        = materielRepo;
+    this.userRepo            = userRepo;
+    this.projetRepo          = projetRepo;
+    this.notificationService = notificationService;
+}
 
     // ── Créer une réservation ─────────────────────────────────────────────────
     @Transactional
@@ -65,7 +68,12 @@ public class ReservationService {
         resa.setNiveauPriorite(niveau);
         resa.setStatut(StatutReservation.EN_ATTENTE);
 
-        return toDTO(reservationRepo.save(resa));
+        ReservationMateriel saved = reservationRepo.save(resa);
+
+// Notifier le chef de département
+notificationService.notifyReservationCreee(saved);
+
+return toDTO(saved);
     }
 
     // ── Accepter une réservation ──────────────────────────────────────────────
@@ -91,7 +99,9 @@ public class ReservationService {
         materiel.setStatut(StatutMateriel.EN_UTILISATION);
         materielRepo.save(materiel);
 
-        return toDTO(reservationRepo.save(resa));
+        ReservationMateriel savedResa = reservationRepo.save(resa);
+        notificationService.notifyReservationAcceptee(savedResa);
+        return toDTO(savedResa);
     }
 
     // ── Liste de toutes les réservations triées par priorité ─────────────────
@@ -213,6 +223,7 @@ public class ReservationService {
         boolean wasActive = resa.getStatut() == StatutReservation.ACTIVE;
         resa.setStatut(StatutReservation.ANNULEE);
         reservationRepo.save(resa);
+        notificationService.notifyReservationAnnulee(resa);
 
         if (wasActive) {
             Materiel m = resa.getMateriel();

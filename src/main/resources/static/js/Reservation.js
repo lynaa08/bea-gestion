@@ -87,8 +87,10 @@ function buildReservationModal(
   const projetOptions = projets
     .map(
       (p) =>
-        `<option value="${p.id}" ${p.id == defaultProjetId ? "selected" : ""}>${p.nom}</option>`,
-    )
+      `<option value="${p.id}" ${p.id == defaultProjetId ? "selected" : ""}
+          data-membres='${JSON.stringify(p.membresMatricules || [])}'
+          data-membresNoms='${JSON.stringify(p.membresNoms || [])}'
+        >${p.nom}</option>`,    )
     .join("");
 
   const today = new Date().toISOString().split("T")[0];
@@ -107,14 +109,14 @@ function buildReservationModal(
     ">
       <div style="background:#0d2b6e;padding:18px 24px;border-radius:18px 18px 0 0;display:flex;justify-content:space-between;align-items:center">
         <div>
-          <div style="color:#fff;font-weight:700;font-size:16px">📦 Réserver un matériel</div>
+          <div style="color:#fff;font-weight:700;font-size:16px"> Réserver un matériel</div>
           ${defaultProjetNom ? `<div style="color:#5bb8e8;font-size:12px;margin-top:2px">Projet : ${defaultProjetNom}</div>` : ""}
         </div>
         <button onclick="closeResaModal()" style="background:rgba(255,255,255,0.15);border:none;color:#fff;width:30px;height:30px;border-radius:8px;cursor:pointer;font-size:18px;line-height:1">×</button>
       </div>
       <div style="padding:24px">
         <div style="background:#fff8e1;border:1px solid #ffe082;border-radius:10px;padding:12px 14px;margin-bottom:20px;font-size:12px;color:#6d4c00">
-          <strong>📊 Priorité automatique :</strong> Toutes les demandes démarrent <strong>EN_ATTENTE</strong> et sont examinées par le Chef de département. Le classement se fait par priorité du projet, deadline et urgence.
+          <strong> Priorité automatique :</strong> Toutes les demandes démarrent <strong>EN_ATTENTE</strong> et sont examinées par le Chef de département. Le classement se fait par priorité du projet, deadline et urgence.
         </div>
         <div id="resaMessage"></div>
         <div style="margin-bottom:14px">
@@ -138,7 +140,7 @@ function buildReservationModal(
           <label style="display:block;font-size:11px;font-weight:700;color:#4a6080;text-transform:uppercase;letter-spacing:.04em;margin-bottom:6px">
             Projet lié <span style="color:#8a9fbf;font-weight:400">(influence la priorité)</span>
           </label>
-          <select id="resaProjetId" style="width:100%;padding:10px 12px;border:1.5px solid #d8e6f2;border-radius:8px;font-size:13px;color:#1a2d5a;outline:none">
+          <select id="resaProjetId" onchange="onProjetChange(this)" style="width:100%;padding:10px 12px;border:1.5px solid #d8e6f2;border-radius:8px;font-size:13px;color:#1a2d5a;outline:none">
             <option value="">-- Aucun projet --</option>
             ${projetOptions}
           </select>
@@ -171,6 +173,11 @@ function buildReservationModal(
   </div>`;
 
   document.body.insertAdjacentHTML("beforeend", html);
+  // Appliquer le filtre si un projet est présent par défaut
+if (defaultProjetId) {
+  const projetSelect = document.getElementById("resaProjetId");
+  if (projetSelect) onProjetChange(projetSelect);
+}
 }
 
 async function onMaterielChange(select) {
@@ -304,4 +311,48 @@ function showResaMsg(type, msg) {
   const bg = type === "success" ? "#e6f9ee" : "#fee";
   const color = type === "success" ? "#1a7a40" : "#b00";
   el.innerHTML = `<div style="background:${bg};color:${color};padding:10px 14px;border-radius:8px;margin-bottom:12px;font-size:13px">${msg}</div>`;
+}
+// ── Filtrer responsables selon le projet sélectionné (pour DEVELOPPEUR) ──
+function onProjetChange(select) {
+  const role = getUserRoleFromToken();
+  const resaResponsable = document.getElementById("resaResponsable");
+  if (!resaResponsable) return;
+
+  const selectedOption = select.options[select.selectedIndex];
+
+  // Si pas de projet sélectionné → remettre tous les users
+  if (!selectedOption || !selectedOption.value) {
+    resaResponsable.innerHTML =
+      `<option value="">-- Sélectionner un responsable --</option>` +
+      (window._allUserOptions || "");
+    return;
+  }
+
+  let membresMatricules = [];
+  let membresNoms = [];
+  try {
+    membresMatricules = JSON.parse(selectedOption.getAttribute("data-membres") || "[]");
+    membresNoms = JSON.parse(selectedOption.getAttribute("data-membresNoms") || "[]");
+  } catch (e) {
+    membresMatricules = [];
+    membresNoms = [];
+  }
+
+  console.log("Rôle détecté:", role);
+  console.log("Membres matricules:", membresMatricules);
+  console.log("Membres noms:", membresNoms);
+
+  if (role === "DEVELOPPEUR" && membresMatricules.length > 0) {
+    resaResponsable.innerHTML = `<option value="">-- Sélectionner un responsable --</option>`;
+    membresMatricules.forEach((matricule, index) => {
+      // membresNoms contient déjà "Prénom Nom (matricule)" grâce au mapper
+      const nom = membresNoms[index] || matricule;
+      resaResponsable.innerHTML +=
+        `<option value="${matricule}">${nom}</option>`;
+    });
+  } else {
+    resaResponsable.innerHTML =
+      `<option value="">-- Sélectionner un responsable --</option>` +
+      (window._allUserOptions || "");
+  }
 }
